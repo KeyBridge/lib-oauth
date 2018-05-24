@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>keybridge.lib</groupId>
+  <artifactId>lib-oauth</artifactId>
+  <version>0.1.0</version>
+  <packaging>jar</packaging>
+
+  <name>oauth</name>
+  <description>                 The OAuth 2.0 Authorization Framework
+    Request for Comments: 6749
+
+    The OAuth 2.0 authorization framework enables a third-party
+    application to obtain limited access to an HTTP service, either on
+    behalf of a resource owner by orchestrating an approval interaction
+    between the resource owner and the HTTP service, or by allowing the
+    third-party application to obtain access on its own behalf.
+
+    History:
+
+    v0.0.1 - first draft 05/24/18
+    v0.1.0 - import oauth classes from lib-openid
+  </description>
+
+  <organization>
+    <name>Key Bridge</name>
+    <url>http://keybridge.ch</url>
+  </organization>
+
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <netbeans.hint.license>apache20</netbeans.hint.license>
+  </properties>
+
+
+  <dependencies>
+    <dependency>
+      <groupId>org.glassfish.jersey.core</groupId>
+      <artifactId>jersey-common</artifactId>
+      <version>2.23.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>keybridge.lib</groupId>
+      <artifactId>xml-adapter</artifactId>
+      <version>1.1.0</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <distributionManagement>
+    <repository>
+      <id>${repository.name}</id>
+      <url>${repository.url}</url>
+    </repository>
+  </distributionManagement>
+
+</project>
