@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2018 Key Bridge.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -113,7 +113,7 @@ public class MacAccessTokenResponse extends AccessTokenResponse {
   /**
    * Build a new Message Authentication Code (MAC) token.
    * <p>
-   * The default duration is 30 days.
+   * The default duration is 7 days.
    *
    * @param access_token  The OAuth 2.0 access token;
    * @param kid           The name of the key (i.e. the key id), which is an
