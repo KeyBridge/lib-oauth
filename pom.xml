@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>keybridge.lib</groupId>
   <artifactId>lib-oauth</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <packaging>jar</packaging>
 
   <name>oauth</name>
-  <description>                 The OAuth 2.0 Authorization Framework
+  <description>The OAuth 2.0 Authorization Framework
     Request for Comments: 6749
 
     The OAuth 2.0 authorization framework enables a third-party
@@ -20,6 +20,8 @@
 
     v0.0.1 - first draft 05/24/18
     v0.1.0 - import oauth classes from lib-openid
+    v0.2.0 - complete implementation; add package-info namespace
+
   </description>
 
   <organization>
