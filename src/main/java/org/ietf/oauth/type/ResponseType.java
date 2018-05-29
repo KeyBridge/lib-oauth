@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2018 Key Bridge.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,19 +30,19 @@ package org.ietf.oauth.type;
 public enum ResponseType {
 
   /**
-   * Used for the authorization code grant type.
+   * code: Used for the authorization code grant type.
    */
   CODE("code", "Authorization Code Grant Type"),
   /**
-   * Used for the implicit grant type.
+   * token: Used for the implicit grant type.
    */
   TOKEN("token", "Implicit Grant Type"),
   /**
-   * Include an ID Token in the Authorization Request.
+   * id_token: Include an ID Token in the Authorization Request.
    */
   ID_TOKEN("id_token", "ID Token"),
   /**
-   * Used for client registration.
+   * mac: Message access token. Used for client registration.
    */
   MAC("mac", "Message access token");
 
