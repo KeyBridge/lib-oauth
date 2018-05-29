@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2018 Key Bridge.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -80,11 +80,20 @@ import org.ietf.oauth.type.ScopeType;
 public class AuthorizationRequest extends AbstractUrlEncodedMessage implements Serializable {
 
   /**
-   * 4.2.1. Authorization Request {@code response_type} is REQUIRED and MUST be
-   * set to "token".
+   * 3.1.1. Response Type
+   * <p>
+   * REQUIRED. The value MUST be one of "code" for requesting an authorization
+   * code as described by Section 4.1.1, "token" for requesting an access token
+   * (implicit grant) as described by Section 4.2.1, or a registered extension
+   * value as described by Section 8.4.
+   * <p>
+   * Extension response types MAY contain a space-delimited (%x20) list of
+   * values, where the order of values does not matter (e.g., response type "a
+   * b" is the same as "b a"). The meaning of such composite response types is
+   * defined by their respective specifications.
    */
   @XmlTransient
-  private static final ResponseType RESPONSE_TYPE = ResponseType.CODE;
+  private static final ResponseType RESPONSE_TYPE = ResponseType.MAC;
   /**
    * 4.1.1. Authorization Request scope is OPTIONAL and describes the scope of
    * the access request.
@@ -93,7 +102,8 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
   private static final ScopeType SCOPE_TYPE = ScopeType.OAUTH;
 
   /**
-   * REQUIRED. Value MUST be set to "code".
+   * REQUIRED. Value MUST be set to "code" or "token" (or "mac" for new client
+   * registration).
    */
   @XmlElement(required = true)
   @XmlJavaTypeAdapter(XmlResponseTypeAdapter.class)
@@ -111,7 +121,6 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
    */
   @XmlElement(required = true)
   private String client_id;
-
   /**
    * OPTIONAL. After completing its interaction with the resource owner, the
    * authorization server directs the resource owner's user-agent back to the
@@ -154,7 +163,8 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
   }
 
   /**
-   * Construct a new OAUTH AuthorizationRequest instance.
+   * Construct a new OAUTH AuthorizationRequest instance. The default response
+   * type is "MAC".
    *
    * @param client_id The Client Identifier valid at the Authorization Server
    * @param state     An opaque value used by the client to maintain state
