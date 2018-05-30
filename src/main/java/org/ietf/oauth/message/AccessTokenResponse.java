@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2018 Key Bridge.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,8 @@ package org.ietf.oauth.message;
 
 import java.io.Serializable;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.HashSet;
@@ -114,7 +116,6 @@ public class AccessTokenResponse implements Serializable {
    */
   @XmlElement(required = true)
   private String access_token;
-
   /**
    * Default is "Bearer".
    * <p>
@@ -138,13 +139,14 @@ public class AccessTokenResponse implements Serializable {
    */
   @XmlElement(required = true)
   private String token_type;
-
   /**
    * RECOMMENDED. The lifetime in seconds of the access token. For example, the
    * value "3600" denotes that the access token will expire in one hour from the
    * time the response was generated. If omitted, the authorization server
    * SHOULD provide the expiration time via other means or document the default
    * value.
+   * <p>
+   * Default is 7 days.
    */
   @XmlJavaTypeAdapter(XmlDurationSecondsAdapter.class)
   private Duration expires_in;
@@ -207,9 +209,19 @@ public class AccessTokenResponse implements Serializable {
    */
   private String error_message;
 
+  /**
+   * A system time stamp when this token response was created. Marked
+   * XmlTransient as this field is not intended to be conveyed to the user.
+   * <p>
+   * Note: the time zone is always "UTC".
+   */
+  @XmlTransient
+  private LocalDateTime created_at;
+
   public AccessTokenResponse() {
     this.token_type = TOKEN_TYPE_BEARER;
-    this.expires_in = Duration.of(48, ChronoUnit.HOURS);
+    this.created_at = LocalDateTime.now(ZoneId.of("UTC"));
+    this.expires_in = Duration.of(7, ChronoUnit.DAYS);
   }
 
   public AccessTokenResponse(String token_type) {
@@ -337,6 +349,24 @@ public class AccessTokenResponse implements Serializable {
 
   public void setError_message(String error_message) {
     this.error_message = error_message;
+  }
+
+  public LocalDateTime getCreated_at() {
+    return created_at;
+  }
+
+  public void setCreated_at(LocalDateTime created_at) {
+    this.created_at = created_at;
   }//</editor-fold>
+
+  /**
+   * Convenience method to inspect this access token and determine if it has
+   * expired.
+   *
+   * @return TRUE if expired, otherwise FALSE (= not expired)
+   */
+  public boolean isExpired() {
+    return LocalDateTime.now(ZoneId.of("UTC")).isAfter(created_at.plus(expires_in));
+  }
 
 }
