@@ -15,8 +15,6 @@
  */
 package org.ietf.oauth.message;
 
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import javax.xml.bind.annotation.*;
 
 /**
@@ -108,7 +106,6 @@ public class MacAccessTokenResponse extends AccessTokenResponse {
 
   public MacAccessTokenResponse() {
     super(TOKEN_TYPE_MAC);
-    super.setExpires_in(Duration.of(7, ChronoUnit.DAYS));
   }
 
   /**

@@ -217,12 +217,13 @@ public class AccessTokenResponse implements Serializable {
   private LocalDateTime created_at;
 
   public AccessTokenResponse() {
-    this.token_type = TOKEN_TYPE_BEARER;
     this.created_at = LocalDateTime.now(ZoneId.of("UTC"));
     this.expires_in = Duration.of(7, ChronoUnit.DAYS);
+    this.token_type = TOKEN_TYPE_BEARER;
   }
 
   public AccessTokenResponse(String token_type) {
+    this();
     this.token_type = token_type;
   }
 
