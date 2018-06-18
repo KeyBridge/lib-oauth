@@ -1,2 +1,2 @@
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://org.ietf/oauth/2.0")
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://org.ietf/oauth")
 package org.ietf.oauth.message;
