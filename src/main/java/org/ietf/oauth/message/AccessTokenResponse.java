@@ -29,8 +29,6 @@ import org.ietf.oauth.adapter.XmlErrorResponseTypeAdapter;
 import org.ietf.oauth.type.ErrorResponseType;
 
 /**
- * <img alt="image" src="doc-files/accessTokenResponse.png">
- * <p>
  * 4.1.4. Access Token Response
  * <p>
  * All Token Responses that contain tokens, secrets, or other sensitive

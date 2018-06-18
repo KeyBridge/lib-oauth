@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2018 Key Bridge.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +22,6 @@ import org.ietf.oauth.AbstractUrlEncodedMessage;
 import org.ietf.oauth.type.ScopeType;
 
 /**
- * <img alt="image" src="doc-files/accessTokenRequest.png">
- * <p>
  * RFC 6749 OAuth 2.0
  * <p>
  * 1.4. Access Token

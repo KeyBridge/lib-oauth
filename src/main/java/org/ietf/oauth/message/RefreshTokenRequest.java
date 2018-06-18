@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2018 Key Bridge.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,8 +23,6 @@ import javax.xml.bind.annotation.*;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
 
 /**
- * <img alt="image" src="doc-files/refreshTokenRequest.png">
- * <p>
  * RFC 6749 OAuth 2.0
  * <p>
  * 1.5. Refresh Token

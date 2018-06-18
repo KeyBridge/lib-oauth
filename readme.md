@@ -109,5 +109,5 @@ Copyright 2018 Key Bridge. Published under the Apache License, Version 2.0.
  
 ## References
 
- * [OpThe OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749)
+ * [The OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749)
 

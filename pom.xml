@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>keybridge.lib</groupId>
   <artifactId>lib-oauth</artifactId>
-  <version>0.3.0</version>
+  <version>0.4.0</version>
   <packaging>jar</packaging>
 
   <name>oauth</name>
@@ -22,7 +22,7 @@
     v0.1.0 - import oauth classes from lib-openid
     v0.2.0 - complete implementation; add package-info namespace
     v0.3.0 - add created_at field to abstract token
-
+    v0.4.0 - update javadoc, add notation to support OpenId
   </description>
 
   <organization>

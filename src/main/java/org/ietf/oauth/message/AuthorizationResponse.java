@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2018 Key Bridge.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,8 +24,6 @@ import org.ietf.oauth.adapter.XmlErrorResponseTypeAdapter;
 import org.ietf.oauth.type.ErrorResponseType;
 
 /**
- * <img alt="image" src="doc-files/authorizationResponse.png">
- * <p>
  * A combined response object handling both the success and fail conditions
  * described in sections 4.1.2 and 4.1.2.1.
  * <p>

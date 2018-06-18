@@ -28,8 +28,6 @@ import org.ietf.oauth.type.ResponseType;
 import org.ietf.oauth.type.ScopeType;
 
 /**
- * <img alt="image" src="doc-files/authorizationRequest.png">
- * <p>
  * RFC 6749 OAuth 2.0
  * <p>
  * 4.1.1. Authorization Request
@@ -91,9 +89,12 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
    * values, where the order of values does not matter (e.g., response type "a
    * b" is the same as "b a"). The meaning of such composite response types is
    * defined by their respective specifications.
+   * <p>
+   * Openid 4.2.1. Authorization Request {@code response_type} is REQUIRED and
+   * MUST be set to "token".
    */
   @XmlTransient
-  private static final ResponseType RESPONSE_TYPE = ResponseType.MAC;
+  private static final ResponseType RESPONSE_TYPE = ResponseType.CODE;
   /**
    * 4.1.1. Authorization Request scope is OPTIONAL and describes the scope of
    * the access request.
@@ -163,8 +164,9 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
   }
 
   /**
-   * Construct a new OAUTH AuthorizationRequest instance. The default response
-   * type is "MAC".
+   * Construct a new OAUTH AuthorizationRequest instance.
+   * <p>
+   * The default response type is "CODE". Set to "MAC" for OpenId.
    *
    * @param client_id The Client Identifier valid at the Authorization Server
    * @param state     An opaque value used by the client to maintain state

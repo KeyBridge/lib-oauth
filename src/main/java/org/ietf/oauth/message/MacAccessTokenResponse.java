@@ -20,8 +20,6 @@ import java.time.temporal.ChronoUnit;
 import javax.xml.bind.annotation.*;
 
 /**
- * <img alt="image" src="doc-files/macAccessTokenResponse.png">
- * <p>
  * Internet-Draft OAuth 2.0 MAC Tokens
  * <p>
  * This specification describes how to use MAC Tokens in HTTP requests to access

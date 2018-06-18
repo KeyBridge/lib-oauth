@@ -1,6 +1,7 @@
-Request for Comments: 6749
 
-The OAuth 2.0 Authorization Framework
+# The OAuth 2.0 Authorization Framework
+
+**Request for Comments: 6749**
 
 The OAuth 2.0 authorization framework enables a third-party
 application to obtain limited access to an HTTP service.
@@ -36,12 +37,14 @@ application to obtain limited access to an HTTP service.
 
    Access tokens are credentials used to access protected resources.  An
    access token is a string representing an authorization issued to the
-   client.  
+   client.
 
 Case 1: Retrieve a new access token.
 
-The token request 
+The token request
+
 4.1.3.  Access Token Request
+
   client_id is OAuth consumer key
   scope        is the scope request
   nonce        is a one-time nonce; written into the redirect URI field
@@ -49,6 +52,7 @@ The token request
                e.g. DigestUtils.sha512Hex(secret + data);
 
 4.2.2.  Access Token Response
+
   access_token is the token
   expires_in   is the duration
   scope        is the scope grant
