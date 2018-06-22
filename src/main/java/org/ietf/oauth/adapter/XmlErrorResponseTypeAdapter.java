@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2018 Key Bridge.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,12 +28,12 @@ public class XmlErrorResponseTypeAdapter extends XmlAdapter<String, ErrorRespons
 
   @Override
   public ErrorResponseType unmarshal(String v) throws Exception {
-    return ErrorResponseType.fromText(v);
+    return ErrorResponseType.valueOf(v);
   }
 
   @Override
   public String marshal(ErrorResponseType v) throws Exception {
-    return v.toText();
+    return v.name();
   }
 
 }

@@ -115,7 +115,7 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage implements Ser
    * the access request.
    */
   @XmlTransient
-  private static final ScopeType SCOPE_TYPE = ScopeType.OAUTH;
+  private static final ScopeType SCOPE_TYPE = ScopeType.oauth;
 
   /**
    * REQUIRED. Value MUST be set to "authorization_code".
@@ -165,7 +165,7 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage implements Ser
 
   public AccessTokenRequest() {
     this.grant_type = AUTHORIZATION_CODE;
-    this.scope = SCOPE_TYPE.toText();
+    this.scope = SCOPE_TYPE.name();
   }
 
   /**

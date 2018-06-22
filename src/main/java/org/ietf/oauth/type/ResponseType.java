@@ -32,39 +32,24 @@ public enum ResponseType {
   /**
    * code: Used for the authorization code grant type.
    */
-  CODE("code", "Authorization Code Grant Type"),
+  code("Authorization Code Grant Type"),
   /**
    * token: Used for the implicit grant type.
    */
-  TOKEN("token", "Implicit Grant Type"),
+  token("Implicit Grant Type"),
   /**
    * id_token: Include an ID Token in the Authorization Request.
    */
-  ID_TOKEN("id_token", "ID Token"),
+  id_token("ID Token"),
   /**
    * mac: Message access token. Used for client registration.
    */
-  MAC("mac", "Message access token");
+  mac("Message access token");
 
-  private final String paramName;
   private final String displayName;
 
-  private ResponseType(String value, String displayName) {
-    this.paramName = value;
+  private ResponseType(String displayName) {
     this.displayName = displayName;
-  }
-
-  /**
-   * Gets param name.
-   *
-   * @return param name
-   */
-  public String toText() {
-    return paramName;
-  }
-
-  public static ResponseType fromText(String param) {
-    return ResponseType.valueOf(param.toUpperCase());
   }
 
   /**
@@ -74,15 +59,6 @@ public enum ResponseType {
    */
   public String getDisplayName() {
     return displayName;
-  }
-
-  /**
-   * Returns a string representation of the object. In this case the parameter
-   * name for the response_type parameter.
-   */
-  @Override
-  public String toString() {
-    return paramName;
   }
 
 }

@@ -94,13 +94,13 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
    * MUST be set to "token".
    */
   @XmlTransient
-  private static final ResponseType RESPONSE_TYPE = ResponseType.CODE;
+  private static final ResponseType RESPONSE_TYPE = ResponseType.code;
   /**
    * 4.1.1. Authorization Request scope is OPTIONAL and describes the scope of
    * the access request.
    */
   @XmlTransient
-  private static final ScopeType SCOPE_TYPE = ScopeType.OAUTH;
+  private static final ScopeType SCOPE_TYPE = ScopeType.oauth;
 
   /**
    * REQUIRED. Value MUST be set to "code" or "token" (or "mac" for new client
@@ -160,7 +160,7 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
 
   public AuthorizationRequest() {
     this.response_type = RESPONSE_TYPE;
-    this.scope = Arrays.asList(new String[]{SCOPE_TYPE.toText()});
+    this.scope = Arrays.asList(new String[]{SCOPE_TYPE.name()});
   }
 
   /**

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2018 Key Bridge.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,74 +33,38 @@ public enum ErrorResponseType {
    * The request is missing a required parameter, includes an invalid parameter
    * value, includes a parameter more than once, or is otherwise malformed.
    */
-  INVALID_REQUEST("invalid_request"),
+  invalid_request,
   /**
    * The client is not authorized to request an authorization code using this
    * method.
    */
-  UNAUTHORIZED_CLIENT("unauthorized_client"),
+  unauthorized_client,
   /**
    * The resource owner or authorization server denied the request.
    */
-  ACCESS_DENIED("access_denied"),
+  access_denied,
   /**
    * The authorization server does not support obtaining an authorization code
    * using this method.
    */
-  UNSUPPORTED_RESPONSE_TYPE("unsupported_response_type"),
+  unsupported_response_type,
   /**
    * The requested scope is invalid, unknown, or malformed.
    */
-  INVALID_SCOPE("invalid_scope"),
+  invalid_scope,
   /**
    * The authorization server encountered an unexpected condition that prevented
    * it from fulfilling the request. (This error code is needed because a 500
    * Internal Server Error HTTP status code cannot be returned to the client via
    * an HTTP redirect.)
    */
-  SERVER_ERROR("server_error"),
+  server_error,
   /**
    * The authorization server is currently unable to handle the request due to a
    * temporary overloading or maintenance of the server. (This error code is
    * needed because a 503 Service Unavailable HTTP status code cannot be
    * returned to the client via an HTTP redirect.)
    */
-  TEMPORARILY_UNAVAILABLE("temporarily_unavailable");
-
-  private final String paramName;
-
-  private ErrorResponseType(String paramName) {
-    this.paramName = paramName;
-  }
-
-  /**
-   * Gets error parameter.
-   *
-   * @return error parameter
-   */
-  public String toText() {
-    return paramName;
-  }
-
-  /**
-   * Return the corresponding enumeration from a string parameter.
-   *
-   * @param param The parameter to be match.
-   * @return The <code>enumeration</code> if found, otherwise <code>null</code>.
-   */
-  public static ErrorResponseType fromText(String param) {
-    return ErrorResponseType.valueOf(param.toUpperCase());
-  }
-
-  /**
-   * Returns a string representation of the object. In this case, the lower case
-   * code of the error.
-   *
-   * @return the OAuth specification name (e.g. "server_error")
-   */
-  @Override
-  public String toString() {
-    return paramName;
-  }
+  temporarily_unavailable;
 
 }

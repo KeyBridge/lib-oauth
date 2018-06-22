@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>keybridge.lib</groupId>
   <artifactId>lib-oauth</artifactId>
-  <version>0.5.0</version>
+  <version>0.6.0</version>
   <packaging>jar</packaging>
 
   <name>oauth</name>
@@ -24,7 +24,7 @@
     v0.3.0 - add created_at field to abstract token
     v0.4.0 - update javadoc, add notation to support OpenId
     v0.5.0 - remove 2.0 from namespace
-  </description>
+    v0.6.0 - simplify enumerated types</description>
 
   <organization>
     <name>Key Bridge</name>

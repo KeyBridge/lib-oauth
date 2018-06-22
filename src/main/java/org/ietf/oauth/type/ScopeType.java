@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2018 Key Bridge.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,34 +56,6 @@ public enum ScopeType {
    * <p>
    * NOT USED FOR OPENID TRANSACTIONS.
    */
-  OAUTH("oauth");
-
-  private final String paramName;
-
-  private ScopeType(String paramName) {
-    this.paramName = paramName;
-  }
-
-  /**
-   * Gets param name.
-   *
-   * @return param name
-   */
-  public String toText() {
-    return paramName;
-  }
-
-  public static ScopeType fromText(String param) {
-    return ScopeType.valueOf(param.toUpperCase());
-  }
-
-  /**
-   * Returns a string representation of the object. In this case the parameter
-   * name.
-   */
-  @Override
-  public String toString() {
-    return paramName;
-  }
+  oauth;
 
 }

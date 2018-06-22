@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2018 Key Bridge.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,12 +28,12 @@ public class XmlScopeTypeAdapter extends XmlAdapter<String, ScopeType> {
 
   @Override
   public ScopeType unmarshal(String v) throws Exception {
-    return ScopeType.fromText(v);
+    return ScopeType.valueOf(v);
   }
 
   @Override
   public String marshal(ScopeType v) throws Exception {
-    return v.toString();
+    return v.name();
   }
 
 }
