@@ -216,26 +216,31 @@ public class AccessTokenResponse implements Serializable {
   @XmlTransient
   private LocalDateTime created_at;
 
+  /**
+   * Default no-arg constructor. Creates a "Bearer" AccessTokenResponse instance
+   * with the created_at field set to now (UTC time zone) and valid for seven
+   * (7) days.
+   */
   public AccessTokenResponse() {
-    this.created_at = LocalDateTime.now(ZoneId.of("UTC"));
-    this.expires_in = Duration.of(7, ChronoUnit.DAYS);
     this.token_type = TOKEN_TYPE_BEARER;
   }
 
   public AccessTokenResponse(String token_type) {
-    this();
     this.token_type = token_type;
   }
 
   /**
-   * Build a new TokenResponse instance. The default token duration is valid for
-   * 48 hours.
+   * Build a "Bearer" AccessTokenResponse instance with the created_at field set
+   * to now (UTC time zone) and valid for seven (7) days.
    *
    * @param access_token The OAuth 2.0 access token; typically a UUID
+   * @param duration     the issued token validity duration (days)
    * @return A new TokenResponse instance.
    */
-  public static AccessTokenResponse getInstance(String access_token) {
+  public static AccessTokenResponse getInstance(String access_token, int duration) {
     AccessTokenResponse tr = new AccessTokenResponse();
+    tr.setCreated_at(LocalDateTime.now(ZoneId.of("UTC")));
+    tr.setExpires_in(Duration.of(duration, ChronoUnit.DAYS));
     tr.setAccess_token(access_token);
     return tr;
   }
