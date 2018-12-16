@@ -17,8 +17,8 @@ package org.ietf.oauth.message;
 
 import java.io.Serializable;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.ietf.oauth.adapter.XmlDurationSecondsAdapter;
 import org.ietf.oauth.adapter.XmlErrorResponseTypeAdapter;
+import org.ietf.oauth.adapter.XmlZonedDateTimeAdapter;
 import org.ietf.oauth.type.ErrorResponseType;
 
 /**
@@ -78,7 +79,8 @@ import org.ietf.oauth.type.ErrorResponseType;
  * </pre>
  *
  * @author Key Bridge 10/08/17
- * @since 0.2.0
+ * @since 0.2.0 first draft
+ * @since 0.7.0 expose custom fields [created_at, not_before, not_after]
  */
 @XmlRootElement(name = "AccessTokenResponse")
 @XmlType(name = "AccessTokenResponse")
@@ -208,13 +210,35 @@ public class AccessTokenResponse implements Serializable {
   private String error_message;
 
   /**
-   * A system time stamp when this token response was created. Marked
-   * XmlTransient as this field is not intended to be conveyed to the user.
+   * Key Bridge vendor field.
    * <p>
-   * Note: the time zone is always "UTC".
+   * A system time stamp when this token response was created. The time zone is
+   * always "UTC".
+   *
+   * @since 0.7.0 expose custom fields [created_at, not_before, not_after]
    */
-  @XmlTransient
-  private LocalDateTime created_at;
+  @XmlJavaTypeAdapter(XmlZonedDateTimeAdapter.class)
+  private ZonedDateTime created_at;
+  /**
+   * Key Bridge vendor field.
+   * <p>
+   * The start date-time of the validity period of this token. The time zone is
+   * always "UTC".
+   *
+   * @since 0.7.0 expose custom fields [created_at, not_before, not_after]
+   */
+  @XmlJavaTypeAdapter(XmlZonedDateTimeAdapter.class)
+  private ZonedDateTime not_before;
+  /**
+   * Key Bridge vendor field.
+   * <p>
+   * The end date-time of the validity period of this token. The time zone is
+   * always "UTC".
+   *
+   * @since 0.7.0 expose custom fields [created_at, not_before, not_after]
+   */
+  @XmlJavaTypeAdapter(XmlZonedDateTimeAdapter.class)
+  private ZonedDateTime not_after;
 
   /**
    * Default no-arg constructor. Creates a "Bearer" AccessTokenResponse instance
@@ -239,7 +263,7 @@ public class AccessTokenResponse implements Serializable {
    */
   public static AccessTokenResponse getInstance(String access_token, int duration) {
     AccessTokenResponse tr = new AccessTokenResponse();
-    tr.setCreated_at(LocalDateTime.now(ZoneId.of("UTC")));
+    tr.setCreated_at(ZonedDateTime.now(ZoneId.of("UTC")));
     tr.setExpires_in(Duration.of(duration, ChronoUnit.DAYS));
     tr.setAccess_token(access_token);
     return tr;
@@ -355,12 +379,58 @@ public class AccessTokenResponse implements Serializable {
     this.error_message = error_message;
   }
 
-  public LocalDateTime getCreated_at() {
+  public ZonedDateTime getCreated_at() {
     return created_at;
   }
 
-  public void setCreated_at(LocalDateTime created_at) {
-    this.created_at = created_at;
+  /**
+   * Set system time stamp when this token response was created. The time zone
+   * must be "UTC". The input value is truncated to seconds.
+   *
+   * @param created_at time stamp when this token response was created
+   */
+  public void setCreated_at(ZonedDateTime created_at) {
+    /**
+     * Developer note: Truncate to seconds or EQUALS will fail to match due to
+     * nanosecond time component.
+     */
+    this.created_at = created_at == null ? null : created_at.truncatedTo(ChronoUnit.SECONDS);
+  }
+
+  public ZonedDateTime getNot_before() {
+    return not_before;
+  }
+
+  /**
+   * Set the start date-time of the validity period of this token. The time zone
+   * must be "UTC". The input value is truncated to seconds.
+   *
+   * @param not_before start date-time of the validity period of this token
+   */
+  public void setNot_before(ZonedDateTime not_before) {
+    /**
+     * Developer note: Truncate to seconds or EQUALS will fail to match due to
+     * nanosecond time component.
+     */
+    this.not_before = not_before == null ? null : not_before.truncatedTo(ChronoUnit.SECONDS);
+  }
+
+  public ZonedDateTime getNot_after() {
+    return not_after;
+  }
+
+  /**
+   * Set the end date-time of the validity period of this token. The time zone
+   * must be "UTC". The input value is truncated to seconds.
+   *
+   * @param not_after end date-time of the validity period of this token
+   */
+  public void setNot_after(ZonedDateTime not_after) {
+    /**
+     * Developer note: Truncate to seconds or EQUALS will fail to match due to
+     * nanosecond time component.
+     */
+    this.not_after = not_after == null ? null : not_after.truncatedTo(ChronoUnit.SECONDS);
   }//</editor-fold>
 
   /**
@@ -370,7 +440,11 @@ public class AccessTokenResponse implements Serializable {
    * @return TRUE if expired, otherwise FALSE (= not expired)
    */
   public boolean isExpired() {
-    return LocalDateTime.now(ZoneId.of("UTC")).isAfter(created_at.plus(expires_in));
+    return not_after != null
+           ? ZonedDateTime.now(ZoneId.of("UTC")).isAfter(not_after)
+           : expires_in != null
+             ? ZonedDateTime.now(ZoneId.of("UTC")).isAfter(created_at.plus(expires_in))
+             : false; // never expires (== BAD)
   }
 
 }
