@@ -80,7 +80,8 @@ import org.ietf.oauth.type.ErrorResponseType;
  *
  * @author Key Bridge 10/08/17
  * @since 0.2.0 first draft
- * @since 0.7.0 expose custom fields [created_at, not_before, not_after]
+ * @since 0.7.0 expose custom fields [created_at, not_before, not_after];
+ * automatically update expiration fields if possible in setters
  */
 @XmlRootElement(name = "AccessTokenResponse")
 @XmlType(name = "AccessTokenResponse")
@@ -330,6 +331,12 @@ public class AccessTokenResponse implements Serializable {
    */
   public void setExpires_in(Duration expires_in) {
     this.expires_in = expires_in;
+    /**
+     * Update not_after if possible.
+     */
+    if (not_before != null && expires_in != null) {
+      not_after = not_before.plus(expires_in);
+    }
   }
 
   public String getRefresh_token() {
@@ -431,6 +438,12 @@ public class AccessTokenResponse implements Serializable {
      * nanosecond time component.
      */
     this.not_after = not_after == null ? null : not_after.truncatedTo(ChronoUnit.SECONDS);
+    /**
+     * Update expires_in if possible
+     */
+    if (not_before != null && not_after != null) {
+      expires_in = Duration.between(not_before, not_after);
+    }
   }//</editor-fold>
 
   /**
