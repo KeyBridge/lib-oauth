@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>keybridge.lib</groupId>
-  <artifactId>lib-oauth</artifactId>
-  <version>0.7.0</version>
+  <artifactId>oauth</artifactId>
+  <version>0.8.0</version>
   <packaging>jar</packaging>
 
-  <name>oauth</name>
+  <name>lib-oauth</name>
   <description>The OAuth 2.0 Authorization Framework
     Request for Comments: 6749
 
@@ -26,6 +26,7 @@
     v0.5.0 - remove 2.0 from namespace
     v0.6.0 - simplify enumerated types
     v0.7.0 - expose custom timestamp fields in access token response [created_at, not_before, not_after]
+    v0.8.0 - add json annotations and lib-json-adapter dependency
   </description>
 
   <organization>
@@ -42,12 +43,18 @@
 
 
   <dependencies>
+    <!--provides MultiValuedMap-->
     <dependency>
-      <!--provides MultiValuedMap-->
       <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-common</artifactId>
       <version>2.23.2</version>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>ch.keybridge</groupId>
+      <artifactId>json-adapter</artifactId>
+      <version>1.0.0</version>
     </dependency>
 
     <dependency>
