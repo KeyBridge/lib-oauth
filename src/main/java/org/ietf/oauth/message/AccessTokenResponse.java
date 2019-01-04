@@ -15,6 +15,9 @@
  */
 package org.ietf.oauth.message;
 
+import ch.keybridge.lib.json.adapter.JsonDurationSecondsAdapter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.ZoneId;
@@ -22,6 +25,7 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.ietf.oauth.adapter.XmlDurationSecondsAdapter;
@@ -150,6 +154,8 @@ public class AccessTokenResponse implements Serializable {
    * Default is 7 days.
    */
   @XmlJavaTypeAdapter(XmlDurationSecondsAdapter.class)
+  @JsonSerialize(using = JsonDurationSecondsAdapter.Serializer.class)
+  @JsonDeserialize(using = JsonDurationSecondsAdapter.Deserializer.class)
   private Duration expires_in;
   /**
    * OPTIONAL. The refresh token, which can be used to obtain new access tokens
@@ -458,6 +464,32 @@ public class AccessTokenResponse implements Serializable {
            : expires_in != null
              ? ZonedDateTime.now(ZoneId.of("UTC")).isAfter(created_at.plus(expires_in))
              : false; // never expires (== BAD)
+  }
+
+  @Override
+  public int hashCode() {
+    int hash = 5;
+    hash = 37 * hash + Objects.hashCode(this.access_token);
+    hash = 37 * hash + Objects.hashCode(this.token_type);
+    return hash;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final AccessTokenResponse other = (AccessTokenResponse) obj;
+    if (!Objects.equals(this.access_token, other.access_token)) {
+      return false;
+    }
+    return Objects.equals(this.token_type, other.token_type);
   }
 
 }
