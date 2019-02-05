@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://org.ietf/oauth" xmlns:tns="http://org.ietf/oauth" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="AccessTokenRequest" type="tns:AccessTokenRequest"/>
+
+  <xs:element name="AccessTokenResponse" type="tns:AccessTokenResponse"/>
+
+  <xs:element name="AuthorizationRequest" type="tns:AuthorizationRequest"/>
+
+  <xs:element name="AuthorizationResponse" type="tns:AuthorizationResponse"/>
+
+  <xs:element name="MacAccessTokenResponse" type="tns:MacAccessTokenResponse"/>
+
+  <xs:element name="RefreshTokenRequest" type="tns:RefreshTokenRequest"/>
+
+  <xs:complexType name="AuthorizationRequest">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractUrlEncodedMessage">
+        <xs:sequence>
+          <xs:element name="response_type" type="xs:string"/>
+          <xs:element name="client_id" type="xs:string"/>
+          <xs:element name="redirect_uri" type="xs:string" minOccurs="0"/>
+          <xs:element name="scope">
+            <xs:simpleType>
+              <xs:list itemType="xs:string"/>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="state" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractUrlEncodedMessage" abstract="true">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="MacAccessTokenResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:AccessTokenResponse">
+        <xs:sequence>
+          <xs:element name="kid" type="xs:string" minOccurs="0"/>
+          <xs:element name="mac_key" type="xs:string" minOccurs="0"/>
+          <xs:element name="mac_algorithm" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="AccessTokenResponse">
+    <xs:sequence>
+      <xs:element name="access_token" type="xs:string"/>
+      <xs:element name="token_type" type="xs:string"/>
+      <xs:element name="expires_in" type="xs:string" minOccurs="0"/>
+      <xs:element name="refresh_token" type="xs:string" minOccurs="0"/>
+      <xs:element name="scope" minOccurs="0">
+        <xs:simpleType>
+          <xs:list itemType="xs:string"/>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="state" type="xs:string" minOccurs="0"/>
+      <xs:element name="error" type="xs:string" minOccurs="0"/>
+      <xs:element name="error_message" type="xs:string" minOccurs="0"/>
+      <xs:element name="created_at" type="xs:string" minOccurs="0"/>
+      <xs:element name="not_before" type="xs:string" minOccurs="0"/>
+      <xs:element name="not_after" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="AccessTokenRequest">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractUrlEncodedMessage">
+        <xs:sequence>
+          <xs:element name="grant_type" type="xs:string"/>
+          <xs:element name="code" type="xs:string"/>
+          <xs:element name="redirect_uri" type="xs:string"/>
+          <xs:element name="client_id" type="xs:string"/>
+          <xs:element name="state" type="xs:string"/>
+          <xs:element name="scope" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="RefreshTokenRequest">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractUrlEncodedMessage">
+        <xs:sequence>
+          <xs:element name="grant_type" type="xs:string" minOccurs="0"/>
+          <xs:element name="client_id" type="xs:string" minOccurs="0"/>
+          <xs:element name="refresh_token" type="xs:string" minOccurs="0"/>
+          <xs:element name="scope" minOccurs="0">
+            <xs:simpleType>
+              <xs:list itemType="xs:string"/>
+            </xs:simpleType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="AuthorizationResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractUrlEncodedMessage">
+        <xs:sequence>
+          <xs:element name="code" type="xs:string"/>
+          <xs:element name="state" type="xs:string"/>
+          <xs:element name="error" type="xs:string" minOccurs="0"/>
+          <xs:element name="error_message" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>
+
