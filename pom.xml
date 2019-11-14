@@ -54,7 +54,7 @@
     <dependency>
       <groupId>ch.keybridge</groupId>
       <artifactId>json-adapter</artifactId>
-      <version>1.0.0</version>
+      <version>2.0.0</version>
     </dependency>
 
     <dependency>
@@ -66,7 +66,13 @@
     <dependency>
       <groupId>keybridge.lib</groupId>
       <artifactId>xml-adapter</artifactId>
-      <version>1.2.0</version>
+      <version>3.1.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.locationtech.jts</groupId>
+      <artifactId>jts-core</artifactId>
+      <version>1.16.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
