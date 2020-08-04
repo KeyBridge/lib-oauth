@@ -15,12 +15,8 @@
  */
 package org.ietf.oauth.message;
 
-import ch.keybridge.lib.json.JsonUtility;
-import ch.keybridge.lib.xml.JaxbUtility;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import java.io.IOException;
+import ch.keybridge.json.JsonbUtility;
 import java.time.Duration;
-import javax.xml.bind.JAXBException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,11 +28,16 @@ import org.junit.Test;
  */
 public class MacAccessTokenResponseTest {
 
+  private JsonbUtility JSONB;
+
   public MacAccessTokenResponseTest() {
   }
 
   @Before
   public void setUp() {
+
+    JSONB = new JsonbUtility();
+
   }
 
   @After
@@ -47,26 +48,26 @@ public class MacAccessTokenResponseTest {
    * The following tests require, and are intended to test, lib-json-adapter.
    */
   @Test
-  public void testMarshal() throws JAXBException, JsonProcessingException {
+  public void testMarshal() {
 
     MacAccessTokenResponse m = MacAccessTokenResponse.getInstance("access_token", "mac_key");
     m.setExpires_in(Duration.ofMinutes(10));
 //    m.setNot_after(ZonedDateTime.now(ZoneId.of("UTC")).plusHours(1));
-    System.out.println(JaxbUtility.marshal(m));
+    System.out.println(JSONB.marshal(m));
 
-    System.out.println(JsonUtility.marshal(m));
+    System.out.println(JSONB.marshal(m));
     System.out.println("testMarshal OK");
   }
 
   @Test
-  public void testUnmarshal() throws JsonProcessingException, IOException, JAXBException {
+  public void testUnmarshal() {
     MacAccessTokenResponse m = MacAccessTokenResponse.getInstance("access_token", "mac_key");
-    System.out.println(JsonUtility.marshal(m));
+    System.out.println(JSONB.marshal(m));
 
-    String json = JsonUtility.marshal(m);
-    MacAccessTokenResponse m2 = JsonUtility.unmarshal(json, MacAccessTokenResponse.class);
+    String json = JSONB.marshal(m);
+    MacAccessTokenResponse m2 = JSONB.unmarshal(json, MacAccessTokenResponse.class);
 //    System.out.println("Unmarshalled M2 ");
-    System.out.println(JsonUtility.marshal(m2));
+    System.out.println(JSONB.marshal(m2));
     Assert.assertEquals(m, m2);
     System.out.println("testUnmarshal OK");
   }

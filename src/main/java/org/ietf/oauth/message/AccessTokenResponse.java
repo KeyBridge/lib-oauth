@@ -15,10 +15,8 @@
  */
 package org.ietf.oauth.message;
 
-import ch.keybridge.lib.json.adapter.JsonDurationSecondsAdapter;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
+import java.time.Clock;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -28,7 +26,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import org.ietf.oauth.adapter.XmlDurationSecondsAdapter;
 import org.ietf.oauth.adapter.XmlErrorResponseTypeAdapter;
 import org.ietf.oauth.adapter.XmlZonedDateTimeAdapter;
 import org.ietf.oauth.type.ErrorResponseType;
@@ -108,6 +105,11 @@ public class AccessTokenResponse implements Serializable {
    */
   @XmlTransient
   private static final String TOKEN_TYPE_BEARER = "Bearer";
+  /**
+   * The UTC time zone.
+   */
+  @XmlTransient
+  private static final ZoneId UTC = Clock.systemUTC().getZone();
 
   /**
    * REQUIRED. The access token issued by the authorization server.
@@ -153,10 +155,7 @@ public class AccessTokenResponse implements Serializable {
    * <p>
    * Default is 7 days.
    */
-  @XmlJavaTypeAdapter(XmlDurationSecondsAdapter.class)
-  @JsonSerialize(using = JsonDurationSecondsAdapter.Serializer.class)
-  @JsonDeserialize(using = JsonDurationSecondsAdapter.Deserializer.class)
-  private Duration expires_in;
+  private Long expires_in;
   /**
    * OPTIONAL. The refresh token, which can be used to obtain new access tokens
    * using the same authorization grant as described in Section 6.
@@ -324,7 +323,7 @@ public class AccessTokenResponse implements Serializable {
    * @return The lifetime in seconds of the access token.
    */
   public Duration getExpires_in() {
-    return expires_in;
+    return Duration.ofSeconds(expires_in);
   }
 
   /**
@@ -336,12 +335,16 @@ public class AccessTokenResponse implements Serializable {
    * @param expires_in The lifetime in seconds of the access token.
    */
   public void setExpires_in(Duration expires_in) {
-    this.expires_in = expires_in;
-    /**
-     * Update not_after if possible.
-     */
-    if (not_before != null && expires_in != null) {
-      not_after = not_before.plus(expires_in);
+    if (expires_in == null) {
+      this.expires_in = null;
+    } else {
+      this.expires_in = expires_in.getSeconds();
+      /**
+       * Update not_after if possible.
+       */
+      if (not_before != null) {
+        not_after = not_before.plus(expires_in);
+      }
     }
   }
 
@@ -425,7 +428,7 @@ public class AccessTokenResponse implements Serializable {
      * Developer note: Truncate to seconds or EQUALS will fail to match due to
      * nanosecond time component.
      */
-    this.not_before = not_before == null ? null : not_before.truncatedTo(ChronoUnit.SECONDS);
+    this.not_before = not_before == null ? null : not_before.withZoneSameInstant(UTC).truncatedTo(ChronoUnit.SECONDS);
   }
 
   public ZonedDateTime getNot_after() {
@@ -443,12 +446,12 @@ public class AccessTokenResponse implements Serializable {
      * Developer note: Truncate to seconds or EQUALS will fail to match due to
      * nanosecond time component.
      */
-    this.not_after = not_after == null ? null : not_after.truncatedTo(ChronoUnit.SECONDS);
+    this.not_after = not_after == null ? null : not_after.withZoneSameInstant(UTC).truncatedTo(ChronoUnit.SECONDS);
     /**
      * Update expires_in if possible
      */
     if (not_before != null && not_after != null) {
-      expires_in = Duration.between(not_before, not_after);
+      expires_in = Duration.between(not_before, not_after).getSeconds();
     }
   }//</editor-fold>
 
@@ -460,9 +463,9 @@ public class AccessTokenResponse implements Serializable {
    */
   public boolean isExpired() {
     return not_after != null
-           ? ZonedDateTime.now(ZoneId.of("UTC")).isAfter(not_after)
+           ? ZonedDateTime.now(UTC).isAfter(not_after)
            : expires_in != null
-             ? ZonedDateTime.now(ZoneId.of("UTC")).isAfter(created_at.plus(expires_in))
+             ? ZonedDateTime.now(UTC).isAfter(created_at.plus(expires_in, ChronoUnit.SECONDS))
              : false; // never expires (== BAD)
   }
 
