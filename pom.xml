@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>keybridge.lib</groupId>
   <artifactId>oauth</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
 
   <name>lib-oauth</name>
@@ -27,7 +27,9 @@
     v0.6.0 - simplify enumerated types
     v0.7.0 - expose custom timestamp fields in access token response [created_at, not_before, not_after]
     v0.8.0 - add json annotations and lib-json-adapter dependency
-    v1.0.0 - remove json dependency; use jsonb; promote to v1.0.0; release</description>
+    v1.0.0 - remove json dependency; use jsonb; promote to v1.0.0; release
+    v1.0.1 - add support for Resource Owner Password Credentials Grant
+  </description>
 
   <organization>
     <name>Key Bridge</name>

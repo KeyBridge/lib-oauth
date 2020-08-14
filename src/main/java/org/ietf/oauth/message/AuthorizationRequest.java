@@ -131,7 +131,6 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
    * request.
    */
   private String redirect_uri;
-
   /**
    * OPTIONAL. The scope of the access request as described by Section 3.3.
    * <p>
@@ -149,7 +148,6 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
   @XmlElement(required = true)
   @XmlList
   private Collection<String> scope;
-
   /**
    * RECOMMENDED. An opaque value used by the client to maintain state between
    * the request and callback. The authorization server includes this value when

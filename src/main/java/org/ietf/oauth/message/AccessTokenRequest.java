@@ -32,7 +32,27 @@ import org.ietf.oauth.type.ScopeType;
  * durations of access, granted by the resource owner, and enforced by the
  * resource server and authorization server.
  * <p>
- * 4.1.3. Access Token Request
+ * This class supports all four different types of Oauth access token requests:
+ * 4.1. Authorization Code Grant <br>
+ * 4.2. Implicit Grant  <br>
+ * 4.3. Resource Owner Password Credentials Grant  <br>
+ * 4.4. Client Credentials Grant  <br>
+ * <p>
+ * The class should be populated according to the token request type as follows:
+ * <pre>
+ * +----------------+-+-+-+-+
+ * |                |A|I|R|C|
+ * +----------------+-+-+-+-+
+ * | grant_type     |x| |x|x|
+ * | code           |x| | | |
+ * | redirect_uri   |x|x| | |
+ * | client_id      |x| | | |
+ * | username       | | |x| |
+ * | password       | | |x| |
+ * | scope          | |x|x|x|
+ * | response_type  | |x| | |
+ * | state          | |x| | |
+ * +----------------+-+-+-+-+</pre> 4.1.3. Access Token Request
  * <p>
  * The client makes a request to the token endpoint by sending the parameters
  * using the "application/x-www-form-urlencoded" format. For example, the client
@@ -140,6 +160,18 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage implements Ser
   @XmlElement(required = true)
   private String client_id;
   /**
+   * The resource owner username. The resource owner password credentials grant
+   * type is suitable in cases where the resource owner has a trust relationship
+   * with the client.
+   */
+  private String username;
+  /**
+   * The resource owner password. The resource owner password credentials grant
+   * type is suitable in cases where the resource owner has a trust relationship
+   * with the client.
+   */
+  private String password;
+  /**
    * RECOMMENDED. An opaque value used by the client to maintain state between
    * the request and callback. The authorization server includes this value when
    * redirecting the user-agent back to the client. The parameter SHOULD be used
@@ -228,6 +260,22 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage implements Ser
 
   public void setClient_id(String client_id) {
     this.client_id = client_id;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   public String getState() {
