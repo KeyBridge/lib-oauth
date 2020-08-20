@@ -82,37 +82,12 @@
 
 
 
-
-
-
-
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.locationtech.jts</groupId>
-      <artifactId>jts-core</artifactId>
-      <version>1.16.0</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!--    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>jsonb-adapter</artifactId>
-      <version>1.0.0</version>
-      <scope>test</scope>
-    </dependency>-->
-
-    <!--    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>xml-adapter</artifactId>
-      <version>4.0.0</version>
-      <scope>test</scope>
-    </dependency>-->
     <dependency>
       <groupId>keybridge.lib</groupId>
       <artifactId>jsonb-adapter</artifactId>
