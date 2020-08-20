@@ -15,25 +15,33 @@
  */
 package org.ietf.oauth.adapter;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.json.bind.adapter.JsonbAdapter;
 import org.ietf.oauth.type.ScopeType;
 
 /**
- * Java XML adapter to translate between a ScopeType instance.
+ * Java JSON adapter to translate between a ScopeType instance.
  *
- * @since v0.0.1
  * @author Jesse Caulfield 10/06/17
+ * @since v0.0.1
+ * @author Key Bridge LLC
+ * @since v2.0.0 created 2020-08-20
  */
-public class XmlScopeTypeAdapter extends XmlAdapter<String, ScopeType> {
+public class JsonScopeTypeAdapter implements JsonbAdapter< ScopeType, String> {
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public ScopeType unmarshal(String v) throws Exception {
-    return ScopeType.valueOf(v);
+  public String adaptToJson(ScopeType obj) throws Exception {
+    return obj == null ? null : obj.name();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public String marshal(ScopeType v) throws Exception {
-    return v.name();
+  public ScopeType adaptFromJson(String obj) throws Exception {
+    return obj == null ? null : ScopeType.valueOf(obj);
   }
 
 }

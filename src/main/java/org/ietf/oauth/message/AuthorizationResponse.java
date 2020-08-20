@@ -16,11 +16,12 @@
 package org.ietf.oauth.message;
 
 import java.io.Serializable;
+import java.util.Objects;
+import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.xml.bind.annotation.*;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
-import org.ietf.oauth.adapter.XmlErrorResponseTypeAdapter;
+import org.ietf.oauth.adapter.JsonErrorResponseTypeAdapter;
 import org.ietf.oauth.type.ErrorResponseType;
 
 /**
@@ -57,9 +58,6 @@ import org.ietf.oauth.type.ErrorResponseType;
  * @author Key Bridge 10/08/17
  * @since v0.2.0
  */
-@XmlRootElement(name = "AuthorizationResponse")
-@XmlType(name = "AuthorizationResponse")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class AuthorizationResponse extends AbstractUrlEncodedMessage implements Serializable {
 
   /**
@@ -72,7 +70,6 @@ public class AuthorizationResponse extends AbstractUrlEncodedMessage implements 
    * previously issued based on that authorization code. The authorization code
    * is bound to the client identifier and redirection URI.
    */
-  @XmlElement(required = true)
   private String code;
   /**
    * RECOMMENDED. An opaque value used by the client to maintain state between
@@ -80,7 +77,6 @@ public class AuthorizationResponse extends AbstractUrlEncodedMessage implements 
    * redirecting the user-agent back to the client. The parameter SHOULD be used
    * for preventing cross-site request forgery as described in Section 10.12.
    */
-  @XmlElement(required = true)
   private String state;
 
   /**
@@ -99,12 +95,13 @@ public class AuthorizationResponse extends AbstractUrlEncodedMessage implements 
    * component of the redirection URI using the
    * "application/x-www-form-urlencoded" format, per Appendix B:
    */
-  @XmlJavaTypeAdapter(XmlErrorResponseTypeAdapter.class)
+  @JsonbTypeAdapter(JsonErrorResponseTypeAdapter.class)
   private ErrorResponseType error;
   /**
    * A human readable note about the error. This is useful for debugging.
    */
-  private String error_message;
+  @JsonbProperty("error_message")
+  private String errorMessage;
 
   /**
    * Construct a new AuthorizationResponse instance
@@ -176,12 +173,46 @@ public class AuthorizationResponse extends AbstractUrlEncodedMessage implements 
     this.error = error;
   }
 
-  public String getError_message() {
-    return error_message;
+  public String getErrorMessage() {
+    return errorMessage;
   }
 
-  public void setError_message(String error_message) {
-    this.error_message = error_message;
+  public void setErrorMessage(String errorMessage) {
+    this.errorMessage = errorMessage;
   }//</editor-fold>
+
+  @Override
+  public int hashCode() {
+    int hash = 3;
+    hash = 59 * hash + Objects.hashCode(this.code);
+    hash = 59 * hash + Objects.hashCode(this.state);
+    hash = 59 * hash + Objects.hashCode(this.error);
+    hash = 59 * hash + Objects.hashCode(this.errorMessage);
+    return hash;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final AuthorizationResponse other = (AuthorizationResponse) obj;
+    if (!Objects.equals(this.code, other.code)) {
+      return false;
+    }
+    if (!Objects.equals(this.state, other.state)) {
+      return false;
+    }
+    if (!Objects.equals(this.errorMessage, other.errorMessage)) {
+      return false;
+    }
+    return this.error == other.error;
+  }
 
 }

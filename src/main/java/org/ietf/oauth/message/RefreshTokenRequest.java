@@ -18,8 +18,8 @@ package org.ietf.oauth.message;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
+import javax.json.bind.annotation.JsonbProperty;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.xml.bind.annotation.*;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
 
 /**
@@ -83,41 +83,39 @@ import org.ietf.oauth.AbstractUrlEncodedMessage;
  * @author Key Bridge 10/08/17
  * @since 0.2.0
  */
-@XmlRootElement(name = "RefreshTokenRequest")
-@XmlType(name = "RefreshTokenRequest")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class RefreshTokenRequest extends AbstractUrlEncodedMessage implements Serializable {
 
   /**
    * 12.1. Refresh Request
    */
-  @XmlTransient
   private static final String REFRESH_TOKEN = "refresh_token";
 
   /**
    * REQUIRED. Value MUST be set to "refresh_token".
    */
-  private String grant_type;
+  @JsonbProperty("grant_type")
+  private String grantType;
   /**
    * REQUIRED, if the client is not authenticating with the authorization server
    * as described in OpenID Section 3.2.1.
    */
-  private String client_id;
+  @JsonbProperty("client_id")
+  private String clientId;
   /**
    * REQUIRED. The refresh token issued to the client.
    */
-  private String refresh_token;
+  @JsonbProperty("refresh_token")
+  private String refreshToken;
   /**
    * OPTIONAL. The scope of the access request as described by Section 3.3. The
    * requested scope MUST NOT include any scope not originally granted by the
    * resource owner, and if omitted is treated as equal to the scope originally
    * granted by the resource owner.
    */
-  @XmlList
   private Collection<String> scope;
 
   public RefreshTokenRequest() {
-    this.grant_type = refresh_token;
+    this.grantType = refreshToken;
   }
 
   /**
@@ -135,9 +133,9 @@ public class RefreshTokenRequest extends AbstractUrlEncodedMessage implements Se
    */
   public static RefreshTokenRequest getInstanceRefresh(String client_id, String refresh_token) {
     RefreshTokenRequest tr = new RefreshTokenRequest();
-    tr.setGrant_type(REFRESH_TOKEN);
-    tr.setClient_id(client_id);
-    tr.setRefresh_token(refresh_token);
+    tr.setGrantType(REFRESH_TOKEN);
+    tr.setClientId(client_id);
+    tr.setRefreshToken(refresh_token);
     return tr;
   }
 
@@ -156,28 +154,28 @@ public class RefreshTokenRequest extends AbstractUrlEncodedMessage implements Se
   }
 
   //<editor-fold defaultstate="collapsed" desc="Getter and Setter">
-  public String getGrant_type() {
-    return grant_type;
+  public String getGrantType() {
+    return grantType;
   }
 
-  public void setGrant_type(String grant_type) {
-    this.grant_type = grant_type;
+  public void setGrantType(String grantType) {
+    this.grantType = grantType;
   }
 
-  public String getClient_id() {
-    return client_id;
+  public String getClientId() {
+    return clientId;
   }
 
-  public void setClient_id(String client_id) {
-    this.client_id = client_id;
+  public void setClientId(String clientId) {
+    this.clientId = clientId;
   }
 
-  public String getRefresh_token() {
-    return refresh_token;
+  public String getRefreshToken() {
+    return refreshToken;
   }
 
-  public void setRefresh_token(String refresh_token) {
-    this.refresh_token = refresh_token;
+  public void setRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
   }
 
   public Collection<String> getScope() {

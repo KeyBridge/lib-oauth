@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2018 Key Bridge.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,12 +19,13 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.json.bind.adapter.JsonbAdapter;
+import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * Abstract class implementing a URL encoding and decoding capabilities.
@@ -38,7 +39,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  */
 public abstract class AbstractUrlEncodedMessage {
 
-  @XmlTransient
   protected static final Logger LOGGER = Logger.getLogger(AbstractUrlEncodedMessage.class.getName());
 
   /**
@@ -101,9 +101,25 @@ public abstract class AbstractUrlEncodedMessage {
    */
   public <T extends AbstractUrlEncodedMessage> T readMultivaluedMap(MultivaluedMap<String, String> multivaluedMap) throws Exception {
     Class c = this.getClass();
+    /**
+     * Build a mapping between the json property names and the object field.
+     */
+    Map<String, Field> jsonNamedFields = new HashMap<>();
+    for (Field field : c.getDeclaredFields()) {
+      /**
+       * Get the adapted field name if declared.
+       */
+      String fieldName = field.getDeclaredAnnotation(JsonbProperty.class) == null
+                         ? field.getName()
+                         : field.getDeclaredAnnotation(JsonbProperty.class).value();
+      jsonNamedFields.put(fieldName, field);
+    }
+    /**
+     * Scan and apply the multi-map.
+     */
     for (Map.Entry<String, List<String>> entry : multivaluedMap.entrySet()) {
       try {
-        Field field = c.getDeclaredField(entry.getKey());
+        Field field = jsonNamedFields.get(entry.getKey());
         field.setAccessible(true);
         /**
          * If the field is a collection then expect to iterate over one or more
@@ -128,14 +144,15 @@ public abstract class AbstractUrlEncodedMessage {
              * param is a space-delimited list of Strings. Split and parse.
              */
             for (String paramFragment : param.split("\\s+")) {
-              if (field.getDeclaredAnnotation(XmlJavaTypeAdapter.class) != null) {
-                XmlJavaTypeAdapter xmlJavaTypeAdapter = field.getDeclaredAnnotation(XmlJavaTypeAdapter.class);
-                XmlAdapter xmlAdapter = xmlJavaTypeAdapter.value().getConstructor().newInstance();
-                addMethod.invoke(this, xmlAdapter.unmarshal(paramFragment));
+
+              if (field.getDeclaredAnnotation(JsonbTypeAdapter.class) != null) {
+                JsonbTypeAdapter typeAdapter = field.getDeclaredAnnotation(JsonbTypeAdapter.class);
+                JsonbAdapter adapter = typeAdapter.value().getConstructor().newInstance();
+                addMethod.invoke(this, adapter.adaptFromJson(paramFragment));
               } else {
                 /**
-                 * If no XmlAdapter then the add method must accept String.
-                 * (This is not an assumption, but an implicit requirement.)
+                 * If no Adapter then the add method must accept String. (This
+                 * is not an assumption, but an implicit requirement.)
                  */
                 addMethod.invoke(this, paramFragment);
               }
@@ -145,12 +162,11 @@ public abstract class AbstractUrlEncodedMessage {
           /**
            * Set the field value directly. Use the XmlAdapter if available to
            * correctly unmarshal String to object (Enum, etc.)
-           * <p>
            */
-          if (field.getDeclaredAnnotation(XmlJavaTypeAdapter.class) != null) {
-            XmlJavaTypeAdapter xmlJavaTypeAdapter = field.getDeclaredAnnotation(XmlJavaTypeAdapter.class);
-            XmlAdapter xmlAdapter = xmlJavaTypeAdapter.value().getConstructor().newInstance();
-            field.set(this, xmlAdapter.unmarshal(entry.getValue().get(0)));
+          if (field.getDeclaredAnnotation(JsonbTypeAdapter.class) != null) {
+            JsonbTypeAdapter typeAdapter = field.getDeclaredAnnotation(JsonbTypeAdapter.class);
+            JsonbAdapter adapter = typeAdapter.value().getConstructor().newInstance();
+            field.set(this, adapter.adaptFromJson(entry.getValue().get(0)));
           } else {
             /**
              * If no XmlAdapter then the add method must accept String. (This is
@@ -188,10 +204,26 @@ public abstract class AbstractUrlEncodedMessage {
     UriBuilder uribuilder = UriBuilder.fromUri("");
     Class c = this.getClass();
     for (Field field : c.getDeclaredFields()) {
-      field.setAccessible(true);
+      /**
+       * Ignore transient fields. Do not reveal `static final` attributes.
+       */
+      if (field.getDeclaredAnnotation(JsonbTransient.class) != null) {
+        continue;
+      } else if (Modifier.isStatic(field.getModifiers())) {
+        continue;
+      } else if (Modifier.isFinal(field.getModifiers())) {
+        continue;
+      }
 
+      field.setAccessible(true);
       Object fieldValue = field.get(this);
       if (fieldValue != null) {
+        /**
+         * Get the adapted field name.
+         */
+        String fieldName = field.getDeclaredAnnotation(JsonbProperty.class) == null
+                           ? field.getName()
+                           : field.getDeclaredAnnotation(JsonbProperty.class).value();
         /**
          * Intercept collections.
          */
@@ -207,11 +239,11 @@ public abstract class AbstractUrlEncodedMessage {
              * Using the XmlAdapter if available to correctly marshal Object to
              * String.
              */
-            if (field.getDeclaredAnnotation(XmlJavaTypeAdapter.class) != null) {
-              XmlJavaTypeAdapter xmlJavaTypeAdapter = field.getDeclaredAnnotation(XmlJavaTypeAdapter.class);
-              XmlAdapter xmlAdapter = xmlJavaTypeAdapter.value().getConstructor().newInstance();
+            if (field.getDeclaredAnnotation(JsonbTypeAdapter.class) != null) {
+              JsonbTypeAdapter typeAdapter = field.getDeclaredAnnotation(JsonbTypeAdapter.class);
+              JsonbAdapter adapter = typeAdapter.value().getConstructor().newInstance();
               for (Object object : theCollection) {
-                theList.add((String) xmlAdapter.marshal(object));
+                theList.add((String) adapter.adaptToJson(object));
               }
             } else {
               theCollection.forEach((object) -> {
@@ -223,14 +255,14 @@ public abstract class AbstractUrlEncodedMessage {
              * list.
              */
             String theListString = theList.toString();
-            uribuilder.queryParam(field.getName(),
+            uribuilder.queryParam(fieldName,
                                   theListString.substring(1, theListString.length() - 1).replaceAll("(, ?)", " "));
           }
         } else {
           /**
            * The field is a normal field. Write it to the URI.
            */
-          uribuilder.queryParam(field.getName(), field.get(this));
+          uribuilder.queryParam(fieldName, field.get(this));
         }
       }
     }

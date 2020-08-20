@@ -24,10 +24,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
-import javax.xml.bind.annotation.*;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import org.ietf.oauth.adapter.XmlErrorResponseTypeAdapter;
-import org.ietf.oauth.adapter.XmlZonedDateTimeAdapter;
+import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTypeAdapter;
+import org.ietf.oauth.adapter.JsonErrorResponseTypeAdapter;
+import org.ietf.oauth.adapter.JsonZonedDateTimeAdapter;
 import org.ietf.oauth.type.ErrorResponseType;
 
 /**
@@ -84,9 +84,6 @@ import org.ietf.oauth.type.ErrorResponseType;
  * @since 0.7.0 expose custom fields [created_at, not_before, not_after];
  * automatically update expiration fields if possible in setters
  */
-@XmlRootElement(name = "AccessTokenResponse")
-@XmlType(name = "AccessTokenResponse")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class AccessTokenResponse implements Serializable {
 
   /**
@@ -103,12 +100,10 @@ public class AccessTokenResponse implements Serializable {
    * Authorization: Bearer mF_9.B5f-4.1JqM
    * </pre>
    */
-  @XmlTransient
   private static final String TOKEN_TYPE_BEARER = "Bearer";
   /**
    * The UTC time zone.
    */
-  @XmlTransient
   private static final ZoneId UTC = Clock.systemUTC().getZone();
 
   /**
@@ -121,8 +116,8 @@ public class AccessTokenResponse implements Serializable {
    * manner as for the Implicit Flow, as defined in Section 3.2.2.9, but using
    * the ID Token and Access Token returned from the Token Endpoint.
    */
-  @XmlElement(required = true)
-  private String access_token;
+  @JsonbProperty("access_token")
+  private String accessToken;
   /**
    * Default is "Bearer".
    * <p>
@@ -144,8 +139,8 @@ public class AccessTokenResponse implements Serializable {
    * Authorization: Bearer mF_9.B5f-4.1JqM
    * </pre>
    */
-  @XmlElement(required = true)
-  private String token_type;
+  @JsonbProperty("token_type")
+  private String tokenType;
   /**
    * RECOMMENDED. The lifetime in seconds of the access token. For example, the
    * value "3600" denotes that the access token will expire in one hour from the
@@ -155,7 +150,8 @@ public class AccessTokenResponse implements Serializable {
    * <p>
    * Default is 7 days.
    */
-  private Long expires_in;
+  @JsonbProperty("expires_in")
+  private Long expiresIn;
   /**
    * OPTIONAL. The refresh token, which can be used to obtain new access tokens
    * using the same authorization grant as described in Section 6.
@@ -174,7 +170,8 @@ public class AccessTokenResponse implements Serializable {
    * issues a refresh token, it is included when issuing an access token (i.e.,
    * step (D) in Figure 1).
    */
-  private String refresh_token;
+  @JsonbProperty("refresh_token")
+  private String refreshToken;
 
   /**
    * OPTIONAL, if identical to the scope requested by the client; otherwise,
@@ -193,7 +190,6 @@ public class AccessTokenResponse implements Serializable {
    * strings, their order does not matter, and each string adds an additional
    * access range to the requested scope.
    */
-  @XmlList
   private Collection<String> scope;
 
   /**
@@ -208,12 +204,13 @@ public class AccessTokenResponse implements Serializable {
    * are defined as in Section 5.2 of OAuth 2.0 [RFC6749]. The HTTP response
    * body uses the application/json media type with HTTP response code of 400.
    */
-  @XmlJavaTypeAdapter(XmlErrorResponseTypeAdapter.class)
+  @JsonbTypeAdapter(JsonErrorResponseTypeAdapter.class)
   private ErrorResponseType error;
   /**
    * A human readable note about the error. This is useful for debugging.
    */
-  private String error_message;
+  @JsonbProperty("error_message")
+  private String errorMessage;
 
   /**
    * Key Bridge vendor field.
@@ -223,8 +220,9 @@ public class AccessTokenResponse implements Serializable {
    *
    * @since 0.7.0 expose custom fields [created_at, not_before, not_after]
    */
-  @XmlJavaTypeAdapter(XmlZonedDateTimeAdapter.class)
-  private ZonedDateTime created_at;
+  @JsonbTypeAdapter(JsonZonedDateTimeAdapter.class)
+  @JsonbProperty("created_at")
+  private ZonedDateTime createdAt;
   /**
    * Key Bridge vendor field.
    * <p>
@@ -233,8 +231,9 @@ public class AccessTokenResponse implements Serializable {
    *
    * @since 0.7.0 expose custom fields [created_at, not_before, not_after]
    */
-  @XmlJavaTypeAdapter(XmlZonedDateTimeAdapter.class)
-  private ZonedDateTime not_before;
+  @JsonbTypeAdapter(JsonZonedDateTimeAdapter.class)
+  @JsonbProperty("not_before")
+  private ZonedDateTime notBefore;
   /**
    * Key Bridge vendor field.
    * <p>
@@ -243,8 +242,9 @@ public class AccessTokenResponse implements Serializable {
    *
    * @since 0.7.0 expose custom fields [created_at, not_before, not_after]
    */
-  @XmlJavaTypeAdapter(XmlZonedDateTimeAdapter.class)
-  private ZonedDateTime not_after;
+  @JsonbTypeAdapter(JsonZonedDateTimeAdapter.class)
+  @JsonbProperty("not_after")
+  private ZonedDateTime notAfter;
 
   /**
    * Default no-arg constructor. Creates a "Bearer" AccessTokenResponse instance
@@ -252,11 +252,13 @@ public class AccessTokenResponse implements Serializable {
    * (7) days.
    */
   public AccessTokenResponse() {
-    this.token_type = TOKEN_TYPE_BEARER;
+    this.tokenType = TOKEN_TYPE_BEARER;
+    this.createdAt = ZonedDateTime.now(UTC).truncatedTo(ChronoUnit.SECONDS);
   }
 
   public AccessTokenResponse(String token_type) {
-    this.token_type = token_type;
+    this();
+    this.tokenType = token_type;
   }
 
   /**
@@ -269,9 +271,9 @@ public class AccessTokenResponse implements Serializable {
    */
   public static AccessTokenResponse getInstance(String access_token, int duration) {
     AccessTokenResponse tr = new AccessTokenResponse();
-    tr.setCreated_at(ZonedDateTime.now(ZoneId.of("UTC")));
+    tr.setCreatedAt(ZonedDateTime.now(ZoneId.of("UTC")));
     tr.setExpires_in(Duration.of(duration, ChronoUnit.DAYS));
-    tr.setAccess_token(access_token);
+    tr.setAccessToken(access_token);
     return tr;
   }
 
@@ -281,17 +283,17 @@ public class AccessTokenResponse implements Serializable {
    *
    * @return The access token
    */
-  public String getAccess_token() {
-    return access_token;
+  public String getAccessToken() {
+    return accessToken;
   }
 
   /**
    * Set the access token issued by the authorization server.
    *
-   * @param access_token The access token
+   * @param accessToken The access token
    */
-  public void setAccess_token(String access_token) {
-    this.access_token = access_token;
+  public void setAccessToken(String accessToken) {
+    this.accessToken = accessToken;
   }
 
   /**
@@ -300,18 +302,18 @@ public class AccessTokenResponse implements Serializable {
    *
    * @return Default is "Bearer".
    */
-  public String getToken_type() {
-    return token_type;
+  public String getTokenType() {
+    return tokenType;
   }
 
   /**
    * Set the type of the token issued as described in Section 7.1. Value is case
    * insensitive.
    *
-   * @param token_type Default is "Bearer".
+   * @param tokenType Default is "Bearer".
    */
-  public void setToken_type(String token_type) {
-    this.token_type = token_type;
+  public void setTokenType(String tokenType) {
+    this.tokenType = tokenType;
   }
 
   /**
@@ -323,7 +325,7 @@ public class AccessTokenResponse implements Serializable {
    * @return The lifetime in seconds of the access token.
    */
   public Duration getExpires_in() {
-    return Duration.ofSeconds(expires_in);
+    return Duration.ofSeconds(expiresIn);
   }
 
   /**
@@ -336,24 +338,24 @@ public class AccessTokenResponse implements Serializable {
    */
   public void setExpires_in(Duration expires_in) {
     if (expires_in == null) {
-      this.expires_in = null;
+      this.expiresIn = null;
     } else {
-      this.expires_in = expires_in.getSeconds();
+      this.expiresIn = expires_in.getSeconds();
       /**
        * Update not_after if possible.
        */
-      if (not_before != null) {
-        not_after = not_before.plus(expires_in);
+      if (notBefore != null) {
+        notAfter = notBefore.plus(expires_in);
       }
     }
   }
 
-  public String getRefresh_token() {
-    return refresh_token;
+  public String getRefreshToken() {
+    return refreshToken;
   }
 
-  public void setRefresh_token(String refresh_token) {
-    this.refresh_token = refresh_token;
+  public void setRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
   }
 
   public Collection<String> getScope() {
@@ -387,71 +389,71 @@ public class AccessTokenResponse implements Serializable {
     this.error = error;
   }
 
-  public String getError_message() {
-    return error_message;
+  public String getErrorMessage() {
+    return errorMessage;
   }
 
-  public void setError_message(String error_message) {
-    this.error_message = error_message;
+  public void setErrorMessage(String errorMessage) {
+    this.errorMessage = errorMessage;
   }
 
-  public ZonedDateTime getCreated_at() {
-    return created_at;
+  public ZonedDateTime getCreatedAt() {
+    return createdAt;
   }
 
   /**
    * Set system time stamp when this token response was created. The time zone
    * must be "UTC". The input value is truncated to seconds.
    *
-   * @param created_at time stamp when this token response was created
+   * @param createdAt time stamp when this token response was created
    */
-  public void setCreated_at(ZonedDateTime created_at) {
+  public void setCreatedAt(ZonedDateTime createdAt) {
     /**
      * Developer note: Truncate to seconds or EQUALS will fail to match due to
      * nanosecond time component.
      */
-    this.created_at = created_at == null ? null : created_at.truncatedTo(ChronoUnit.SECONDS);
+    this.createdAt = createdAt == null ? null : createdAt.withZoneSameLocal(UTC).truncatedTo(ChronoUnit.SECONDS);
   }
 
-  public ZonedDateTime getNot_before() {
-    return not_before;
+  public ZonedDateTime getNotBefore() {
+    return notBefore;
   }
 
   /**
    * Set the start date-time of the validity period of this token. The time zone
    * must be "UTC". The input value is truncated to seconds.
    *
-   * @param not_before start date-time of the validity period of this token
+   * @param notBefore start date-time of the validity period of this token
    */
-  public void setNot_before(ZonedDateTime not_before) {
+  public void setNotBefore(ZonedDateTime notBefore) {
     /**
      * Developer note: Truncate to seconds or EQUALS will fail to match due to
      * nanosecond time component.
      */
-    this.not_before = not_before == null ? null : not_before.withZoneSameInstant(UTC).truncatedTo(ChronoUnit.SECONDS);
+    this.notBefore = notBefore == null ? null : notBefore.withZoneSameLocal(UTC).truncatedTo(ChronoUnit.SECONDS);
   }
 
-  public ZonedDateTime getNot_after() {
-    return not_after;
+  public ZonedDateTime getNotAfter() {
+    return notAfter;
   }
 
   /**
    * Set the end date-time of the validity period of this token. The time zone
    * must be "UTC". The input value is truncated to seconds.
    *
-   * @param not_after end date-time of the validity period of this token
+   * @param notAfter end date-time of the validity period of this token
    */
-  public void setNot_after(ZonedDateTime not_after) {
+  public void setNotAfter(ZonedDateTime notAfter) {
     /**
      * Developer note: Truncate to seconds or EQUALS will fail to match due to
      * nanosecond time component.
      */
-    this.not_after = not_after == null ? null : not_after.withZoneSameInstant(UTC).truncatedTo(ChronoUnit.SECONDS);
+    this.notAfter = notAfter == null ? null : notAfter.withZoneSameLocal(UTC).truncatedTo(ChronoUnit.SECONDS);
     /**
      * Update expires_in if possible
      */
-    if (not_before != null && not_after != null) {
-      expires_in = Duration.between(not_before, not_after).getSeconds();
+    if (notBefore != null && notAfter != null) {
+      expiresIn = Duration.between(notBefore, notAfter).getSeconds();
     }
   }//</editor-fold>
 
@@ -462,18 +464,18 @@ public class AccessTokenResponse implements Serializable {
    * @return TRUE if expired, otherwise FALSE (= not expired)
    */
   public boolean isExpired() {
-    return not_after != null
-           ? ZonedDateTime.now(UTC).isAfter(not_after)
-           : expires_in != null
-             ? ZonedDateTime.now(UTC).isAfter(created_at.plus(expires_in, ChronoUnit.SECONDS))
+    return notAfter != null
+           ? ZonedDateTime.now(UTC).isAfter(notAfter)
+           : expiresIn != null
+             ? ZonedDateTime.now(UTC).isAfter(createdAt.plus(expiresIn, ChronoUnit.SECONDS))
              : false; // never expires (== BAD)
   }
 
   @Override
   public int hashCode() {
     int hash = 5;
-    hash = 37 * hash + Objects.hashCode(this.access_token);
-    hash = 37 * hash + Objects.hashCode(this.token_type);
+    hash = 37 * hash + Objects.hashCode(this.accessToken);
+    hash = 37 * hash + Objects.hashCode(this.tokenType);
     return hash;
   }
 
@@ -489,10 +491,10 @@ public class AccessTokenResponse implements Serializable {
       return false;
     }
     final AccessTokenResponse other = (AccessTokenResponse) obj;
-    if (!Objects.equals(this.access_token, other.access_token)) {
+    if (!Objects.equals(this.accessToken, other.accessToken)) {
       return false;
     }
-    return Objects.equals(this.token_type, other.token_type);
+    return Objects.equals(this.tokenType, other.tokenType);
   }
 
 }

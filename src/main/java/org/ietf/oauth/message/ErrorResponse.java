@@ -16,7 +16,7 @@
 package org.ietf.oauth.message;
 
 import java.io.Serializable;
-import javax.xml.bind.annotation.*;
+import javax.json.bind.annotation.JsonbProperty;
 import org.ietf.oauth.type.ErrorResponseType;
 
 /**
@@ -37,21 +37,16 @@ import org.ietf.oauth.type.ErrorResponseType;
  * following HTTP response:
  * <p>
  * HTTP/1.1 302 Found Location:
- * https://client.example.com/cb#error=access_denied&state=xyz
- *
+ * https://client.example.com/cb#error=access_denied&amp;state=xyz
  *
  * @author Key Bridge
  * @since v1.0.1 created 2020-08-14
  */
-@XmlRootElement(name = "ErrorResponse")
-@XmlType(name = "ErrorResponse")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class ErrorResponse implements Serializable {
 
   /**
    * REQUIRED. A single ASCII [USASCII] error code.
    */
-  @XmlElement(required = true)
   private ErrorResponseType error;
   /**
    * OPTIONAL. Human-readable ASCII [USASCII] text providing additional
@@ -59,8 +54,8 @@ public class ErrorResponse implements Serializable {
    * that occurred. Values for the "error_description" parameter MUST NOT
    * include characters outside the set %x20-21 / %x23-5B / %x5D-7E.
    */
-  @XmlElement(required = true)
-  private String error_description;
+  @JsonbProperty("error_description")
+  private String errorDescription;
   /**
    * OPTIONAL. A URI identifying a human-readable web page with information
    * about the error, used to provide the client developer with additional
@@ -68,13 +63,12 @@ public class ErrorResponse implements Serializable {
    * conform to the URI-reference syntax and thus MUST NOT include characters
    * outside the set %x21 / %x23-5B / %x5D-7E.
    */
-  @XmlElement(required = true)
-  private String error_uri;
+  @JsonbProperty("error_uri")
+  private String errorUri;
   /**
    * REQUIRED if a "state" parameter was present in the client authorization
    * request. The exact value received from the client.
    */
-  @XmlElement(required = true)
   private String state;
 
   //<editor-fold defaultstate="collapsed" desc="Getter and Setter">
@@ -86,20 +80,20 @@ public class ErrorResponse implements Serializable {
     this.error = error;
   }
 
-  public String getError_description() {
-    return error_description;
+  public String getErrorDescription() {
+    return errorDescription;
   }
 
-  public void setError_description(String error_description) {
-    this.error_description = error_description;
+  public void setErrorDescription(String errorDescription) {
+    this.errorDescription = errorDescription;
   }
 
-  public String getError_uri() {
-    return error_uri;
+  public String getErrorUri() {
+    return errorUri;
   }
 
-  public void setError_uri(String error_uri) {
-    this.error_uri = error_uri;
+  public void setErrorUri(String errorUri) {
+    this.errorUri = errorUri;
   }
 
   public String getState() {

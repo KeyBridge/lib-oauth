@@ -15,25 +15,33 @@
  */
 package org.ietf.oauth.adapter;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.json.bind.adapter.JsonbAdapter;
 import org.ietf.oauth.type.ErrorResponseType;
 
 /**
- * Java XML adapter to translate between a ErrorResponseType instance.
+ * Java JSON adapter to translate between a ErrorResponseType instance.
  *
  * @since v0.0.1
  * @author Jesse Caulfield 10/06/17
+ * @author Key Bridge LLC
+ * @since v2.0.0 rewrite 2020-08-20
  */
-public class XmlErrorResponseTypeAdapter extends XmlAdapter<String, ErrorResponseType> {
+public class JsonErrorResponseTypeAdapter implements JsonbAdapter<ErrorResponseType, String> {
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public ErrorResponseType unmarshal(String v) throws Exception {
-    return ErrorResponseType.valueOf(v);
+  public String adaptToJson(ErrorResponseType obj) throws Exception {
+    return obj == null ? null : obj.name();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public String marshal(ErrorResponseType v) throws Exception {
-    return v.name();
+  public ErrorResponseType adaptFromJson(String obj) throws Exception {
+    return obj == null ? null : ErrorResponseType.valueOf(obj);
   }
 
 }

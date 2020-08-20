@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2018 Key Bridge.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,25 +17,33 @@ package org.ietf.oauth.adapter;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.json.bind.adapter.JsonbAdapter;
 
 /**
- * Java XML adapter to translate between a standard java.time.Duration instance
+ * Java JSON adapter to translate between a standard java.time.Duration instance
  * to seconds.
  *
  * @since v0.0.1
  * @author Jesse Caulfield 10/06/17
+ * @author Key Bridge LLC
+ * @since v2.0.0 rewrite 2020-08-20
  */
-public class XmlDurationSecondsAdapter extends XmlAdapter<String, Duration> {
+public class JsonDurationSecondsAdapter implements JsonbAdapter<Duration, String> {
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public Duration unmarshal(String v) throws Exception {
-    return Duration.of(Long.parseLong(v), ChronoUnit.SECONDS);
+  public String adaptToJson(Duration obj) throws Exception {
+    return obj == null ? null : String.valueOf(obj.getSeconds());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public String marshal(Duration v) throws Exception {
-    return String.valueOf(v.getSeconds());
+  public Duration adaptFromJson(String obj) throws Exception {
+    return obj == null ? null : Duration.of(Long.parseLong(obj), ChronoUnit.SECONDS);
   }
 
 }

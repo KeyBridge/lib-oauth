@@ -15,25 +15,33 @@
  */
 package org.ietf.oauth.adapter;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.json.bind.adapter.JsonbAdapter;
 import org.ietf.oauth.type.ResponseType;
 
 /**
- * Java XML adapter to translate between a ResponseType instance.
+ * Java JSON adapter to translate between a ResponseType instance.
  *
  * @since v0.0.1
  * @author Jesse Caulfield 10/06/17
+ * @author Key Bridge LLC
+ * @since v2.0.0 rewrite 2020-08-20
  */
-public class XmlResponseTypeAdapter extends XmlAdapter<String, ResponseType> {
+public class JsonResponseTypeAdapter implements JsonbAdapter< ResponseType, String> {
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public ResponseType unmarshal(String v) throws Exception {
-    return ResponseType.valueOf(v);
+  public String adaptToJson(ResponseType obj) throws Exception {
+    return obj == null ? null : obj.name();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public String marshal(ResponseType v) throws Exception {
-    return v.name();
+  public ResponseType adaptFromJson(String obj) throws Exception {
+    return obj == null ? null : ResponseType.valueOf(obj);
   }
 
 }

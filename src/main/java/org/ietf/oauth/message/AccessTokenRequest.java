@@ -16,8 +16,8 @@
 package org.ietf.oauth.message;
 
 import java.io.Serializable;
+import javax.json.bind.annotation.JsonbProperty;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.xml.bind.annotation.*;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
 import org.ietf.oauth.type.ScopeType;
 
@@ -120,45 +120,39 @@ import org.ietf.oauth.type.ScopeType;
  * @author Key Bridge 10/08/17
  * @since v0.2.0
  */
-@XmlRootElement(name = "AccessTokenRequest")
-@XmlType(name = "AccessTokenRequest")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class AccessTokenRequest extends AbstractUrlEncodedMessage implements Serializable {
 
   /**
    * 3.1.3.1. Token Request
    */
-  @XmlTransient
   private static final String AUTHORIZATION_CODE = "authorization_code";
   /**
    * 4.1.1. Authorization Request scope is OPTIONAL and describes the scope of
    * the access request.
    */
-  @XmlTransient
   private static final ScopeType SCOPE_TYPE = ScopeType.oauth;
 
   /**
    * REQUIRED. Value MUST be set to "authorization_code".
    */
-  @XmlElement(required = true)
-  private String grant_type;
+  @JsonbProperty("grant_type")
+  private String grantType;
   /**
    * REQUIRED. The authorization code received from the authorization server.
    */
-  @XmlElement(required = true)
   private String code;
   /**
    * REQUIRED, if the "redirect_uri" parameter was included in the authorization
    * request as described in Section 4.1.1, and their values MUST be identical.
    */
-  @XmlElement(required = true)
-  private String redirect_uri;
+  @JsonbProperty("redirect_uri")
+  private String redirectUri;
   /**
    * REQUIRED, if the client is not authenticating with the authorization server
    * as described in Section 3.2.1.
    */
-  @XmlElement(required = true)
-  private String client_id;
+  @JsonbProperty("client_id")
+  private String clientId;
   /**
    * The resource owner username. The resource owner password credentials grant
    * type is suitable in cases where the resource owner has a trust relationship
@@ -177,7 +171,6 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage implements Ser
    * redirecting the user-agent back to the client. The parameter SHOULD be used
    * for preventing cross-site request forgery as described in Section 10.12.
    */
-  @XmlElement(required = true)
   private String state;
   /**
    * OPTIONAL. The scope of the access request as described by Section 3.3.
@@ -196,7 +189,7 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage implements Ser
   private String scope;
 
   public AccessTokenRequest() {
-    this.grant_type = AUTHORIZATION_CODE;
+    this.grantType = AUTHORIZATION_CODE;
     this.scope = SCOPE_TYPE.name();
   }
 
@@ -210,7 +203,7 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage implements Ser
    */
   public static AccessTokenRequest getInstance(String client_id, String state) {
     AccessTokenRequest ar = new AccessTokenRequest();
-    ar.setClient_id(client_id);
+    ar.setClientId(client_id);
     ar.setState(state);
     return ar;
   }
@@ -230,12 +223,12 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage implements Ser
   }
 
   //<editor-fold defaultstate="collapsed" desc="Getter and Setter">
-  public String getGrant_type() {
-    return grant_type;
+  public String getGrantType() {
+    return grantType;
   }
 
-  public void setGrant_type(String grant_type) {
-    this.grant_type = grant_type;
+  public void setGrantType(String grantType) {
+    this.grantType = grantType;
   }
 
   public String getCode() {
@@ -246,20 +239,20 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage implements Ser
     this.code = code;
   }
 
-  public String getRedirect_uri() {
-    return redirect_uri;
+  public String getRedirectUri() {
+    return redirectUri;
   }
 
-  public void setRedirect_uri(String redirect_uri) {
-    this.redirect_uri = redirect_uri;
+  public void setRedirectUri(String redirectUri) {
+    this.redirectUri = redirectUri;
   }
 
-  public String getClient_id() {
-    return client_id;
+  public String getClientId() {
+    return clientId;
   }
 
-  public void setClient_id(String client_id) {
-    this.client_id = client_id;
+  public void setClientId(String clientId) {
+    this.clientId = clientId;
   }
 
   public String getUsername() {

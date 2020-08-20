@@ -18,12 +18,13 @@ package org.ietf.oauth.message;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Objects;
+import java.util.TreeSet;
+import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.xml.bind.annotation.*;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
-import org.ietf.oauth.adapter.XmlResponseTypeAdapter;
+import org.ietf.oauth.adapter.JsonResponseTypeAdapter;
 import org.ietf.oauth.type.ResponseType;
 import org.ietf.oauth.type.ScopeType;
 
@@ -72,9 +73,6 @@ import org.ietf.oauth.type.ScopeType;
  * @author Key Bridge 10/08/17
  * @since v0.2.0
  */
-@XmlRootElement(name = "AuthorizationRequest")
-@XmlType(name = "AuthorizationRequest")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class AuthorizationRequest extends AbstractUrlEncodedMessage implements Serializable {
 
   /**
@@ -93,22 +91,20 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
    * Openid 4.2.1. Authorization Request {@code response_type} is REQUIRED and
    * MUST be set to "token".
    */
-  @XmlTransient
   private static final ResponseType RESPONSE_TYPE = ResponseType.code;
   /**
    * 4.1.1. Authorization Request scope is OPTIONAL and describes the scope of
    * the access request.
    */
-  @XmlTransient
   private static final ScopeType SCOPE_TYPE = ScopeType.oauth;
 
   /**
    * REQUIRED. Value MUST be set to "code" or "token" (or "mac" for new client
    * registration).
    */
-  @XmlElement(required = true)
-  @XmlJavaTypeAdapter(XmlResponseTypeAdapter.class)
-  private ResponseType response_type;
+  @JsonbProperty("response_type")
+  @JsonbTypeAdapter(JsonResponseTypeAdapter.class)
+  private ResponseType responseType;
   /**
    * REQUIRED. OAuth 2.0 Client Identifier valid at the Authorization Server.
    * <p>
@@ -120,8 +116,8 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
    * resource owner and MUST NOT be used alone for client authentication. The
    * client identifier is unique to the authorization server.
    */
-  @XmlElement(required = true)
-  private String client_id;
+  @JsonbProperty("client_id")
+  private String clientId;
   /**
    * OPTIONAL. After completing its interaction with the resource owner, the
    * authorization server directs the resource owner's user-agent back to the
@@ -130,7 +126,8 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
    * during the client registration process or when making the authorization
    * request.
    */
-  private String redirect_uri;
+  @JsonbProperty("redirect_uri")
+  private String redirectUri;
   /**
    * OPTIONAL. The scope of the access request as described by Section 3.3.
    * <p>
@@ -145,8 +142,6 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
    * strings, their order does not matter, and each string adds an additional
    * access range to the requested scope.
    */
-  @XmlElement(required = true)
-  @XmlList
   private Collection<String> scope;
   /**
    * RECOMMENDED. An opaque value used by the client to maintain state between
@@ -157,8 +152,8 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
   private String state;
 
   public AuthorizationRequest() {
-    this.response_type = RESPONSE_TYPE;
-    this.scope = Arrays.asList(new String[]{SCOPE_TYPE.name()});
+    this.responseType = RESPONSE_TYPE;
+    this.scope = new TreeSet<>(Arrays.asList(new String[]{SCOPE_TYPE.name()}));
   }
 
   /**
@@ -173,7 +168,7 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
    */
   public static AuthorizationRequest getInstance(String client_id, String state) {
     AuthorizationRequest ar = new AuthorizationRequest();
-    ar.setClient_id(client_id);
+    ar.setClientId(client_id);
     ar.setState(state);
     return ar;
   }
@@ -193,33 +188,33 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
   }
 
   //<editor-fold defaultstate="collapsed" desc="Getter and Setter">
-  public ResponseType getResponse_type() {
-    return response_type;
+  public ResponseType getResponseType() {
+    return responseType;
   }
 
-  public void setResponse_type(ResponseType response_type) {
-    this.response_type = response_type;
+  public void setResponseType(ResponseType responseType) {
+    this.responseType = responseType;
   }
 
-  public String getClient_id() {
-    return client_id;
+  public String getClientId() {
+    return clientId;
   }
 
-  public void setClient_id(String client_id) {
-    this.client_id = client_id;
+  public void setClientId(String clientId) {
+    this.clientId = clientId;
   }
 
-  public String getRedirect_uri() {
-    return redirect_uri;
+  public String getRedirectUri() {
+    return redirectUri;
   }
 
-  public void setRedirect_uri(String redirect_uri) {
-    this.redirect_uri = redirect_uri;
+  public void setRedirectUri(String redirectUri) {
+    this.redirectUri = redirectUri;
   }
 
   public Collection<String> getScope() {
     if (scope == null) {
-      scope = new HashSet<>();
+      scope = new TreeSet<>();
     }
     return scope;
   }
@@ -239,5 +234,43 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
   public void setState(String state) {
     this.state = state;
   }//</editor-fold>
+
+  @Override
+  public int hashCode() {
+    int hash = 7;
+    hash = 97 * hash + Objects.hashCode(this.responseType);
+    hash = 97 * hash + Objects.hashCode(this.clientId);
+    hash = 97 * hash + Objects.hashCode(this.redirectUri);
+    hash = 97 * hash + Objects.hashCode(this.scope);
+    hash = 97 * hash + Objects.hashCode(this.state);
+    return hash;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final AuthorizationRequest other = (AuthorizationRequest) obj;
+    if (!Objects.equals(this.clientId, other.clientId)) {
+      return false;
+    }
+    if (!Objects.equals(this.redirectUri, other.redirectUri)) {
+      return false;
+    }
+    if (!Objects.equals(this.state, other.state)) {
+      return false;
+    }
+    if (this.responseType != other.responseType) {
+      return false;
+    }
+    return Objects.equals(this.scope, other.scope);
+  }
 
 }
