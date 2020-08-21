@@ -15,7 +15,10 @@
  */
 package org.ietf.oauth;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.*;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,7 +42,7 @@ import javax.ws.rs.core.UriBuilder;
  */
 public abstract class AbstractUrlEncodedMessage {
 
-  protected static final Logger LOGGER = Logger.getLogger(AbstractUrlEncodedMessage.class.getName());
+  protected static final Logger LOG = Logger.getLogger(AbstractUrlEncodedMessage.class.getName());
 
   /**
    * Create a new instance of this type and set field values from the provided
@@ -75,9 +78,17 @@ public abstract class AbstractUrlEncodedMessage {
        * ensure a match with the class field name. In this library all field
        * names are lower case. Currently the parsing logic is extremely case
        * sensitive.
+       * <p>
+       * URL decode the value, then conditionally expand the value if there are
+       * white space characters [+ ] indicated a list.
        */
-      multivaluedMap.put(string.split("=")[0],
-                         Arrays.asList(string.split("=")[1].split("[+ ]")));
+      try {
+        multivaluedMap.put(string.split("=")[0],
+                           Arrays.asList(URLDecoder.decode(string.split("=")[1], StandardCharsets.UTF_8.name()).split("[+ ]")));
+      } catch (UnsupportedEncodingException unsupportedEncodingException) {
+        multivaluedMap.put(string.split("=")[0],
+                           Arrays.asList(string.split("=")[1].split("[+ ]")));
+      }
     }
     return multivaluedMap;
   }
@@ -90,7 +101,7 @@ public abstract class AbstractUrlEncodedMessage {
    * configuration and assign to each field a corresponding value in the a
    * MultivaluedMap instance.
    * <p>
-   * Non-String types are converted where an XmlAdapter is identified in the
+   * Non-String types are converted where a Json Adapter is identified in the
    * class annotation. Collection fields are transformed from space-delimited
    * strings.
    *
@@ -136,7 +147,7 @@ public abstract class AbstractUrlEncodedMessage {
            */
           Method addMethod = c.getDeclaredMethod("add" + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1), (Class) actualType);
           /**
-           * Call the add[type] method, using the XmlAdapter if available to
+           * Call the add[type] method, using the Json Adapter if available to
            * correctly unmarshal String to object (Enum, etc.)
            */
           for (String param : entry.getValue()) {
@@ -167,7 +178,7 @@ public abstract class AbstractUrlEncodedMessage {
           }
         } else {
           /**
-           * Set the field value directly. Use the XmlAdapter if available to
+           * Set the field value directly. Use the Json Adapter if available to
            * correctly unmarshal String to object (Enum, etc.)
            */
           if (field.getDeclaredAnnotation(JsonbTypeAdapter.class) != null) {
@@ -176,14 +187,14 @@ public abstract class AbstractUrlEncodedMessage {
             field.set(this, adapter.adaptFromJson(entry.getValue().get(0)));
           } else {
             /**
-             * If no XmlAdapter then the add method must accept String. (This is
+             * If no Adapter then the add method must accept String. (This is
              * not an assumption, but an implicit requirement.)
              */
             field.set(this, entry.getValue().get(0));
           }
         }
       } catch (NoSuchFieldException | SecurityException noSuchFieldException) {
-        LOGGER.log(Level.SEVERE, "{0} is not a valid field name of class {1}", new Object[]{entry.getKey(), c.getSimpleName()});
+        LOG.log(Level.SEVERE, "{0} is not a valid field name of class {1}", new Object[]{entry.getKey(), c.getSimpleName()});
       }
     }
     return (T) this;
@@ -275,9 +286,9 @@ public abstract class AbstractUrlEncodedMessage {
     }
     /**
      * Return the query parameter portion of the URI builder, less the initial
-     * "?" character.
+     * "?" character. Note: return the RAW query string, which is URL encoded.
      */
-    return uribuilder.build("").getQuery();
+    return uribuilder.build("").getRawQuery();
   }
 
   /**
@@ -300,7 +311,7 @@ public abstract class AbstractUrlEncodedMessage {
         Method fromTextMethod = type.getDeclaredMethod("fromText", String.class);
         enumInstance = (Enum) fromTextMethod.invoke(type, name);
       } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
-        LOGGER.log(Level.SEVERE, "Failed instantiate enumerated class {0} from name {1}", new Object[]{type.getSimpleName(), name});
+        LOG.log(Level.SEVERE, "Failed instantiate enumerated class {0} from name {1}", new Object[]{type.getSimpleName(), name});
       }
     }
     return enumInstance;
