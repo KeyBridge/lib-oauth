@@ -151,10 +151,17 @@ public abstract class AbstractUrlEncodedMessage {
                 addMethod.invoke(this, adapter.adaptFromJson(paramFragment));
               } else {
                 /**
-                 * If no Adapter then the add method must accept String. (This
-                 * is not an assumption, but an implicit requirement.)
+                 * If no Adapter then the add method must accept a single
+                 * parameter which must be either a String _or_ Enum. (This is
+                 * not an assumption, but an implicit requirement.) Complex
+                 * object lists must be intercepted with an adapter.
                  */
-                addMethod.invoke(this, paramFragment);
+                if (addMethod.getParameters()[0].getType().isEnum()) {
+                  Enum instance = buildEnumInstance((Class<Enum>) addMethod.getParameters()[0].getType(), paramFragment);
+                  addMethod.invoke(this, instance);
+                } else {
+                  addMethod.invoke(this, paramFragment);
+                }
               }
             }
           }
@@ -274,19 +281,17 @@ public abstract class AbstractUrlEncodedMessage {
   }
 
   /**
-   * @deprecated replaced with XmlAdapters
-   *
    * Build an enumerated instance of the indicated class type.
    *
    * @param type the class type
    * @param name the enumerated instance name i.e. value)
    * @return an enumerated instance
-   * @throws Exception on errro
+   * @throws Exception on error
    */
   private Enum buildEnumInstance(Class<Enum> type, String name) throws Exception {
     Enum enumInstance = null;
     try {
-      enumInstance = Enum.valueOf(type, name.toUpperCase());
+      enumInstance = Enum.valueOf(type, name);
     } catch (Exception e) {
       /**
        * If the names do not match then try looking for a 'fromText' method.
