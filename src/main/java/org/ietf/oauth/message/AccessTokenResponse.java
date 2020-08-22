@@ -25,8 +25,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbTypeAdapter;
-import org.ietf.oauth.adapter.JsonErrorResponseTypeAdapter;
 import org.ietf.oauth.adapter.JsonZonedDateTimeAdapter;
 import org.ietf.oauth.type.ErrorResponseType;
 
@@ -204,7 +204,6 @@ public class AccessTokenResponse implements Serializable {
    * are defined as in Section 5.2 of OAuth 2.0 [RFC6749]. The HTTP response
    * body uses the application/json media type with HTTP response code of 400.
    */
-  @JsonbTypeAdapter(JsonErrorResponseTypeAdapter.class)
   private ErrorResponseType error;
   /**
    * A human readable note about the error. This is useful for debugging.
@@ -463,6 +462,7 @@ public class AccessTokenResponse implements Serializable {
    *
    * @return TRUE if expired, otherwise FALSE (= not expired)
    */
+  @JsonbTransient
   public boolean isExpired() {
     return notAfter != null
            ? ZonedDateTime.now(UTC).isAfter(notAfter)
