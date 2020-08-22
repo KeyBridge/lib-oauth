@@ -27,6 +27,7 @@ import java.util.Objects;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbTypeAdapter;
+import org.ietf.oauth.adapter.JsonDurationSecondsAdapter;
 import org.ietf.oauth.adapter.JsonZonedDateTimeAdapter;
 import org.ietf.oauth.type.ErrorResponseType;
 
@@ -151,7 +152,8 @@ public class AccessTokenResponse implements Serializable {
    * Default is 7 days.
    */
   @JsonbProperty("expires_in")
-  private Long expiresIn;
+  @JsonbTypeAdapter(JsonDurationSecondsAdapter.class)
+  private Duration expiresIn;
   /**
    * OPTIONAL. The refresh token, which can be used to obtain new access tokens
    * using the same authorization grant as described in Section 6.
@@ -323,8 +325,8 @@ public class AccessTokenResponse implements Serializable {
    *
    * @return The lifetime in seconds of the access token.
    */
-  public Duration getExpires_in() {
-    return Duration.ofSeconds(expiresIn);
+  public Duration getExpiresIn() {
+    return expiresIn;
   }
 
   /**
@@ -339,7 +341,7 @@ public class AccessTokenResponse implements Serializable {
     if (expires_in == null) {
       this.expiresIn = null;
     } else {
-      this.expiresIn = expires_in.getSeconds();
+      this.expiresIn = expires_in;
       /**
        * Update not_after if possible.
        */
@@ -452,7 +454,7 @@ public class AccessTokenResponse implements Serializable {
      * Update expires_in if possible
      */
     if (notBefore != null && notAfter != null) {
-      expiresIn = Duration.between(notBefore, notAfter).getSeconds();
+      expiresIn = Duration.between(notBefore, notAfter);
     }
   }//</editor-fold>
 
@@ -467,7 +469,7 @@ public class AccessTokenResponse implements Serializable {
     return notAfter != null
            ? ZonedDateTime.now(UTC).isAfter(notAfter)
            : expiresIn != null
-             ? ZonedDateTime.now(UTC).isAfter(createdAt.plus(expiresIn, ChronoUnit.SECONDS))
+             ? ZonedDateTime.now(UTC).isAfter(createdAt.plus(expiresIn))
              : false; // never expires (== BAD)
   }
 
