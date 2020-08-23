@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.json.bind.adapter.JsonbAdapter;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
@@ -70,24 +71,18 @@ public abstract class AbstractUrlEncodedMessage {
   private MultivaluedMap<String, String> parseUrlEncodedString(String urlEncodedString) {
     /**
      * Parse the query string into an MVMap.
+     * <p>
+     * Defensive programming note: Possibly force the key to lower case to
+     * ensure a match with the class field name. In this library all field names
+     * are lower case. Currently the parsing logic is extremely case sensitive.
      */
     MultivaluedMap<String, String> multivaluedMap = new MultivaluedHashMap<>();
     for (String string : urlEncodedString.split("&")) {
-      /**
-       * Defensive programming note: Possibly force the key to lower case to
-       * ensure a match with the class field name. In this library all field
-       * names are lower case. Currently the parsing logic is extremely case
-       * sensitive.
-       * <p>
-       * URL decode the value, then conditionally expand the value if there are
-       * white space characters [+ ] indicated a list.
-       */
       try {
-        multivaluedMap.put(string.split("=")[0],
-                           Arrays.asList(URLDecoder.decode(string.split("=")[1], StandardCharsets.UTF_8.name()).split("[+ ]")));
+        multivaluedMap.add(string.split("=")[0], URLDecoder.decode(string.split("=")[1], StandardCharsets.UTF_8.name()));
       } catch (UnsupportedEncodingException unsupportedEncodingException) {
-        multivaluedMap.put(string.split("=")[0],
-                           Arrays.asList(string.split("=")[1].split("[+ ]")));
+        multivaluedMap.add(string.split("=")[0], string.split("=")[1]);
+        LOG.warning(unsupportedEncodingException.getMessage() + "  " + string);
       }
     }
     return multivaluedMap;
@@ -150,29 +145,27 @@ public abstract class AbstractUrlEncodedMessage {
            * Call the add[type] method, using the Json Adapter if available to
            * correctly unmarshal String to object (Enum, etc.)
            */
-          for (String param : entry.getValue()) {
+          for (String stringValue : entry.getValue()) {
             /**
              * param is a space-delimited list of Strings. Split and parse.
              */
-            for (String paramFragment : param.split("\\s+")) {
 
-              if (field.getDeclaredAnnotation(JsonbTypeAdapter.class) != null) {
-                JsonbTypeAdapter typeAdapter = field.getDeclaredAnnotation(JsonbTypeAdapter.class);
-                JsonbAdapter adapter = typeAdapter.value().getConstructor().newInstance();
-                addMethod.invoke(this, adapter.adaptFromJson(paramFragment));
+            if (field.getDeclaredAnnotation(JsonbTypeAdapter.class) != null) {
+              JsonbTypeAdapter typeAdapter = field.getDeclaredAnnotation(JsonbTypeAdapter.class);
+              JsonbAdapter adapter = typeAdapter.value().getConstructor().newInstance();
+              addMethod.invoke(this, adapter.adaptFromJson(stringValue));
+            } else {
+              /**
+               * If no Adapter then the add method must accept a single
+               * parameter which must be either a String _or_ Enum. (This is not
+               * an assumption, but an implicit requirement.) Complex object
+               * lists must be intercepted with an adapter.
+               */
+              if (addMethod.getParameters()[0].getType().isEnum()) {
+                Enum instance = buildEnumInstance((Class<Enum>) addMethod.getParameters()[0].getType(), stringValue);
+                addMethod.invoke(this, instance);
               } else {
-                /**
-                 * If no Adapter then the add method must accept a single
-                 * parameter which must be either a String _or_ Enum. (This is
-                 * not an assumption, but an implicit requirement.) Complex
-                 * object lists must be intercepted with an adapter.
-                 */
-                if (addMethod.getParameters()[0].getType().isEnum()) {
-                  Enum instance = buildEnumInstance((Class<Enum>) addMethod.getParameters()[0].getType(), paramFragment);
-                  addMethod.invoke(this, instance);
-                } else {
-                  addMethod.invoke(this, paramFragment);
-                }
+                addMethod.invoke(this, stringValue);
               }
             }
           }
@@ -187,10 +180,17 @@ public abstract class AbstractUrlEncodedMessage {
             field.set(this, adapter.adaptFromJson(entry.getValue().get(0)));
           } else {
             /**
-             * If no Adapter then the add method must accept String. (This is
-             * not an assumption, but an implicit requirement.)
+             * If no Adapter then the field must be either a String _or_ Enum.
+             * (This is not an assumption, but an implicit requirement.) Complex
+             * object lists must be intercepted with an adapter.
              */
-            field.set(this, entry.getValue().get(0));
+            if (field.getType().isEnum()) {
+              Enum instance = buildEnumInstance((Class<Enum>) field.getType(), entry.getValue().get(0));
+              field.set(this, instance);
+            } else {
+              field.set(this, entry.getValue().get(0));
+            }
+
           }
         }
       } catch (NoSuchFieldException | SecurityException noSuchFieldException) {
@@ -201,25 +201,14 @@ public abstract class AbstractUrlEncodedMessage {
   }
 
   /**
-   * Transform this class instance into a URL-encoded string.
-   * <p>
-   * This method uses Java bean reflection to inspect the current bean instance
-   * configuration and assign each non-null field into a query parameter array.
-   * <p>
-   * Collection fields are transformed into space-delimited strings. All other
-   * fields are copied in as Strings with an implicit call to their toString
-   * method.
+   * Transform this entity to a multivalued map. The map can then be used to
+   * generate a URL-encoded version of the object instance.
    *
-   * @return the bean configuration as a URL-encoded query string
-   * @throws Exception on error
+   * @return a MultivaluedMap instance configuration
+   * @throws Exception on marshal error
    */
-  public String writeUrlEncoded() throws Exception {
-    /**
-     * <p>
-     * <p>
-     * We use the Jersey UriBuilder to handle encoding.
-     */
-    UriBuilder uribuilder = UriBuilder.fromUri("");
+  public MultivaluedMap<String, String> asMultivaluedMap() throws Exception {
+    MultivaluedMap<String, String> multivaluedMap = new MultivaluedHashMap<>();
     Class c = this.getClass();
     for (Field field : c.getDeclaredFields()) {
       /**
@@ -250,9 +239,9 @@ public abstract class AbstractUrlEncodedMessage {
            * Extract the collection into a String list, then write the String
            * list to the URI builder.
            */
-          Collection theCollection = (Collection) field.get(this);
+          Collection<Object> theCollection = (Collection) field.get(this);
           if (!theCollection.isEmpty()) {
-            List<String> theList = new ArrayList<>();
+            List<String> theStringList = new ArrayList<>();
             /**
              * Using the XmlAdapter if available to correctly marshal Object to
              * String.
@@ -261,27 +250,52 @@ public abstract class AbstractUrlEncodedMessage {
               JsonbTypeAdapter typeAdapter = field.getDeclaredAnnotation(JsonbTypeAdapter.class);
               JsonbAdapter adapter = typeAdapter.value().getConstructor().newInstance();
               for (Object object : theCollection) {
-                theList.add((String) adapter.adaptToJson(object));
+                theStringList.add((String) adapter.adaptToJson(object)); // throws Exception
               }
             } else {
-              theCollection.forEach((object) -> {
-                theList.add(String.valueOf(object));
-              });
+              theStringList = theCollection.stream()
+                .map(o -> String.valueOf(o))
+                .collect(Collectors.toList());
             }
             /**
-             * Convert the list from a comma-delimited to a space-delimited
-             * list.
+             * Record the collection adapted to JSON strings.
              */
-            String theListString = theList.toString();
-            uribuilder.queryParam(fieldName,
-                                  theListString.substring(1, theListString.length() - 1).replaceAll("(, ?)", " "));
+            multivaluedMap.put(fieldName, theStringList);
           }
         } else {
           /**
-           * The field is a normal field. Write it to the URI.
+           * The field is a normal field with no transformer. Write its String
+           * value to the map.
            */
-          uribuilder.queryParam(fieldName, field.get(this));
+          multivaluedMap.putSingle(fieldName, String.valueOf(field.get(this)));
         }
+      }
+    }
+    return multivaluedMap;
+  }
+
+  /**
+   * Transform this class instance into a URL-encoded string.
+   * <p>
+   * This method uses Java bean reflection to inspect the current bean instance
+   * configuration and assign each non-null field into a query parameter array.
+   * <p>
+   * Collection fields are transformed into space-delimited strings. All other
+   * fields are copied in as Strings with an implicit call to their toString
+   * method.
+   *
+   * @return the bean configuration as a URL-encoded query string
+   * @throws Exception on error
+   */
+  public String writeUrlEncoded() throws Exception {
+    /**
+     * Use the Jersey UriBuilder to handle encoding.
+     */
+    UriBuilder uribuilder = UriBuilder.fromUri("");
+    MultivaluedMap<String, String> mvMap = asMultivaluedMap();
+    for (Map.Entry<String, List<String>> entry : mvMap.entrySet()) {
+      for (String value : entry.getValue()) {
+        uribuilder.queryParam(entry.getKey(), value);
       }
     }
     /**
