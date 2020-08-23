@@ -205,8 +205,10 @@ public class AccessTokenResponse implements Serializable {
    * constructs the error response. The parameters of the Token Error Response
    * are defined as in Section 5.2 of OAuth 2.0 [RFC6749]. The HTTP response
    * body uses the application/json media type with HTTP response code of 400.
+   * <p>
+   * See {@code ErrorResponseType} for enumerated values.
    */
-  private ErrorResponseType error;
+  private String error;
   /**
    * A human readable note about the error. This is useful for debugging.
    */
@@ -382,11 +384,25 @@ public class AccessTokenResponse implements Serializable {
     this.state = state;
   }
 
-  public ErrorResponseType getError() {
+  public String getError() {
     return error;
   }
 
   public void setError(ErrorResponseType error) {
+    this.error = error.name();
+  }
+
+  /**
+   * If the Token Request is invalid or unauthorized, the Authorization Server
+   * constructs the error response. The parameters of the Token Error Response
+   * are defined as in Section 5.2 of OAuth 2.0 [RFC6749]. The HTTP response
+   * body uses the application/json media type with HTTP response code of 400.
+   * <p>
+   * See {@code ErrorResponseType} for enumerated values.
+   *
+   * @param error the error type
+   */
+  public void setError(String error) {
     this.error = error;
   }
 
