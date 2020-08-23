@@ -72,7 +72,7 @@ public class AuthorizationRequestTest {
     AbstractUrlEncodedMessage recovered = a.readUrlEncodedString(encodedUrl);
 
 //    System.out.println("recovered...");
-//    System.out.println(new JsonbUtility().marshal(recovered));
+    System.out.println(new JsonbUtility().marshal(recovered));
     Assert.assertEquals(a, recovered);
 
     System.out.println("AuthorizationRequest testRoundTrip OK");
