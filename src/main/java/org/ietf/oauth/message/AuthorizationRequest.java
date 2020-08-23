@@ -21,10 +21,8 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.TreeSet;
 import javax.json.bind.annotation.JsonbProperty;
-import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.ws.rs.core.MultivaluedMap;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
-import org.ietf.oauth.adapter.JsonResponseTypeAdapter;
 import org.ietf.oauth.type.ResponseType;
 import org.ietf.oauth.type.ScopeType;
 
@@ -103,7 +101,6 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
    * registration).
    */
   @JsonbProperty("response_type")
-  @JsonbTypeAdapter(JsonResponseTypeAdapter.class)
   private ResponseType responseType;
   /**
    * REQUIRED. OAuth 2.0 Client Identifier valid at the Authorization Server.
