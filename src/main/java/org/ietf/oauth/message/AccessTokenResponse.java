@@ -251,14 +251,18 @@ public class AccessTokenResponse implements Serializable {
 
   /**
    * Default no-arg constructor. Creates a "Bearer" AccessTokenResponse instance
-   * with the created_at field set to now (UTC time zone) and valid for seven
-   * (7) days.
+   * with the created_at field set to now (UTC time zone). The duration must be
+   * explictly set.
    */
   public AccessTokenResponse() {
     this.tokenType = TOKEN_TYPE_BEARER;
     this.createdAt = ZonedDateTime.now(UTC).truncatedTo(ChronoUnit.SECONDS);
+    this.notBefore = createdAt;
   }
 
+  /**
+   * Default no-arg constructor. Sets the token type.
+   */
   public AccessTokenResponse(String token_type) {
     this();
     this.tokenType = token_type;
@@ -274,8 +278,7 @@ public class AccessTokenResponse implements Serializable {
    */
   public static AccessTokenResponse getInstance(String access_token, int duration) {
     AccessTokenResponse tr = new AccessTokenResponse();
-    tr.setCreatedAt(ZonedDateTime.now(ZoneId.of("UTC")));
-    tr.setExpires_in(Duration.of(duration, ChronoUnit.DAYS));
+    tr.setExpiresIn(Duration.ofDays(duration));
     tr.setAccessToken(access_token);
     return tr;
   }
@@ -337,9 +340,9 @@ public class AccessTokenResponse implements Serializable {
    * the response was generated. If omitted, the authorization server SHOULD
    * provide the expiration time via other means or document the default value.
    *
-   * @param expires_in The lifetime in seconds of the access token.
+   * @param expires_in The lifetime of the access token.
    */
-  public void setExpires_in(Duration expires_in) {
+  public void setExpiresIn(Duration expires_in) {
     if (expires_in == null) {
       this.expiresIn = null;
     } else {

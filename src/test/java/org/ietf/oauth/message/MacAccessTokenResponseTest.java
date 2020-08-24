@@ -51,7 +51,7 @@ public class MacAccessTokenResponseTest {
   public void testMarshal() {
 
     MacAccessTokenResponse m = MacAccessTokenResponse.getInstance("access_token", "mac_key");
-    m.setExpires_in(Duration.ofMinutes(10));
+    m.setExpiresIn(Duration.ofMinutes(10));
 //    m.setNot_after(ZonedDateTime.now(ZoneId.of("UTC")).plusHours(1));
     System.out.println(JSONB.marshal(m));
 
