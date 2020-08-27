@@ -20,7 +20,7 @@ import java.util.UUID;
 import javax.json.bind.annotation.JsonbProperty;
 
 /**
- * Internet-Draft OAuth 2.0 MAC Tokens
+ * OAuth 2.0 Message Authentication Code (MAC) Tokens
  * <p>
  * This specification describes how to use MAC Tokens in HTTP requests to access
  * OAuth 2.0 protected resources. An OAuth client willing to access a protected
@@ -69,6 +69,8 @@ import javax.json.bind.annotation.JsonbProperty;
  * }
  * </pre>
  *
+ * @see
+ * <a href="https://trac.tools.ietf.org/id/draft-ietf-oauth-v2-http-mac-05.txt">draft-ietf-oauth-v2-http-mac-05.txt</a>
  * @author Key Bridge
  */
 public class MacAccessTokenResponse extends AccessTokenResponse {
