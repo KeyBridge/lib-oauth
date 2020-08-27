@@ -15,6 +15,8 @@
  */
 package org.ietf.oauth.type;
 
+import javax.json.bind.annotation.JsonbProperty;
+
 /**
  * The "grant_type" element is defined in RFC 6749 OAuth 2.0 Sections 4.1.3,
  * 4.3.2, 4.4.2, 4.5, and 6 plus OpenId Connect Core section 3.1.3.1. and 12.
@@ -62,6 +64,15 @@ public enum GrantType {
    *  +---------+       (w/ Optional Refresh Token) </pre>
    */
   authorization_code,
+  /**
+   * 4.2. Implicit Grant
+   * <p>
+   * The implicit grant type is used to obtain access tokens (it does not
+   * support the issuance of refresh tokens) and is optimized for public clients
+   * known to operate a particular redirection URI. These clients are typically
+   * implemented in a browser using a scripting language such as JavaScript.
+   */
+  implicit,
   /**
    * 4.3. Resource Owner Password Credentials Grant Access Token Request
    * <p>
@@ -117,4 +128,23 @@ public enum GrantType {
    * to which it was issued.
    */
   refresh_token,
+  /**
+   * The JWT Bearer Token Grant Type defined in OAuth JWT Bearer Token Profiles
+   * [RFC7523].
+   *
+   * @see <a href="https://tools.ietf.org/html/rfc7523">JSON Web Token (JWT)
+   * Profile for OAuth 2.0 Client Authentication and Authorization Grants</a>
+   */
+  @JsonbProperty("urn:ietf:params:oauth:grant-type:jwt-bearer")
+  jwt_bearer,
+  /**
+   * The SAML 2.0 Bearer Assertion Grant defined in OAuth SAML 2 Bearer Token
+   * Profiles [RFC7522].
+   *
+   * @see <a href="https://tools.ietf.org/html/rfc7522">Security Assertion
+   * Markup Language (SAML) 2.0 Profile for OAuth 2.0 Client Authentication and
+   * Authorization Grants</a>
+   */
+  @JsonbProperty("urn:ietf:params:oauth:grant-type:saml2-bearer")
+  saml2_bearer
 }
