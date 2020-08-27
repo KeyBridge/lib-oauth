@@ -15,7 +15,6 @@
  */
 package org.ietf.oauth.message;
 
-import java.io.Serializable;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.ws.rs.core.MultivaluedMap;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
@@ -127,7 +126,7 @@ import org.ietf.oauth.type.ScopeType;
  * @author Key Bridge 10/08/17
  * @since v0.2.0
  */
-public class AccessTokenRequest extends AbstractUrlEncodedMessage implements Serializable {
+public class AccessTokenRequest extends AbstractUrlEncodedMessage {
 
   /**
    * 3.1.3.1. Token Request
