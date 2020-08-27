@@ -15,6 +15,7 @@
  */
 package org.ietf.oauth;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.*;
 import java.net.URLDecoder;
@@ -41,7 +42,7 @@ import javax.ws.rs.core.UriBuilder;
  * @author Key Bridge 10/08/17
  * @since v0.2.0
  */
-public abstract class AbstractUrlEncodedMessage {
+public abstract class AbstractUrlEncodedMessage implements Serializable {
 
   protected static final Logger LOG = Logger.getLogger(AbstractUrlEncodedMessage.class.getName());
 
