@@ -88,6 +88,28 @@ public enum ErrorResponseType {
    * needed because a 503 Service Unavailable HTTP status code cannot be
    * returned to the client via an HTTP redirect.)
    */
-  temporarily_unavailable;
+  temporarily_unavailable,
+
+  //  RFC 7591             OAuth 2.0 Dynamic Registration
+  /**
+   * The value of one or more redirection URIs is invalid.
+   */
+  invalid_redirect_uri,
+  /**
+   * The value of one of the client metadata fields is invalid and the server
+   * has rejected this request. Note that an authorization server MAY choose to
+   * substitute a valid value for any requested parameter of a client's
+   * metadata.
+   */
+  invalid_client_metadata,
+  /**
+   * The software statement presented is invalid.
+   */
+  invalid_software_statement,
+  /**
+   * The software statement presented is not approved for use by this
+   * authorization server.
+   */
+  unapproved_software_statement;
 
 }
