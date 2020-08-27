@@ -20,6 +20,7 @@ import com.thedeanda.lorem.LoremIpsum;
 import java.util.Random;
 import java.util.UUID;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
+import org.ietf.oauth.type.GrantType;
 import org.junit.*;
 
 /**
@@ -53,7 +54,7 @@ public class AccessTokenRequestTest {
   @Test
   public void testRoundTrip() throws Exception {
     AccessTokenRequest a = new AccessTokenRequest();
-    a.setGrantType(l.getWords(1));
+    a.setGrantType(GrantType.client_credentials);
     a.setCode(UUID.randomUUID().toString());
     a.setRedirectUri(l.getUrl());
     a.setClientId(UUID.randomUUID().toString());
