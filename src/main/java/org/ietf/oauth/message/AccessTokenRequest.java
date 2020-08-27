@@ -19,6 +19,7 @@ import java.io.Serializable;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.ws.rs.core.MultivaluedMap;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
+import org.ietf.oauth.type.GrantType;
 import org.ietf.oauth.type.ScopeType;
 
 /**
@@ -32,7 +33,9 @@ import org.ietf.oauth.type.ScopeType;
  * durations of access, granted by the resource owner, and enforced by the
  * resource server and authorization server.
  * <p>
- * This class supports all four different types of Oauth access token requests:
+ * This class supports all four different types of Oauth 2.0 access token
+ * request flows:
+ * <p>
  * 4.1. Authorization Code Grant <br>
  * 4.2. Implicit Grant  <br>
  * 4.3. Resource Owner Password Credentials Grant  <br>
@@ -115,7 +118,11 @@ import org.ietf.oauth.type.ScopeType;
  *   "expires_in":3600,
  *   "example_parameter":"example_value"
  * }
- * </pre>
+ * </pre> Developer note: Oauth 2.0 Section 4.5. Extension Grants are not
+ * supported in this implementation. Extension grants use a server-defined URI
+ * as the grant_type. This implementation limits grant types to an enumerated
+ * list defined in RFC 6749 OAuth 2.0 Sections 4.1.3, 4.3.2, 4.4.2, and 6. See
+ * the {@code GrantType} class for details.
  *
  * @author Key Bridge 10/08/17
  * @since v0.2.0
@@ -124,8 +131,10 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage implements Ser
 
   /**
    * 3.1.3.1. Token Request
+   * <p>
+   * The default value is "authorization_code".
    */
-  private static final String AUTHORIZATION_CODE = "authorization_code";
+  private static final GrantType AUTHORIZATION_CODE = GrantType.authorization_code;
   /**
    * 4.1.1. Authorization Request scope is OPTIONAL and describes the scope of
    * the access request.
@@ -133,10 +142,13 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage implements Ser
   private static final ScopeType SCOPE_TYPE = ScopeType.oauth;
 
   /**
-   * REQUIRED. Value MUST be set to "authorization_code".
+   * The "grant_type" element is defined in RFC 6749 OAuth 2.0 Sections 4.1.3,
+   * 4.3.2, 4.4.2, 4.5, and 6.
+   * <p>
+   * Note that Section 4.5 is NOT supported in this implementation.
    */
   @JsonbProperty("grant_type")
-  private String grantType;
+  private GrantType grantType;
   /**
    * REQUIRED. The authorization code received from the authorization server.
    */
@@ -223,11 +235,16 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage implements Ser
   }
 
   //<editor-fold defaultstate="collapsed" desc="Getter and Setter">
-  public String getGrantType() {
+  public GrantType getGrantType() {
     return grantType;
   }
 
-  public void setGrantType(String grantType) {
+  /**
+   * Set the token request grant type.
+   *
+   * @param grantType the grant type
+   */
+  public void setGrantType(GrantType grantType) {
     this.grantType = grantType;
   }
 
