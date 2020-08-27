@@ -82,7 +82,7 @@ public abstract class AbstractUrlEncodedMessage {
         multivaluedMap.add(string.split("=")[0], URLDecoder.decode(string.split("=")[1], StandardCharsets.UTF_8.name()));
       } catch (UnsupportedEncodingException unsupportedEncodingException) {
         multivaluedMap.add(string.split("=")[0], string.split("=")[1]);
-        LOG.warning(unsupportedEncodingException.getMessage() + "  " + string);
+        LOG.log(Level.WARNING, "{0}  {1}", new Object[]{unsupportedEncodingException.getMessage(), string});
       }
     }
     return multivaluedMap;
