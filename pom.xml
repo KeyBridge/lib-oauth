@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>keybridge.lib</groupId>
   <artifactId>oauth</artifactId>
-  <version>2.0.0</version>
+  <version>2.1.0</version>
   <packaging>jar</packaging>
 
   <name>lib-oauth</name>
@@ -30,6 +30,9 @@
     v1.0.0 - remove json dependency; use jsonb; promote to v1.0.0; release
     v1.0.1 - add support for Resource Owner Password Credentials Grant
     v2.0.0 - convert to json-b, remove all xml annotation; add unit tests
+    v2.1.0 - add support for RFC 7591 dynamic client registration
+
+
   </description>
 
   <organization>
