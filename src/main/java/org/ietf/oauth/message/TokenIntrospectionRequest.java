@@ -31,6 +31,8 @@ import org.ietf.oauth.AbstractUrlEncodedMessage;
  * The protected resource calls the introspection endpoint using an HTTP POST
  * request with parameters sent as "application/x-www-form-urlencoded".
  *
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc7662.html">OAuth
+ * Introspection</a>
  * @author Key Bridge
  * @since v2.2.0 created 2020-09-05
  */

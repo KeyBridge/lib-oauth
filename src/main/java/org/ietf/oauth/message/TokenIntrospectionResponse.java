@@ -35,8 +35,8 @@ import org.ietf.oauth.adapter.JsonZonedDateTimeEpochAdapter;
  * The server responds with a JSON object [RFC7159] in "application/ json"
  * format with the following top-level members.
  *
- *
- *
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc7662.html">OAuth
+ * Introspection</a>
  * @author Key Bridge
  * @since v2.2.0 created 2020-09-05
  */
