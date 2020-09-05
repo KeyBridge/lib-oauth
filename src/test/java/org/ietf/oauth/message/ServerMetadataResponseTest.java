@@ -54,17 +54,20 @@ public class ServerMetadataResponseTest {
   }
 
   @Test
-  public void testSomeMethod() {
+  public void prepareForSerialization() {
 
     ServerMetadataResponse response = buildResponse();
 
 //    clear the locales
     response.getUiLocalesSupported().clear();
-    response.getTokenEndpointAuthSigningAlgValuesSupported().clear();
     // should set locales to null
     response.prepareForSerialization();
+    String json = new JsonbUtility().marshal(response);
+//    System.out.println(new JsonbUtility().marshal(response));
 
-    System.out.println(new JsonbUtility().marshal(response));
+    Assert.assertTrue(!json.contains("ui_locales_supported"));
+
+    System.out.println("ServerMetadataResponse prepareForSerialization OK");
 
   }
 
