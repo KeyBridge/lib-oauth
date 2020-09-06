@@ -33,10 +33,10 @@ import javax.json.bind.annotation.JsonbProperty;
  * all requested client metadata values as top-level members of that JSON
  * object.
  *
- * @author Key Bridge
- * @since v2.1.0 created 2020-08-27
  * @see <a href="https://tools.ietf.org/html/rfc7591">OAuth 2.0 Dynamic Client
  * Registration Protocol</a>
+ * @author Key Bridge
+ * @since v2.1.0 created 2020-08-27
  */
 public class ClientRegistrationRequest extends AbstractClientMetadata {
 

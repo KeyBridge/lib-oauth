@@ -31,10 +31,10 @@ import org.ietf.oauth.adapter.JsonZonedDateTimeAdapter;
  * about this client, including any fields provisioned by the authorization
  * server itself.
  *
- * @author Key Bridge
- * @since v2.1.0 created 2020-08-27
  * @see <a href="https://tools.ietf.org/html/rfc7591">OAuth 2.0 Dynamic Client
  * Registration Protocol</a>
+ * @author Key Bridge
+ * @since v2.1.0 created 2020-08-27
  */
 public class ClientRegistrationResponse extends AbstractClientMetadata {
 
