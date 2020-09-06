@@ -33,9 +33,8 @@ public enum GrantType {
    * 4.1. Authorization Code Grant Access Token Request
    * <p>
    * The authorization code grant type is used to obtain both access tokens and
-   * refresh tokens and is optimized for confidential clients.
-   * <p>
-   * This is a redirection-based flow.
+   * refresh tokens and is optimized for confidential clients. This is a
+   * redirection-based flow.
    * <pre>
    *  +----------+
    *  | Resource |
@@ -62,6 +61,12 @@ public enum GrantType {
    *  |         |                                             |
    *  |         |=---(E)----- Access Token -------------------'
    *  +---------+       (w/ Optional Refresh Token) </pre>
+   * <p>
+   * The authorization code grant is used when an application exchanges an
+   * authorization code for an access token. After the user returns to the
+   * application via the redirect URL, the application will get the
+   * authorization code from the URL and use it to request an access token. This
+   * request will be made to the token endpoint.
    */
   authorization_code,
   /**
@@ -117,6 +122,9 @@ public enum GrantType {
    * |         |=--(B)---- Access Token ---------|               |
    * |         |                                  |               |
    * +---------+                                  +---------------+ </pre>
+   * <p>
+   * The Client Credentials grant is used when applications request an access
+   * token to access their own resources, not on behalf of a user.
    */
   client_credentials,
   /**
