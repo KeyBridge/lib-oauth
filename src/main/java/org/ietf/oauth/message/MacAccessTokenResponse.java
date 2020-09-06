@@ -20,6 +20,10 @@ import java.util.UUID;
 import javax.json.bind.annotation.JsonbProperty;
 
 /**
+ * @deprecated use JSON Web Tokens instead
+ *
+ * Internet-Draft OAuth 2.0 MAC Tokens
+ * <p>
  * OAuth 2.0 Message Authentication Code (MAC) Tokens
  * <p>
  * This specification describes how to use MAC Tokens in HTTP requests to access
@@ -41,8 +45,7 @@ import javax.json.bind.annotation.JsonbProperty;
  * client wants to interact with. This specification assumes use of the
  * 'Authorization Code' grant.
  * <p>
- * For example:
- * <pre>
+ * For example:  <pre>
  * HTTP/1.1 200 OK
  * Content-Type: application/json
  * Cache-Control: no-store
