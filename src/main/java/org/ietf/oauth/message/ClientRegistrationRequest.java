@@ -41,8 +41,10 @@ import javax.json.bind.annotation.JsonbProperty;
 public class ClientRegistrationRequest extends AbstractClientMetadata {
 
   /**
-   * The hardware address (usually MAC) of the client server. Key Bridge
-   * proprietary field to uniquely identify the client server instance.
+   * The hardware address (usually MAC) of the client server.
+   * <p>
+   * This is a Key Bridge proprietary field reported by the client server and
+   * used by Key Bridge to uniquely identify the client server instance.
    */
   @JsonbProperty("hardware_address")
   private String hardwareAddress;
