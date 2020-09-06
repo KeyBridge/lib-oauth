@@ -52,8 +52,8 @@ public class ClientUpdateRequest extends AbstractClientMetadata {
    * clients to authenticate to the token endpoint, as described in OAuth 2.0
    * [RFC6749], Section 2.3.1.
    * <p>
-   * (This is basically a client "password" and is used for "Basic" type HTTP
-   * authentication.)
+   * (This is basically a client "password" shared secret and is used for
+   * "Basic" type HTTP authentication.)
    */
   @JsonbProperty("client_secret")
   private String clientSecret;
