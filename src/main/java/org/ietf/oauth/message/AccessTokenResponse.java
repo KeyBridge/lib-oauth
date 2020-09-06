@@ -261,7 +261,10 @@ public class AccessTokenResponse implements Serializable {
   }
 
   /**
-   * Default no-arg constructor. Sets the token type.
+   * New token response constructor setting a custom token type. Note that the
+   * default is "Bearer".
+   *
+   * @param token_type the token type
    */
   public AccessTokenResponse(String token_type) {
     this();

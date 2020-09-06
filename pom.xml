@@ -33,7 +33,7 @@
     v2.1.0 - add support for RFC 7591 dynamic client registration
     v2.2.0 - add RFC7662 OAuth Introspection messages
     - add RFC8414 Authorization Server Metadata
-
+    - add RFC8693 OAuth 2.0 Token Exchange
   </description>
 
   <organization>

@@ -36,7 +36,6 @@ public enum TokenAuthenticationType {
   /**
    * The client uses the HTTP POST parameters as defined in OAuth 2.0, Section
    * 2.3.1.
-   * <p>
    */
   client_secret_post,
   /**

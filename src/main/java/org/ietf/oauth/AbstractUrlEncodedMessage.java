@@ -129,11 +129,17 @@ public abstract class AbstractUrlEncodedMessage implements Serializable {
         Field field = jsonNamedFields.get(entry.getKey());
         field.setAccessible(true);
         /**
-         * If the field is a collection then expect to iterate over one or more
-         * entries. The expected entries may be String or Enumerated.
+         * If the field has an adapter then use it directly. JSONB adapters are
+         * applied to collections.
          */
-        if (field.getType().isAssignableFrom(Collection.class)) {
+        if (field.getDeclaredAnnotation(JsonbTypeAdapter.class) != null) {
+          JsonbTypeAdapter typeAdapter = field.getDeclaredAnnotation(JsonbTypeAdapter.class);
+          JsonbAdapter adapter = typeAdapter.value().getConstructor().newInstance();
+          field.set(this, adapter.adaptFromJson(entry.getValue().get(0)));
+        } else if (field.getType().isAssignableFrom(Collection.class)) {
           /**
+           * If the field is a collection then expect to iterate over one or
+           * more entries. The expected entries may be String or Enumerated.
            * Need to convert the types.
            */
           ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
@@ -150,7 +156,6 @@ public abstract class AbstractUrlEncodedMessage implements Serializable {
             /**
              * param is a space-delimited list of Strings. Split and parse.
              */
-
             if (field.getDeclaredAnnotation(JsonbTypeAdapter.class) != null) {
               JsonbTypeAdapter typeAdapter = field.getDeclaredAnnotation(JsonbTypeAdapter.class);
               JsonbAdapter adapter = typeAdapter.value().getConstructor().newInstance();
@@ -233,12 +238,17 @@ public abstract class AbstractUrlEncodedMessage implements Serializable {
                            ? field.getName()
                            : field.getDeclaredAnnotation(JsonbProperty.class).value();
         /**
-         * Intercept collections.
+         * If the field has an adapter then use it directly. JSONB adapters are
+         * applied to collections.
          */
-        if (field.getType().isAssignableFrom(Collection.class)) {
+        if (field.getDeclaredAnnotation(JsonbTypeAdapter.class) != null) {
+          JsonbTypeAdapter typeAdapter = field.getDeclaredAnnotation(JsonbTypeAdapter.class);
+          JsonbAdapter adapter = typeAdapter.value().getConstructor().newInstance();
+          multivaluedMap.putSingle(fieldName, (String) adapter.adaptToJson(fieldValue));
+        } else if (field.getType().isAssignableFrom(Collection.class)) {
           /**
-           * Extract the collection into a String list, then write the String
-           * list to the URI builder.
+           * Intercept collections. Extract the collection into a String list,
+           * then write the String list to the URI builder.
            */
           Collection<Object> theCollection = (Collection) field.get(this);
           if (!theCollection.isEmpty()) {

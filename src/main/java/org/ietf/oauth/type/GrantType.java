@@ -46,7 +46,7 @@ public enum GrantType {
    *       |
    *      (B)
    *  +----|-----+          Client Identifier      +---------------+
-   *  |         -+----(A)-- & Redirection URI ----=|               |
+   *  |         -+----(A)-- + Redirection URI ----=|               |
    *  |  User-   |                                 | Authorization |
    *  |  Agent  -+----(B)-- User authenticates ---=|     Server    |
    *  |          |                                 |               |
@@ -58,7 +58,7 @@ public enum GrantType {
    *    ^    v                                         |      |
    *  +---------+                                      |      |
    *  |         |----(D)-- Authorization Code ---------'      |
-   *  |  Client |          & Redirection URI                  |
+   *  |  Client |          + Redirection URI                  |
    *  |         |                                             |
    *  |         |=---(E)----- Access Token -------------------'
    *  +---------+       (w/ Optional Refresh Token) </pre>
@@ -146,5 +146,14 @@ public enum GrantType {
    * Authorization Grants</a>
    */
   @JsonbProperty("urn:ietf:params:oauth:grant-type:saml2-bearer")
-  saml2_bearer
+  saml2_bearer,
+  /**
+   * Indicates that a token exchange is being performed.
+   *
+   * @see <a href="https://tools.ietf.org/html/rfc8693">OAuth 2.0 Token
+   * Exchange</a>
+   */
+  @JsonbProperty("urn:ietf:params:oauth:grant-type:token-exchange")
+  token_exchange;
+
 }
