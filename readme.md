@@ -12,7 +12,6 @@ third-party application to obtain access on its own behalf.
 
 This OAuth library includes data objects specified in several RFCs:
 
-  *  [5849](https://tools.ietf.org/html/rfc5849)  The OAuth 1.0 Protocol  **deprecated**
   *  [6749](https://tools.ietf.org/html/rfc6749)  The OAuth 2.0 Authorization Framework
   *  [6750](https://tools.ietf.org/html/rfc6750)  The OAuth 2.0 Authorization Framework: Bearer Token Usage
   *  [6819](https://tools.ietf.org/html/rfc6819)  OAuth 2.0 Threat Model and Security Considerations
@@ -20,6 +19,11 @@ This OAuth library includes data objects specified in several RFCs:
   *  [7591](https://tools.ietf.org/html/rfc7591)  OAuth 2.0 Dynamic Client Registration Protocol
   *  [7592](https://tools.ietf.org/html/rfc7592)  OAuth 2.0 Dynamic Client Registration Management Protocol
   *  [8628](https://tools.ietf.org/html/rfc8628)  OAuth 2.0 Device Authorization Grant
+
+The following specifications are implemented in this library but are marked as deprecated.
+
+  *  [5849](https://tools.ietf.org/html/rfc5849)  The OAuth 1.0 Protocol  **deprecated**
+  *  [draft-ietf-oauth-v2-http-mac-05](https://trac.tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-05)  OAuth 2.0 Message Authentication Code (MAC) Tokens **deprecated**
 
 **Road map**
 

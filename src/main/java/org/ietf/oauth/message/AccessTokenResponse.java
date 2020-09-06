@@ -32,7 +32,7 @@ import org.ietf.oauth.adapter.JsonZonedDateTimeAdapter;
 import org.ietf.oauth.type.ErrorResponseType;
 
 /**
- * 4.1.4. Access Token Response
+ * RFC 6749 OAuth 2.0 4.1.4. Access Token Response
  * <p>
  * All Token Responses that contain tokens, secrets, or other sensitive
  * information MUST include the following HTTP response header fields and

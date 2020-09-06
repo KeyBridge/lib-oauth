@@ -22,9 +22,7 @@ import org.ietf.oauth.type.GrantType;
 import org.ietf.oauth.type.ScopeType;
 
 /**
- * RFC 6749 OAuth 2.0
- * <p>
- * 1.4. Access Token
+ * RFC 6749 OAuth 2.0 1.4. Access Token
  * <p>
  * Access tokens are credentials used to access protected resources. An access
  * token is a string representing an authorization issued to the client. The
