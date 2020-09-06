@@ -28,18 +28,40 @@ package org.ietf.oauth.type;
  * Registration Protocol</a>
  */
 public enum TokenAuthenticationType {
+
   /**
    * The client is a public client as defined in OAuth 2.0, Section 2.1, and
    * does not have a client secret.
+   * <p>
+   * Public clients use a "none" value for the "token_endpoint_auth_method"
+   * metadata field and are generally used with the "implicit" grant type. Often
+   * these clients will be short-lived in-browser applications requesting access
+   * to a user's resources and access is tied to a user's active session at the
+   * authorization server.
+   * <p>
+   * Public applications typically are assigned the following grant_types
+   * enabled:
+   * <p>
+   * - implicit <br>
+   * - authorization_code <br>
+   * - refresh_token
    */
   none,
   /**
    * The client uses the HTTP POST parameters as defined in OAuth 2.0, Section
    * 2.3.1.
+   * <p>
+   * The authorization server MAY support including the client credentials in
+   * the request-body using the following parameters: `client_id`,
+   * `client_secret`.
    */
   client_secret_post,
   /**
    * The client uses HTTP Basic as defined in OAuth 2.0, Section 2.3.1.
+   * <p>
+   * Clients in possession of a client password MAY use the HTTP Basic
+   * authentication scheme as defined in [RFC2617] to authenticate with the
+   * authorization server.
    */
   client_secret_basic
 }

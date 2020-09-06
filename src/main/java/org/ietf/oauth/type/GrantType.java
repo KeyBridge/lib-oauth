@@ -136,6 +136,7 @@ public enum GrantType {
    * to which it was issued.
    */
   refresh_token,
+
   /**
    * The JWT Bearer Token Grant Type defined in OAuth JWT Bearer Token Profiles
    * [RFC7523].
@@ -162,6 +163,15 @@ public enum GrantType {
    * Exchange</a>
    */
   @JsonbProperty("urn:ietf:params:oauth:grant-type:token-exchange")
-  token_exchange;
+  token_exchange,
+
+  /**
+   * Device Access Token Request
+   *
+   * @see <a href="https://tools.ietf.org/html/rfc8693">OAuth 2.0 Device
+   * Grant</a>
+   */
+  @JsonbProperty("urn:ietf:params:oauth:grant-type:device_code")
+  device_code;
 
 }

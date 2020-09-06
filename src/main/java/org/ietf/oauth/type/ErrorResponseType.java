@@ -91,6 +91,7 @@ public enum ErrorResponseType {
   temporarily_unavailable,
 
   //  RFC 7591             OAuth 2.0 Dynamic Registration
+  //  3.2.2.  Client Registration Error Response
   /**
    * The value of one or more redirection URIs is invalid.
    */

@@ -32,6 +32,15 @@ import javax.json.bind.annotation.JsonbProperty;
  * Entity Payload is a JSON [RFC7159] document consisting of a JSON object and
  * all requested client metadata values as top-level members of that JSON
  * object.
+ * <p>
+ * Unless used as a claim in a software statement, the authorization server MUST
+ * treat all client metadata as self-asserted. Clients MAY use both the direct
+ * JSON object and the JWT-encoded software statement to present client metadata
+ * to the authorization server as part of the registration request. If the
+ * software statement is valid and signed by an acceptable authority (such as
+ * the software API publisher), the values of client metadata within the
+ * software statement MUST take precedence over those metadata values presented
+ * in the plain JSON object, which could have been intercepted and modified.
  *
  * @see <a href="https://tools.ietf.org/html/rfc7591">OAuth 2.0 Dynamic Client
  * Registration Protocol</a>

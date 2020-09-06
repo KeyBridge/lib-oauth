@@ -25,6 +25,7 @@ import javax.json.bind.annotation.JsonbTypeAdapter;
 import org.ietf.oauth.adapter.JsonCollectionAdapter;
 import org.ietf.oauth.type.GrantType;
 import org.ietf.oauth.type.ResponseType;
+import org.ietf.oauth.type.TokenAuthenticationType;
 
 /**
  * RFC 7591 OAuth 2.0 Dynamic Registration 2. Client Metadata
@@ -80,7 +81,7 @@ public abstract class AbstractClientMetadata implements Serializable {
    * 2.0.
    */
   @JsonbProperty("token_endpoint_auth_method")
-  protected String tokenEndpointAuthMethod;
+  protected TokenAuthenticationType tokenEndpointAuthMethod;
   /**
    * Array of OAuth 2.0 grant type strings that the client can use at the token
    * endpoint. These grant types are defined as follows:
@@ -284,11 +285,11 @@ public abstract class AbstractClientMetadata implements Serializable {
     this.redirectUris = redirectUris;
   }
 
-  public String getTokenEndpointAuthMethod() {
+  public TokenAuthenticationType getTokenEndpointAuthMethod() {
     return tokenEndpointAuthMethod;
   }
 
-  public void setTokenEndpointAuthMethod(String tokenEndpointAuthMethod) {
+  public void setTokenEndpointAuthMethod(TokenAuthenticationType tokenEndpointAuthMethod) {
     this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
   }
 

@@ -35,6 +35,8 @@ import org.ietf.oauth.adapter.JsonZonedDateTimeAdapter;
  * Registration Protocol</a>
  * @author Key Bridge
  * @since v2.1.0 created 2020-08-27
+ * @since 2.2.0 use RFC 7592 ClientInformationResponse where client management
+ * is enabled
  */
 public class ClientRegistrationResponse extends AbstractClientMetadata {
 
@@ -84,7 +86,7 @@ public class ClientRegistrationResponse extends AbstractClientMetadata {
    * @param q the client registration request
    * @return a client registration response instance
    */
-  public static ClientRegistrationResponse getInstance(ClientRegistrationRequest q) {
+  public static ClientRegistrationResponse getInstance(AbstractClientMetadata q) {
     ClientRegistrationResponse c = new ClientRegistrationResponse();
     /**
      * Copy the request data.

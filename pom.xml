@@ -30,11 +30,11 @@
     v1.0.0 - remove json dependency; use jsonb; promote to v1.0.0; release
     v1.0.1 - add support for Resource Owner Password Credentials Grant
     v2.0.0 - convert to json-b, remove all xml annotation; add unit tests
-    v2.1.0 - add support for RFC 7591 dynamic client registration
+    v2.1.0 - add support for RFC 7591 OAuth 2.0 Dynamic Client Registration Protocol
     v2.2.0 - add RFC7662 OAuth Introspection messages
     - add RFC8414 Authorization Server Metadata
     - add RFC8693 OAuth 2.0 Token Exchange
-  </description>
+    - add RFC7592 OAuth 2.0 Dynamic Registration Management</description>
 
   <organization>
     <name>Key Bridge</name>
