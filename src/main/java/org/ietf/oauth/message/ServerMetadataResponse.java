@@ -269,7 +269,6 @@ public class ServerMetadataResponse {
    * A "signed_metadata" metadata value SHOULD NOT appear as a claim in the JWT.
    */
   @JsonbProperty("signed_metadata")
-
   private String signedMetadata;
 
   //<editor-fold defaultstate="collapsed" desc="Getter and Setter">
@@ -483,6 +482,14 @@ public class ServerMetadataResponse {
 
   public void setCodeChallengeMethodsSupported(Collection<String> codeChallengeMethodsSupported) {
     this.codeChallengeMethodsSupported = codeChallengeMethodsSupported;
+  }
+
+  public String getSignedMetadata() {
+    return signedMetadata;
+  }
+
+  public void setSignedMetadata(String signedMetadata) {
+    this.signedMetadata = signedMetadata;
   }//</editor-fold>
 
   /**
