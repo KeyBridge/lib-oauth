@@ -98,28 +98,12 @@ public class ClientRegistrationResponse extends AbstractClientMetadata {
    * @param q the client registration request
    * @return a client registration response instance
    */
-  public static ClientRegistrationResponse getInstance(AbstractClientMetadata q) {
+  public static ClientRegistrationResponse getInstance(ClientRegistrationResponse q) {
     ClientRegistrationResponse c = new ClientRegistrationResponse();
     /**
      * Copy the request data.
      */
-    c.setRedirectUris(q.getRedirectUris());
-    c.setTokenEndpointAuthMethod(q.getTokenEndpointAuthMethod());
-    c.setGrantTypes(q.getGrantTypes());
-    c.setResponseTypes(q.getResponseTypes());
-    c.setClientName(q.getClientName());
-    c.setClientUri(q.getClientUri());
-    c.setLogoUri(q.getLogoUri());
-    c.setScope(q.getScope());
-    c.setContacts(q.getContacts());
-    c.setTosUri(q.getTosUri());
-    c.setPolicyUri(q.getPolicyUri());
-    c.setJwks(q.getJwks());
-    c.setJwksUri(q.getJwksUri());
-    c.setSoftwareId(q.getSoftwareId());
-    c.setSoftwareVersion(q.getSoftwareVersion());
-    c.setSoftwareStatement(q.getSoftwareStatement());
-    c.setExtendedParameters(q.getExtendedParameters());
+    c.copyMetadata(q);
     return c;
   }
 
