@@ -259,6 +259,9 @@ public abstract class AbstractClientMetadata implements Serializable {
    * profiles. The specification allows for arbitrary JSON field names, which
    * require a mutable object type and complex processing logic. A simple map
    * provides a cleaner solution with equivalent functionality.
+   * <p>
+   * Note that the `extendedParameters` field is not included in the equality
+   * evaluation.
    */
   @JsonbProperty("extended_parameters")
   protected Map<String, Object> extendedParameters;
@@ -501,7 +504,6 @@ public abstract class AbstractClientMetadata implements Serializable {
     hash = 97 * hash + Objects.hashCode(this.softwareId);
     hash = 97 * hash + Objects.hashCode(this.softwareVersion);
     hash = 97 * hash + Objects.hashCode(this.softwareStatement);
-    hash = 97 * hash + Objects.hashCode(this.extendedParameters);
     return hash;
   }
 
@@ -547,9 +549,6 @@ public abstract class AbstractClientMetadata implements Serializable {
     if (!Objects.equals(this.softwareStatement, other.softwareStatement)) {
       return false;
     }
-    if (!Objects.equals(this.extendedParameters, other.extendedParameters)) {
-      return false;
-    }
     if (this.tokenEndpointAuthMethod != other.tokenEndpointAuthMethod) {
       return false;
     }
@@ -569,6 +568,10 @@ public abstract class AbstractClientMetadata implements Serializable {
     if (!equalCollections(this.contacts, other.contacts)) {
       return false;
     }
+    /**
+     * Note that the extendedParameters is not included in the equality
+     * evaluation.
+     */
     return true;
   }
 
