@@ -66,7 +66,7 @@ public enum TokenAuthenticationType {
 
   //  OpenID Connect Core 1.0 Section 9 Client Authentication
   /**
-   * Clients that have received a client_secret value from the Authorization
+   * Clients that have received a `client_secret value` from the Authorization
    * Server create a JWT using an HMAC SHA algorithm, such as HMAC SHA-256. The
    * HMAC (Hash-based Message Authentication Code) is calculated using the
    * octets of the UTF-8 representation of the client_secret as the shared key.
@@ -99,10 +99,14 @@ public enum TokenAuthenticationType {
    * [OAuth.Assertions] client_assertion parameter. The value of the
    * [OAuth.Assertions] client_assertion_type parameter MUST be
    * "urn:ietf:params:oauth:client-assertion-type:jwt-bearer", per [OAuth.JWT].
+   *
+   * @see
+   * <a href="https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication">OpenID
+   * Connect Core 1.0 Client Authentication</a>
    */
   client_secret_jwt,
   /**
-   * Clients that have registered a public key sign a JWT using that key. The
+   * Clients that have registered a `public key` sign a JWT using that key. The
    * JWT MUST contain the following REQUIRED Claim Values and MAY contain the
    * following OPTIONAL Claim Values:
    * <p>
@@ -132,7 +136,21 @@ public enum TokenAuthenticationType {
    * [OAuth.Assertions] client_assertion parameter. The value of the
    * [OAuth.Assertions] client_assertion_type parameter MUST be
    * "urn:ietf:params:oauth:client-assertion-type:jwt-bearer", per [OAuth.JWT].
+   *
+   * @see
+   * <a href="https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication">OpenID
+   * Connect Core 1.0 Client Authentication</a>
    */
   private_key_jwt,
+
+  /**
+   * Indicates that client authentication to the authorization server will occur
+   * with mutual TLS utilizing the PKI method of associating a certificate to a
+   * client.
+   *
+   * @see <a href="https://tools.ietf.org/html/rfc8705">8705 OAuth 2.0
+   * Mutual-TLS</a>
+   */
+  tls_client_auth,
 
 }
