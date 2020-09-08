@@ -15,9 +15,16 @@
  */
 package org.ietf.oauth.message;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
 import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.ws.rs.core.MultivaluedMap;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
+import org.ietf.oauth.OauthUtility;
+import org.ietf.oauth.adapter.JsonCollectionAdapter;
 import org.ietf.oauth.type.GrantType;
 import org.ietf.oauth.type.ScopeType;
 
@@ -195,11 +202,12 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage {
    * strings, their order does not matter, and each string adds an additional
    * access range to the requested scope.
    */
-  private String scope;
+  @JsonbTypeAdapter(JsonCollectionAdapter.class)
+  private Collection<String> scope;
 
   public AccessTokenRequest() {
     this.grantType = AUTHORIZATION_CODE;
-    this.scope = SCOPE_TYPE.name();
+    this.scope = Collections.singleton(SCOPE_TYPE.name());
   }
 
   /**
@@ -221,14 +229,24 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage {
    * Create a new instance of this type and set field values from the provided
    * input configuration.
    *
-   * @param multivaluedMap a MVMap instance
-   * @return a new AuthenticationRequest instance
+   * @param multivaluedMap a MultivaluedMap instance
+   * @return a new class instance
    * @throws java.lang.Exception on mv-map parse error
    */
-  public static AccessTokenRequest getInstance(MultivaluedMap<String, String> multivaluedMap) throws Exception {
-    AccessTokenRequest ar = new AccessTokenRequest();
-    ar.readMultivaluedMap(multivaluedMap);
-    return ar;
+  public static AccessTokenRequest fromMultivaluedMap(MultivaluedMap<String, String> multivaluedMap) throws Exception {
+    return OauthUtility.fromMultivaluedMap(multivaluedMap, AccessTokenRequest.class);
+  }
+
+  /**
+   * Create a new instance of this type and set field values from the provided
+   * input configuration.
+   *
+   * @param urlEncodedString a URL encoded string
+   * @return the class instance
+   * @throws Exception on error
+   */
+  public static AccessTokenRequest fromUrlEncodedString(String urlEncodedString) throws Exception {
+    return OauthUtility.fromUrlEncodedString(urlEncodedString, AccessTokenRequest.class);
   }
 
   //<editor-fold defaultstate="collapsed" desc="Getter and Setter">
@@ -293,12 +311,70 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage {
     this.state = state;
   }
 
-  public String getScope() {
+  public Collection<String> getScope() {
+    if (scope == null) {
+      scope = new HashSet<>();
+    }
     return scope;
   }
 
-  public void setScope(String scope) {
+  public void setScope(Collection<String> scope) {
     this.scope = scope;
+  }//</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="Equals and Hashcode">
+  @Override
+  public int hashCode() {
+    int hash = 7;
+    hash = 67 * hash + Objects.hashCode(this.grantType);
+    hash = 67 * hash + Objects.hashCode(this.code);
+    hash = 67 * hash + Objects.hashCode(this.redirectUri);
+    hash = 67 * hash + Objects.hashCode(this.clientId);
+    hash = 67 * hash + Objects.hashCode(this.username);
+    hash = 67 * hash + Objects.hashCode(this.password);
+    hash = 67 * hash + Objects.hashCode(this.state);
+    hash = 67 * hash + Objects.hashCode(this.scope);
+    return hash;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final AccessTokenRequest other = (AccessTokenRequest) obj;
+    if (!Objects.equals(this.code, other.code)) {
+      return false;
+    }
+    if (!Objects.equals(this.redirectUri, other.redirectUri)) {
+      return false;
+    }
+    if (!Objects.equals(this.clientId, other.clientId)) {
+      return false;
+    }
+    if (!Objects.equals(this.username, other.username)) {
+      return false;
+    }
+    if (!Objects.equals(this.password, other.password)) {
+      return false;
+    }
+    if (!Objects.equals(this.state, other.state)) {
+      return false;
+    }
+    if (this.grantType != other.grantType) {
+      return false;
+    }
+
+    if (!this.getScope().containsAll(other.getScope())) {
+      return false;
+    }
+    return other.getScope().containsAll(this.getScope());
   }//</editor-fold>
 
 }
