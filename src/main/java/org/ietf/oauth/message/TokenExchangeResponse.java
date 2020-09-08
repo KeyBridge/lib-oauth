@@ -170,6 +170,7 @@ public class TokenExchangeResponse {
     this.refreshToken = refreshToken;
   }//</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="Equals and Hashcode">
   @Override
   public int hashCode() {
     int hash = 7;
@@ -210,7 +211,7 @@ public class TokenExchangeResponse {
       return false;
     }
     return (this.getScope().containsAll(other.getScope()) && other.getScope().containsAll(getScope()));
-  }
+  }//</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="Internal JWT claims builder helper class">
   /**
