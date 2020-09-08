@@ -15,10 +15,12 @@
  */
 package org.ietf.oauth.message;
 
+import java.time.Clock;
+import java.time.Duration;
 import java.time.ZonedDateTime;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTypeAdapter;
-import org.ietf.oauth.adapter.JsonZonedDateTimeAdapter;
+import org.ietf.oauth.adapter.JsonZonedDateTimeEpochAdapter;
 
 /**
  * RFC 7591 OAuth 2.0 Dynamic Registration 3.2.1. Client Information Response
@@ -63,17 +65,26 @@ public class ClientRegistrationResponse extends AbstractClientMetadata {
    * in UTC until the date/time of issuance.
    */
   @JsonbProperty("client_id_issued_at")
-  @JsonbTypeAdapter(JsonZonedDateTimeAdapter.class)
+  @JsonbTypeAdapter(JsonZonedDateTimeEpochAdapter.class)
   private ZonedDateTime issuedAt;
   /**
    * REQUIRED if "client_secret" is issued. Time at which the client secret will
    * expire or 0 if it will not expire. The time is represented as the number of
    * seconds from 1970-01-01T00:00:00Z as measured in UTC until the date/time of
    * expiration.
+   * <p>
+   * After expiration the client must re-register.
    */
   @JsonbProperty("client_secret_expires_at")
-  @JsonbTypeAdapter(JsonZonedDateTimeAdapter.class)
+  @JsonbTypeAdapter(JsonZonedDateTimeEpochAdapter.class)
   private ZonedDateTime expiresAt;
+
+  /**
+   * Default no-arg constructor. Sets the `issuedAt` field to now.
+   */
+  public ClientRegistrationResponse() {
+    this.issuedAt = ZonedDateTime.now(Clock.systemUTC());
+  }
 
   /**
    * Build a client registration response with _exact_ copies of the request
@@ -81,7 +92,8 @@ public class ClientRegistrationResponse extends AbstractClientMetadata {
    * about this client, including any fields provisioned by the authorization
    * server itself.
    * <p>
-   * Note: The response fields must be populated.
+   * Note: This copies the metadata only. The response fields must still be
+   * populated.
    *
    * @param q the client registration request
    * @return a client registration response instance
@@ -143,5 +155,15 @@ public class ClientRegistrationResponse extends AbstractClientMetadata {
   public void setExpiresAt(ZonedDateTime expiresAt) {
     this.expiresAt = expiresAt;
   }//</editor-fold>
+
+  /**
+   * Set the `expiresAt` field to a specific duration after the `issuedAt` time
+   * stamp. After expiration the client must re-register.
+   *
+   * @param duration the duration.
+   */
+  public void setDuration(Duration duration) {
+    this.expiresAt = issuedAt.plus(duration);
+  }
 
 }
