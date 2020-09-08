@@ -433,9 +433,8 @@ public abstract class AbstractClientMetadata implements Serializable {
    * the map previously contained a mapping for the key, the old value is
    * replaced by the specified value.
    *
-   * @param key            key with which the specified value is to be
-   *                       associated
-   * @param parametervalue to be associated with the specified key
+   * @param key       the key with which the specified value is to be associated
+   * @param parameter the value to be associated with the specified key
    */
   public void putExtendedParameter(String key, Object parameter) {
     getExtendedParameters().put(key, parameter);
