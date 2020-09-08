@@ -27,6 +27,7 @@ import java.util.Objects;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbTypeAdapter;
+import org.ietf.oauth.adapter.JsonCollectionAdapter;
 import org.ietf.oauth.adapter.JsonDurationSecondsAdapter;
 import org.ietf.oauth.adapter.JsonZonedDateTimeAdapter;
 import org.ietf.oauth.type.ErrorResponseType;
@@ -192,6 +193,7 @@ public class AccessTokenResponse implements Serializable {
    * strings, their order does not matter, and each string adds an additional
    * access range to the requested scope.
    */
+  @JsonbTypeAdapter(JsonCollectionAdapter.class)
   private Collection<String> scope;
 
   /**
@@ -495,11 +497,21 @@ public class AccessTokenResponse implements Serializable {
              : false; // never expires (== BAD)
   }
 
+  //<editor-fold defaultstate="collapsed" desc="Equals and Hashcode">
   @Override
   public int hashCode() {
-    int hash = 5;
+    int hash = 3;
     hash = 37 * hash + Objects.hashCode(this.accessToken);
     hash = 37 * hash + Objects.hashCode(this.tokenType);
+    hash = 37 * hash + Objects.hashCode(this.expiresIn);
+    hash = 37 * hash + Objects.hashCode(this.refreshToken);
+    hash = 37 * hash + Objects.hashCode(this.scope);
+    hash = 37 * hash + Objects.hashCode(this.state);
+    hash = 37 * hash + Objects.hashCode(this.error);
+    hash = 37 * hash + Objects.hashCode(this.errorMessage);
+    hash = 37 * hash + Objects.hashCode(this.createdAt);
+    hash = 37 * hash + Objects.hashCode(this.notBefore);
+    hash = 37 * hash + Objects.hashCode(this.notAfter);
     return hash;
   }
 
@@ -518,7 +530,37 @@ public class AccessTokenResponse implements Serializable {
     if (!Objects.equals(this.accessToken, other.accessToken)) {
       return false;
     }
-    return Objects.equals(this.tokenType, other.tokenType);
-  }
+    if (!Objects.equals(this.tokenType, other.tokenType)) {
+      return false;
+    }
+    if (!Objects.equals(this.refreshToken, other.refreshToken)) {
+      return false;
+    }
+    if (!Objects.equals(this.state, other.state)) {
+      return false;
+    }
+    if (!Objects.equals(this.error, other.error)) {
+      return false;
+    }
+    if (!Objects.equals(this.errorMessage, other.errorMessage)) {
+      return false;
+    }
+    if (!Objects.equals(this.expiresIn, other.expiresIn)) {
+      return false;
+    }
+    if (!Objects.equals(this.createdAt, other.createdAt)) {
+      return false;
+    }
+    if (!Objects.equals(this.notBefore, other.notBefore)) {
+      return false;
+    }
+    if (!Objects.equals(this.notAfter, other.notAfter)) {
+      return false;
+    }
+    if (!this.getScope().containsAll(other.getScope())) {
+      return false;
+    }
+    return other.getScope().containsAll(this.getScope());
+  }//</editor-fold>
 
 }
