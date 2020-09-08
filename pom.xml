@@ -34,7 +34,10 @@
     v2.2.0 - add RFC7662 OAuth Introspection messages
     - add RFC8414 Authorization Server Metadata
     - add RFC8693 OAuth 2.0 Token Exchange
-    - add RFC7592 OAuth 2.0 Dynamic Registration Management</description>
+    - add RFC7592 OAuth 2.0 Dynamic Registration Management
+    - rewrite URL serializer, MVMap reader to OauthUtility class
+
+  </description>
 
   <organization>
     <name>Key Bridge</name>

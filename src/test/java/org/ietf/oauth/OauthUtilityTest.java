@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ietf.oauth.message;
+package org.ietf.oauth;
 
 import ch.keybridge.json.JsonbUtility;
 import com.thedeanda.lorem.LoremIpsum;
 import java.util.Random;
 import java.util.UUID;
+import javax.ws.rs.core.MultivaluedMap;
+import org.ietf.oauth.message.AccessTokenRequest;
 import org.ietf.oauth.type.GrantType;
 import org.junit.*;
 
@@ -26,12 +28,14 @@ import org.junit.*;
  *
  * @author Key Bridge
  */
-public class AccessTokenRequestTest {
+public class OauthUtilityTest {
 
   private LoremIpsum l = LoremIpsum.getInstance();
   private Random r = new Random();
 
-  public AccessTokenRequestTest() {
+  private JsonbUtility jsonb = new JsonbUtility();
+
+  public OauthUtilityTest() {
   }
 
   @BeforeClass
@@ -51,7 +55,8 @@ public class AccessTokenRequestTest {
   }
 
   @Test
-  public void testRoundTrip() throws Exception {
+  public void testSomeMethod() throws Exception {
+
     AccessTokenRequest a = new AccessTokenRequest();
     a.setGrantType(GrantType.client_credentials);
     a.setCode(UUID.randomUUID().toString());
@@ -63,18 +68,20 @@ public class AccessTokenRequestTest {
 //    a.getScope().add(l.getWords(1));
 
     System.out.println("Marshal AccessTokenRequest");
-    System.out.println(new JsonbUtility().marshal(a));
+    System.out.println(jsonb.marshal(a));
 
-    String encodedUrl = a.toUrlEncodedString();
-    System.out.println("AccessTokenRequest as url " + encodedUrl);
+    MultivaluedMap<String, String> mvmap = OauthUtility.toMultivaluedMap(a);
 
-    AccessTokenRequest recovered = AccessTokenRequest.fromUrlEncodedString(encodedUrl);
+    System.out.println("as map \n" + mvmap);
 
-//    System.out.println("recovered...");
-//    System.out.println(new JsonbUtility().marshal(recovered));
-    Assert.assertEquals(a, recovered);
+    AccessTokenRequest recoveredMap = OauthUtility.fromMultivaluedMap(mvmap, AccessTokenRequest.class);
+    System.out.println("from map" + jsonb.marshal(recoveredMap));
 
-    System.out.println("AccessTokenRequest testRoundTrip OK");
+    String url = OauthUtility.toUrlEncodedString(a);
+    System.out.println("as url \n" + url);
+
+    AccessTokenRequest recoveredUrl = OauthUtility.fromUrlEncodedString(url, AccessTokenRequest.class);
+    System.out.println("from url " + jsonb.marshal(recoveredUrl));
 
   }
 

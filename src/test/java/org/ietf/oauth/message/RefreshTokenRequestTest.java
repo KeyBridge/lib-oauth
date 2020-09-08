@@ -19,7 +19,6 @@ import ch.keybridge.json.JsonbUtility;
 import com.thedeanda.lorem.LoremIpsum;
 import java.util.Random;
 import java.util.UUID;
-import org.ietf.oauth.AbstractUrlEncodedMessage;
 import org.junit.*;
 
 /**
@@ -30,6 +29,7 @@ public class RefreshTokenRequestTest {
 
   private LoremIpsum l = LoremIpsum.getInstance();
   private Random r = new Random();
+  private JsonbUtility jsonb = new JsonbUtility();
 
   public RefreshTokenRequestTest() {
   }
@@ -62,15 +62,15 @@ public class RefreshTokenRequestTest {
     }
 
     System.out.println("Marshal RefreshTokenRequest");
-    System.out.println(new JsonbUtility().marshal(a));
+    System.out.println(jsonb.marshal(a));
 
-    String encodedUrl = a.writeUrlEncoded();
+    String encodedUrl = a.toUrlEncodedString();
     System.out.println("RefreshTokenRequest as url " + encodedUrl);
 
-    AbstractUrlEncodedMessage recovered = a.readUrlEncodedString(encodedUrl);
+    RefreshTokenRequest recovered = a.fromUrlEncodedString(encodedUrl);
 
-//    System.out.println("recovered...");
-//    System.out.println(new JsonbUtility().marshal(recovered));
+    System.out.println("recovered...");
+    System.out.println(jsonb.marshal(recovered));
     Assert.assertEquals(a, recovered);
 
     System.out.println("RefreshTokenRequest testRoundTrip OK");

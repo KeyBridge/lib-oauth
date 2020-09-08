@@ -69,9 +69,9 @@ public class TokenExchangeRequestTest {
 //    System.out.println("TokenExchangeRequest" + json);
 
 //    System.out.println("Query : " + t.writeUrlEncoded()); // throws Exception
-    String query = t.writeUrlEncoded();
+    String query = t.toUrlEncodedString();
 
-    TokenExchangeRequest recovered = new TokenExchangeRequest().readUrlEncodedString(query);
+    TokenExchangeRequest recovered = new TokenExchangeRequest().fromUrlEncodedString(query);
 
 //    System.out.println("Recovered " + jsonb.marshal(recovered));
     Assert.assertEquals(t, recovered);

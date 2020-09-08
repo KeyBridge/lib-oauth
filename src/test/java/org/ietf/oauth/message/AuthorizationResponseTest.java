@@ -19,7 +19,6 @@ import ch.keybridge.json.JsonbUtility;
 import com.thedeanda.lorem.LoremIpsum;
 import java.util.Random;
 import java.util.UUID;
-import org.ietf.oauth.AbstractUrlEncodedMessage;
 import org.ietf.oauth.type.ErrorResponseType;
 import org.junit.*;
 
@@ -63,10 +62,10 @@ public class AuthorizationResponseTest {
     System.out.println("Marshal AuthorizationResponse");
     System.out.println(new JsonbUtility().marshal(a));
 
-    String encodedUrl = a.writeUrlEncoded();
+    String encodedUrl = a.toUrlEncodedString();
     System.out.println("AuthorizationResponse as url " + encodedUrl);
 
-    AbstractUrlEncodedMessage recovered = a.readUrlEncodedString(encodedUrl);
+    AuthorizationResponse recovered = AuthorizationResponse.fromUrlEncodedString(encodedUrl);
 
 //    System.out.println("recovered...");
 //    System.out.println(new JsonbUtility().marshal(recovered));
