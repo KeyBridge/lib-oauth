@@ -16,13 +16,13 @@
 package org.ietf.oauth.message;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.TreeSet;
+import java.util.*;
 import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.ws.rs.core.MultivaluedMap;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
+import org.ietf.oauth.OauthUtility;
+import org.ietf.oauth.adapter.JsonCollectionAdapter;
 import org.ietf.oauth.type.ResponseType;
 import org.ietf.oauth.type.ScopeType;
 
@@ -139,6 +139,7 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
    * strings, their order does not matter, and each string adds an additional
    * access range to the requested scope.
    */
+  @JsonbTypeAdapter(JsonCollectionAdapter.class)
   private Collection<String> scope;
   /**
    * RECOMMENDED. An opaque value used by the client to maintain state between
@@ -174,14 +175,24 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
    * Create a new instance of this type and set field values from the provided
    * input configuration.
    *
-   * @param multivaluedMap a MVMap instance
-   * @return a new AuthenticationRequest instance
+   * @param multivaluedMap a MultivaluedMap instance
+   * @return a new class instance
    * @throws java.lang.Exception on mv-map parse error
    */
-  public static AuthorizationRequest getInstance(MultivaluedMap<String, String> multivaluedMap) throws Exception {
-    AuthorizationRequest ar = new AuthorizationRequest();
-    ar.readMultivaluedMap(multivaluedMap);
-    return ar;
+  public static AuthorizationRequest fromMultivaluedMap(MultivaluedMap<String, String> multivaluedMap) throws Exception {
+    return OauthUtility.fromMultivaluedMap(multivaluedMap, AuthorizationRequest.class);
+  }
+
+  /**
+   * Create a new instance of this type and set field values from the provided
+   * input configuration.
+   *
+   * @param urlEncodedString a URL encoded string
+   * @return the class instance
+   * @throws Exception on error
+   */
+  public static AuthorizationRequest fromUrlEncodedString(String urlEncodedString) throws Exception {
+    return OauthUtility.fromUrlEncodedString(urlEncodedString, AuthorizationRequest.class);
   }
 
   //<editor-fold defaultstate="collapsed" desc="Getter and Setter">
@@ -211,7 +222,7 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
 
   public Collection<String> getScope() {
     if (scope == null) {
-      scope = new TreeSet<>();
+      scope = new HashSet<>();
     }
     return scope;
   }
@@ -232,6 +243,7 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
     this.state = state;
   }//</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="Equals and Hashcode">
   @Override
   public int hashCode() {
     int hash = 7;
@@ -267,7 +279,10 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
     if (this.responseType != other.responseType) {
       return false;
     }
-    return Objects.equals(this.scope, other.scope);
-  }
+    if (!this.getScope().containsAll(other.getScope())) {
+      return false;
+    }
+    return other.getScope().containsAll(this.getScope());
+  }//</editor-fold>
 
 }
