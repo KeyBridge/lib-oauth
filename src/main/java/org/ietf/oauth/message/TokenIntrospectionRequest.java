@@ -16,7 +16,9 @@
 package org.ietf.oauth.message;
 
 import javax.json.bind.annotation.JsonbProperty;
+import javax.ws.rs.core.MultivaluedMap;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
+import org.ietf.oauth.OauthUtility;
 
 /**
  * Request for Comments: 7662 OAuth 2.0 Token Introspection request message
@@ -58,6 +60,30 @@ public class TokenIntrospectionRequest extends AbstractUrlEncodedMessage {
    */
   @JsonbProperty("token_type_hint")
   private String tokenTypeHint;
+
+  /**
+   * Create a new instance of this type and set field values from the provided
+   * input configuration.
+   *
+   * @param multivaluedMap a MultivaluedMap instance
+   * @return a new class instance
+   * @throws java.lang.Exception on mv-map parse error
+   */
+  public static TokenIntrospectionRequest fromMultivaluedMap(MultivaluedMap<String, String> multivaluedMap) throws Exception {
+    return OauthUtility.fromMultivaluedMap(multivaluedMap, TokenIntrospectionRequest.class);
+  }
+
+  /**
+   * Create a new instance of this type and set field values from the provided
+   * input configuration.
+   *
+   * @param urlEncodedString a URL encoded string
+   * @return the class instance
+   * @throws Exception on error
+   */
+  public static TokenIntrospectionRequest fromUrlEncodedString(String urlEncodedString) throws Exception {
+    return OauthUtility.fromUrlEncodedString(urlEncodedString, TokenIntrospectionRequest.class);
+  }
 
   //<editor-fold defaultstate="collapsed" desc="Getter and Setter">
   public String getToken() {
