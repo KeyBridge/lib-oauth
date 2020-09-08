@@ -72,57 +72,57 @@ public class ServerMetadataResponseTest {
   }
 
   private ServerMetadataResponse buildResponse() {
-    ServerMetadataResponse r = new ServerMetadataResponse();
+    ServerMetadataResponse smr = new ServerMetadataResponse();
 
-    r.setIssuer(l.getUrl());
-    r.setAuthorizationEndpoint(getUri());
-    r.setTokenEndpoint(getUri());
-    r.setJwksUri(getUri());
+    smr.setIssuer(l.getUrl());
+    smr.setAuthorizationEndpoint(getUri());
+    smr.setTokenEndpoint(getUri());
+    smr.setJwksUri(getUri());
 
-    r.getScopesSupported().add(l.getWords(1));
-    r.getScopesSupported().add(l.getWords(1));
-    r.getScopesSupported().add(l.getWords(1));
+    smr.getScopesSupported().add(l.getWords(1));
+    smr.getScopesSupported().add(l.getWords(1));
+    smr.getScopesSupported().add(l.getWords(1));
 
-    r.setRegistrationEndpoint(getUri());
-    r.getResponseTypesSupported().add(ResponseType.code);
-    r.getResponseTypesSupported().add(ResponseType.id_token);
-    r.getResponseTypesSupported().add(ResponseType.token);
+    smr.setRegistrationEndpoint(getUri());
+    smr.getResponseTypesSupported().add(ResponseType.code);
+    smr.getResponseTypesSupported().add(ResponseType.id_token);
+    smr.getResponseTypesSupported().add(ResponseType.token);
 
-    r.getResponseModesSupported().add(l.getWords(1));
-    r.getResponseModesSupported().add(l.getWords(1));
-    r.getResponseModesSupported().add(l.getWords(1));
+    smr.getResponseModesSupported().add(l.getWords(1));
+    smr.getResponseModesSupported().add(l.getWords(1));
+    smr.getResponseModesSupported().add(l.getWords(1));
 
-    r.getGrantTypesSupported().add(GrantType.implicit);
-    r.getGrantTypesSupported().add(GrantType.jwt_bearer);
-    r.getGrantTypesSupported().add(GrantType.client_credentials);
+    smr.getGrantTypesSupported().add(GrantType.implicit);
+    smr.getGrantTypesSupported().add(GrantType.jwt_bearer);
+    smr.getGrantTypesSupported().add(GrantType.client_credentials);
 
-    r.getTokenEndpointAuthMethodsSupported().add(TokenAuthenticationType.none);
-    r.getTokenEndpointAuthMethodsSupported().add(TokenAuthenticationType.client_secret_basic);
+    smr.getTokenEndpointAuthMethodsSupported().add(TokenAuthenticationType.none);
+    smr.getTokenEndpointAuthMethodsSupported().add(TokenAuthenticationType.client_secret_basic);
 
-    r.getTokenEndpointAuthSigningAlgValuesSupported().add(l.getWords(1));
+    smr.getTokenEndpointAuthSigningAlgValuesSupported().add(l.getWords(1));
 
-    r.setServiceDocumentation(getUri());
+    smr.setServiceDocumentation(getUri());
 
-    r.getUiLocalesSupported().add(Locale.UK);
-    r.getUiLocalesSupported().add(Locale.FRANCE);
-    r.getUiLocalesSupported().add(Locale.US);
-    r.setOpTosUri(getUri());
-    r.setRevocationEndpoint(getUri());
-    r.getRevocationEndpointAuthMethodsSupported().add(l.getWords(1));
-    r.getRevocationEndpointAuthMethodsSupported().add(l.getWords(1));
-    r.getRevocationEndpointAuthSigningAlgValuesSupported().add(l.getWords(1));
-    r.getRevocationEndpointAuthSigningAlgValuesSupported().add(l.getWords(1));
+    smr.getUiLocalesSupported().add(Locale.UK);
+    smr.getUiLocalesSupported().add(Locale.FRANCE);
+    smr.getUiLocalesSupported().add(Locale.US);
+    smr.setOpTosUri(getUri());
+    smr.setRevocationEndpoint(getUri());
+    smr.getRevocationEndpointAuthMethodsSupported().add(l.getWords(1));
+    smr.getRevocationEndpointAuthMethodsSupported().add(l.getWords(1));
+    smr.getRevocationEndpointAuthSigningAlgValuesSupported().add(l.getWords(1));
+    smr.getRevocationEndpointAuthSigningAlgValuesSupported().add(l.getWords(1));
 
-    r.setIntrospectionEndpoint(getUri());
+    smr.setIntrospectionEndpoint(getUri());
 
-    r.getIntrospectionEndpointAuthMethodsSupported().add(l.getWords(1));
-    r.getIntrospectionEndpointAuthSigningAlgValuesSupported().add(l.getWords(1));
+    smr.getIntrospectionEndpointAuthMethodsSupported().add(l.getWords(1));
+    smr.getIntrospectionEndpointAuthSigningAlgValuesSupported().add(l.getWords(1));
 
-    r.getCodeChallengeMethodsSupported().add(l.getWords(1));
-    r.getCodeChallengeMethodsSupported().add(l.getWords(1));
-    r.getCodeChallengeMethodsSupported().add(l.getWords(1));
+    smr.getCodeChallengeMethodsSupported().add(l.getWords(1));
+    smr.getCodeChallengeMethodsSupported().add(l.getWords(1));
+    smr.getCodeChallengeMethodsSupported().add(l.getWords(1));
 
-    return r;
+    return smr;
   }
 
   private URI getUri() {
