@@ -20,7 +20,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTypeAdapter;
+import javax.ws.rs.core.MultivaluedMap;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
+import org.ietf.oauth.OauthUtility;
 import org.ietf.oauth.adapter.JsonCollectionAdapter;
 import org.ietf.oauth.adapter.JsonGrantTypeAdapter;
 import org.ietf.oauth.adapter.JsonTokenTypeAdapter;
@@ -149,6 +151,30 @@ public class TokenExchangeRequest extends AbstractUrlEncodedMessage {
     this.grantType = GrantType.token_exchange;
   }
 
+  /**
+   * Create a new instance of this type and set field values from the provided
+   * input configuration.
+   *
+   * @param multivaluedMap a MultivaluedMap instance
+   * @return a new class instance
+   * @throws java.lang.Exception on mv-map parse error
+   */
+  public static TokenExchangeRequest fromMultivaluedMap(MultivaluedMap<String, String> multivaluedMap) throws Exception {
+    return OauthUtility.fromMultivaluedMap(multivaluedMap, TokenExchangeRequest.class);
+  }
+
+  /**
+   * Create a new instance of this type and set field values from the provided
+   * input configuration.
+   *
+   * @param urlEncodedString a URL encoded string
+   * @return the class instance
+   * @throws Exception on error
+   */
+  public static TokenExchangeRequest fromUrlEncodedString(String urlEncodedString) throws Exception {
+    return OauthUtility.fromUrlEncodedString(urlEncodedString, TokenExchangeRequest.class);
+  }
+
   //<editor-fold defaultstate="collapsed" desc="Getter and Setter">
   public GrantType getGrantType() {
     return grantType;
@@ -238,6 +264,7 @@ public class TokenExchangeRequest extends AbstractUrlEncodedMessage {
     this.actorTokenType = actorTokenType;
   }//</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="Equals and Hashcode">
   @Override
   public int hashCode() {
     int hash = 3;
@@ -291,7 +318,6 @@ public class TokenExchangeRequest extends AbstractUrlEncodedMessage {
       return false;
     }
     return (this.getScope().containsAll(other.getScope()) && other.getScope().containsAll(getScope()));
-
-  }
+  }//</editor-fold>
 
 }
