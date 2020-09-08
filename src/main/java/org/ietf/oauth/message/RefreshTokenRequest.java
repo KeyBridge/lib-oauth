@@ -18,9 +18,13 @@ package org.ietf.oauth.message;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.ws.rs.core.MultivaluedMap;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
+import org.ietf.oauth.OauthUtility;
+import org.ietf.oauth.adapter.JsonCollectionAdapter;
 
 /**
  * RFC 6749 OAuth 2.0
@@ -112,6 +116,7 @@ public class RefreshTokenRequest extends AbstractUrlEncodedMessage implements Se
    * resource owner, and if omitted is treated as equal to the scope originally
    * granted by the resource owner.
    */
+  @JsonbTypeAdapter(JsonCollectionAdapter.class)
   private Collection<String> scope;
 
   public RefreshTokenRequest() {
@@ -131,7 +136,7 @@ public class RefreshTokenRequest extends AbstractUrlEncodedMessage implements Se
    * @param refresh_token the previously issued token (if any)
    * @return a RefreshTokenRequest instance with no scope.
    */
-  public static RefreshTokenRequest getInstanceRefresh(String client_id, String refresh_token) {
+  public static RefreshTokenRequest getInstance(String client_id, String refresh_token) {
     RefreshTokenRequest tr = new RefreshTokenRequest();
     tr.setGrantType(REFRESH_TOKEN);
     tr.setClientId(client_id);
@@ -143,14 +148,24 @@ public class RefreshTokenRequest extends AbstractUrlEncodedMessage implements Se
    * Create a new instance of this type and set field values from the provided
    * input configuration.
    *
-   * @param multivaluedMap a MVMap instance
-   * @return a new AuthenticationRequest instance
+   * @param multivaluedMap a MultivaluedMap instance
+   * @return a new class instance
    * @throws java.lang.Exception on mv-map parse error
    */
-  public static RefreshTokenRequest getInstance(MultivaluedMap<String, String> multivaluedMap) throws Exception {
-    RefreshTokenRequest tr = new RefreshTokenRequest();
-    tr.readMultivaluedMap(multivaluedMap);
-    return tr;
+  public static RefreshTokenRequest fromMultivaluedMap(MultivaluedMap<String, String> multivaluedMap) throws Exception {
+    return OauthUtility.fromMultivaluedMap(multivaluedMap, RefreshTokenRequest.class);
+  }
+
+  /**
+   * Create a new instance of this type and set field values from the provided
+   * input configuration.
+   *
+   * @param urlEncodedString a URL encoded string
+   * @return the class instance
+   * @throws Exception on error
+   */
+  public static RefreshTokenRequest fromUrlEncodedString(String urlEncodedString) throws Exception {
+    return OauthUtility.fromUrlEncodedString(urlEncodedString, RefreshTokenRequest.class);
   }
 
   //<editor-fold defaultstate="collapsed" desc="Getter and Setter">
@@ -191,6 +206,44 @@ public class RefreshTokenRequest extends AbstractUrlEncodedMessage implements Se
 
   public void addScope(String scope) {
     getScope().add(scope);
+  }//</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="Equals and Hashcode">
+  @Override
+  public int hashCode() {
+    int hash = 3;
+    hash = 31 * hash + Objects.hashCode(this.grantType);
+    hash = 31 * hash + Objects.hashCode(this.clientId);
+    hash = 31 * hash + Objects.hashCode(this.refreshToken);
+    hash = 31 * hash + Objects.hashCode(this.scope);
+    return hash;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final RefreshTokenRequest other = (RefreshTokenRequest) obj;
+    if (!Objects.equals(this.grantType, other.grantType)) {
+      return false;
+    }
+    if (!Objects.equals(this.clientId, other.clientId)) {
+      return false;
+    }
+    if (!Objects.equals(this.refreshToken, other.refreshToken)) {
+      return false;
+    }
+    if (!this.getScope().containsAll(other.getScope())) {
+      return false;
+    }
+    return other.getScope().containsAll(this.getScope());
   }//</editor-fold>
 
 }
