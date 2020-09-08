@@ -19,10 +19,12 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.json.bind.adapter.JsonbAdapter;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
@@ -49,7 +51,7 @@ public class OauthUtility {
    * @param urlEncodedString a URL-encoded query string.
    * @return a MultivaluedMap instance
    */
-  public static MultivaluedMap<String, String> parseUrlEncodedString(String urlEncodedString) {
+  public static MultivaluedMap<String, Object> parseUrlEncodedString(String urlEncodedString) {
     /**
      * Parse the query string into an MVMap.
      * <p>
@@ -57,7 +59,7 @@ public class OauthUtility {
      * ensure a match with the class field name. In this library all field names
      * are lower case. Currently the parsing logic is extremely case sensitive.
      */
-    MultivaluedMap<String, String> multivaluedMap = new MultivaluedHashMap<>();
+    MultivaluedMap<String, Object> multivaluedMap = new MultivaluedHashMap<>();
     for (String string : urlEncodedString.split("&")) {
       try {
         multivaluedMap.add(string.split("=")[0], URLDecoder.decode(string.split("=")[1], StandardCharsets.UTF_8.name()));
@@ -87,9 +89,9 @@ public class OauthUtility {
      * Use the Jersey UriBuilder to handle encoding.
      */
     UriBuilder uribuilder = UriBuilder.fromUri("");
-    MultivaluedMap<String, String> mvMap = toMultivaluedMap(instance);
-    for (Map.Entry<String, List<String>> entry : mvMap.entrySet()) {
-      for (String value : entry.getValue()) {
+    MultivaluedMap<String, Object> mvMap = toMultivaluedMap(instance);
+    for (Map.Entry<String, List<Object>> entry : mvMap.entrySet()) {
+      for (Object value : entry.getValue()) {
         uribuilder.queryParam(entry.getKey(), value);
       }
     }
@@ -101,8 +103,6 @@ public class OauthUtility {
   }
 
   public static <T> T fromUrlEncodedString(String urlEncodedString, Class cls) throws Exception {
-    System.out.println("debug fromUrlEncodedString " + cls.getSimpleName());
-
     return fromMultivaluedMap(parseUrlEncodedString(urlEncodedString), cls);
   }
 
@@ -113,7 +113,7 @@ public class OauthUtility {
    * @param instance an object instance
    * @return a MultivaluedMap instance configuration
    */
-  public static MultivaluedMap<String, String> toMultivaluedMap(Object instance) {
+  public static MultivaluedMap<String, Object> toMultivaluedMap(Object instance) {
     return toMultivaluedMap(instance, instance.getClass());
   }
 
@@ -126,14 +126,14 @@ public class OauthUtility {
    * @param cls      the class type
    * @return a non-null MultivaluedMap instance
    */
-  private static MultivaluedMap<String, String> toMultivaluedMap(Object instance, Class cls) {
-    MultivaluedMap<String, String> multivaluedMap = new MultivaluedHashMap<>();
+  private static MultivaluedMap<String, Object> toMultivaluedMap(Object instance, Class cls) {
+    MultivaluedMap<String, Object> multivaluedMap = new MultivaluedHashMap<>();
     if (cls.getSuperclass() != null) {
       /**
        * If the class extends another then first recursive to inspect the super
        * class.
        */
-      for (Map.Entry<String, List<String>> entry : toMultivaluedMap(instance, cls.getSuperclass()).entrySet()) {
+      for (Map.Entry<String, List<Object>> entry : toMultivaluedMap(instance, cls.getSuperclass()).entrySet()) {
         multivaluedMap.put(entry.getKey(), entry.getValue());
       }
     }
@@ -171,48 +171,26 @@ public class OauthUtility {
           if (field.getDeclaredAnnotation(JsonbTypeAdapter.class) != null) {
             JsonbTypeAdapter typeAdapter = field.getDeclaredAnnotation(JsonbTypeAdapter.class);
             JsonbAdapter adapter = typeAdapter.value().getConstructor().newInstance();
-            multivaluedMap.putSingle(fieldName, (String) adapter.adaptToJson(fieldValue));
+            multivaluedMap.putSingle(fieldName, adapter.adaptToJson(fieldValue));
           } else if (field.getType().isAssignableFrom(Collection.class)) {
             /**
-             * Intercept collections. Extract the collection into a String list,
-             * then write the String list to the URI builder.
+             * Intercept collections. Extract the collection then add the
+             * collection to the map.
              */
-            Collection<Object> theCollection = (Collection) field.get(instance);
-            if (!theCollection.isEmpty()) {
-              List<String> theStringList = new ArrayList<>();
-              /**
-               * Using the XmlAdapter if available to correctly marshal Object
-               * to String.
-               */
-              if (field.getDeclaredAnnotation(JsonbTypeAdapter.class) != null) {
-                JsonbTypeAdapter typeAdapter = field.getDeclaredAnnotation(JsonbTypeAdapter.class);
-                JsonbAdapter adapter = typeAdapter.value().getConstructor().newInstance();
-                for (Object object : theCollection) {
-                  theStringList.add((String) adapter.adaptToJson(object)); // throws Exception
-                }
-              } else {
-                theStringList = theCollection.stream()
-                  .map(o -> String.valueOf(o))
-                  .collect(Collectors.toList());
-              }
-              /**
-               * Record the collection adapted to JSON strings.
-               */
-              multivaluedMap.put(fieldName, theStringList);
-            }
+            multivaluedMap.addAll(fieldName, (Collection) field.get(instance));
           } else {
             /**
              * The field is a normal field with no transformer. Write its String
              * value to the map.
              */
-            multivaluedMap.putSingle(fieldName, String.valueOf(field.get(instance)));
+            multivaluedMap.putSingle(fieldName, field.get(instance));
           }
         }
       } catch (Exception exception) {
         LOG.log(Level.INFO, "Error accessing field {0}.{1}", new Object[]{cls.getSimpleName(), field.getName()});
+        LOG.log(Level.SEVERE, null, exception);
       }
     }
-
     /**
      * Done.
      */
@@ -266,7 +244,7 @@ public class OauthUtility {
    * @return an object instance of the class
    * @throws Exception on parse or method assignment error
    */
-  public static <T> T fromMultivaluedMap(MultivaluedMap<String, String> multivaluedMap, Class cls) throws Exception {
+  public static <T> T fromMultivaluedMap(MultivaluedMap<String, Object> multivaluedMap, Class cls) throws Exception {
     /**
      * Instantiate a new instance of the class.
      */
@@ -278,7 +256,7 @@ public class OauthUtility {
     /**
      * Scan and apply the multi-map.
      */
-    for (Map.Entry<String, List<String>> entry : multivaluedMap.entrySet()) {
+    for (Map.Entry<String, List<Object>> entry : multivaluedMap.entrySet()) {
       try {
         Field field = jsonNamedFields.get(entry.getKey());
         field.setAccessible(true);
@@ -306,14 +284,14 @@ public class OauthUtility {
            * Call the add[type] method, using the Json Adapter if available to
            * correctly unmarshal String to object (Enum, etc.)
            */
-          for (String stringValue : entry.getValue()) {
+          for (Object entryValue : entry.getValue()) {
             /**
              * param is a space-delimited list of Strings. Split and parse.
              */
             if (field.getDeclaredAnnotation(JsonbTypeAdapter.class) != null) {
               JsonbTypeAdapter typeAdapter = field.getDeclaredAnnotation(JsonbTypeAdapter.class);
               JsonbAdapter adapter = typeAdapter.value().getConstructor().newInstance();
-              addMethod.invoke(instance, adapter.adaptFromJson(stringValue));
+              addMethod.invoke(instance, adapter.adaptFromJson(entryValue));
             } else {
               /**
                * If no Adapter then the add method must accept a single
@@ -322,10 +300,10 @@ public class OauthUtility {
                * lists must be intercepted with an adapter.
                */
               if (addMethod.getParameters()[0].getType().isEnum()) {
-                Enum enumInstance = buildEnumInstance((Class<Enum>) addMethod.getParameters()[0].getType(), stringValue);
+                Enum enumInstance = buildEnumInstance((Class<Enum>) addMethod.getParameters()[0].getType(), (String) entryValue);
                 addMethod.invoke(instance, enumInstance);
               } else {
-                addMethod.invoke(instance, stringValue);
+                addMethod.invoke(instance, entryValue);
               }
             }
           }
@@ -344,8 +322,8 @@ public class OauthUtility {
              * (This is not an assumption, but an implicit requirement.) Complex
              * object lists must be intercepted with an adapter.
              */
-            if (field.getType().isEnum()) {
-              Enum enumInstance = buildEnumInstance((Class<Enum>) field.getType(), entry.getValue().get(0));
+            if (field.getType().isEnum() && !entry.getValue().get(0).getClass().isEnum()) {
+              Enum enumInstance = buildEnumInstance((Class<Enum>) field.getType(), (String) entry.getValue().get(0));
               field.set(instance, enumInstance);
             } else {
               field.set(instance, entry.getValue().get(0));
