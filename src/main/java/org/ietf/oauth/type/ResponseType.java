@@ -30,19 +30,22 @@ package org.ietf.oauth.type;
 public enum ResponseType {
 
   /**
-   * code: Used for the authorization code grant type.
+   * Used for the authorization code grant type.
    */
   code("Authorization Code Grant Type"),
   /**
-   * token: Used for the implicit grant type.
+   * Used for the implicit grant type.
    */
   token("Implicit Grant Type"),
   /**
-   * id_token: Include an ID Token in the Authorization Request.
+   * Include an ID Token in the Authorization Request.
    */
   id_token("ID Token"),
+
   /**
-   * mac: Message access token. Used for client registration.
+   * @deprecated use `token`
+   *
+   * Message access token. Used for client registration.
    */
   mac("Message access token");
 
