@@ -425,6 +425,20 @@ public abstract class AbstractClientMetadata implements Serializable {
 
   public void setExtendedParameters(Map<String, Object> extendedParameters) {
     this.extendedParameters = extendedParameters;
+  }
+
+  /**
+   * Shortcut to 'put' an entry to the `extendedParameters` map. Associates the
+   * specified value with the specified key in this map (optional operation). If
+   * the map previously contained a mapping for the key, the old value is
+   * replaced by the specified value.
+   *
+   * @param key            key with which the specified value is to be
+   *                       associated
+   * @param parametervalue to be associated with the specified key
+   */
+  public void putExtendedParameter(String key, Object parameter) {
+    getExtendedParameters().put(key, parameter);
   }//</editor-fold>
 
   /**
