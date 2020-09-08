@@ -454,6 +454,33 @@ public abstract class AbstractClientMetadata implements Serializable {
     }
   }
 
+  /**
+   * Helper method to copy metadata from another instance to this. This method
+   * copies all common client metada fields EXCEPT the ExtendedParameters map,
+   * which if desired must be copied separately.
+   *
+   * @param source the source instance
+   */
+  protected void copyMetadata(AbstractClientMetadata source) {
+    this.setRedirectUris(source.getRedirectUris());
+    this.setTokenEndpointAuthMethod(source.getTokenEndpointAuthMethod());
+    this.setGrantTypes(source.getGrantTypes());
+    this.setResponseTypes(source.getResponseTypes());
+    this.setClientName(source.getClientName());
+    this.setClientUri(source.getClientUri());
+    this.setLogoUri(source.getLogoUri());
+    this.setScope(source.getScope());
+    this.setContacts(source.getContacts());
+    this.setTosUri(source.getTosUri());
+    this.setPolicyUri(source.getPolicyUri());
+    this.setJwks(source.getJwks());
+    this.setJwksUri(source.getJwksUri());
+    this.setSoftwareId(source.getSoftwareId());
+    this.setSoftwareVersion(source.getSoftwareVersion());
+    this.setSoftwareStatement(source.getSoftwareStatement());
+//    this.setExtendedParameters(source.getExtendedParameters());
+  }
+
   //<editor-fold defaultstate="collapsed" desc="Equals and Hashcode">
   @Override
   public int hashCode() {
