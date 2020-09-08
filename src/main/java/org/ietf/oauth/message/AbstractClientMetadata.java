@@ -16,10 +16,8 @@
 package org.ietf.oauth.message;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.lang.reflect.Field;
+import java.util.*;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTypeAdapter;
 import org.ietf.oauth.adapter.JsonCollectionAdapter;
@@ -68,10 +66,10 @@ public abstract class AbstractClientMetadata implements Serializable {
    * <p>
    * - "none": The client is a public client as defined in OAuth 2.0, Section
    * 2.1, and does not have a client secret.  <br>
-   * "client_secret_post": The client uses the HTTP POST parameters as defined
+   * - "client_secret_post": The client uses the HTTP POST parameters as defined
    * in OAuth 2.0, Section 2.3.1.  <br>
-   * "client_secret_basic": The client uses HTTP Basic as defined in OAuth 2.0,
-   * Section 2.3.1.
+   * - "client_secret_basic": The client uses HTTP Basic as defined in OAuth
+   * 2.0, Section 2.3.1.
    * <p>
    * Additional values can be defined via the IANA "OAuth Token Endpoint
    * Authentication Methods" registry established in Section 4.2. Absolute URIs
@@ -266,18 +264,16 @@ public abstract class AbstractClientMetadata implements Serializable {
   protected Map<String, Object> extendedParameters;
 
   /**
-   * Default no-arg constructor. Initializes collections and maps.
+   * Default no-arg constructor.
    */
   public AbstractClientMetadata() {
-    redirectUris = new TreeSet<>();
-    grantTypes = new TreeSet<>();
-    responseTypes = new TreeSet<>();
-    contacts = new TreeSet<>();
-    extendedParameters = new TreeMap<>();
   }
 
   //<editor-fold defaultstate="collapsed" desc="Getter and Setter">
   public Collection<String> getRedirectUris() {
+    if (redirectUris == null) {
+      redirectUris = new TreeSet<>();
+    }
     return redirectUris;
   }
 
@@ -294,6 +290,9 @@ public abstract class AbstractClientMetadata implements Serializable {
   }
 
   public Collection<GrantType> getGrantTypes() {
+    if (grantTypes == null) {
+      grantTypes = new TreeSet<>();
+    }
     return grantTypes;
   }
 
@@ -302,6 +301,9 @@ public abstract class AbstractClientMetadata implements Serializable {
   }
 
   public Collection<ResponseType> getResponseTypes() {
+    if (responseTypes == null) {
+      responseTypes = new TreeSet<>();
+    }
     return responseTypes;
   }
 
@@ -334,6 +336,9 @@ public abstract class AbstractClientMetadata implements Serializable {
   }
 
   public Collection<String> getScope() {
+    if (scope == null) {
+      scope = new TreeSet<>();
+    }
     return scope;
   }
 
@@ -342,6 +347,9 @@ public abstract class AbstractClientMetadata implements Serializable {
   }
 
   public Collection<String> getContacts() {
+    if (contacts == null) {
+      contacts = new TreeSet<>();
+    }
     return contacts;
   }
 
@@ -406,11 +414,165 @@ public abstract class AbstractClientMetadata implements Serializable {
   }
 
   public Map<String, Object> getExtendedParameters() {
+    if (extendedParameters == null) {
+      extendedParameters = new TreeMap<>();
+    }
     return extendedParameters;
   }
 
   public void setExtendedParameters(Map<String, Object> extendedParameters) {
     this.extendedParameters = extendedParameters;
+  }//</editor-fold>
+
+  /**
+   * Helper method to prepare this object for serialization. Generally entries
+   * with zero elements SHOULD be omitted from the response.
+   */
+  public void prepareForSerialization() {
+    /**
+     * Scan the current class and the superclass (the abstract class) declared
+     * fields for Collections. If any collection instance is not null AND empty
+     * then set the field value to null.
+     */
+    for (Class cls = this.getClass(); cls != null; cls = cls.getSuperclass()) {
+      for (Field field : cls.getDeclaredFields()) {
+        try {
+          field.setAccessible(true);
+          if (field.getType().isAssignableFrom(Map.class)) {
+            if (field.get(this) != null && ((Map) field.get(this)).isEmpty()) {
+              field.set(this, null);
+            }
+          } else if (field.getType().isAssignableFrom(Collection.class)) {
+            if (field.get(this) != null && ((Collection) field.get(this)).isEmpty()) {
+              field.set(this, null);
+            }
+          }
+        } catch (IllegalArgumentException | IllegalAccessException exception) {
+          System.err.println("Error clearing empty collection for field " + field.getName());
+        }
+      }
+    }
+  }
+
+  //<editor-fold defaultstate="collapsed" desc="Equals and Hashcode">
+  @Override
+  public int hashCode() {
+    int hash = 7;
+    hash = 97 * hash + Objects.hashCode(this.redirectUris);
+    hash = 97 * hash + Objects.hashCode(this.tokenEndpointAuthMethod);
+    hash = 97 * hash + Objects.hashCode(this.grantTypes);
+    hash = 97 * hash + Objects.hashCode(this.responseTypes);
+    hash = 97 * hash + Objects.hashCode(this.clientName);
+    hash = 97 * hash + Objects.hashCode(this.clientUri);
+    hash = 97 * hash + Objects.hashCode(this.logoUri);
+    hash = 97 * hash + Objects.hashCode(this.scope);
+    hash = 97 * hash + Objects.hashCode(this.contacts);
+    hash = 97 * hash + Objects.hashCode(this.tosUri);
+    hash = 97 * hash + Objects.hashCode(this.policyUri);
+    hash = 97 * hash + Objects.hashCode(this.jwksUri);
+    hash = 97 * hash + Objects.hashCode(this.jwks);
+    hash = 97 * hash + Objects.hashCode(this.softwareId);
+    hash = 97 * hash + Objects.hashCode(this.softwareVersion);
+    hash = 97 * hash + Objects.hashCode(this.softwareStatement);
+    hash = 97 * hash + Objects.hashCode(this.extendedParameters);
+    return hash;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final AbstractClientMetadata other = (AbstractClientMetadata) obj;
+    if (!Objects.equals(this.clientName, other.clientName)) {
+      return false;
+    }
+    if (!Objects.equals(this.clientUri, other.clientUri)) {
+      return false;
+    }
+    if (!Objects.equals(this.logoUri, other.logoUri)) {
+      return false;
+    }
+    if (!Objects.equals(this.tosUri, other.tosUri)) {
+      return false;
+    }
+    if (!Objects.equals(this.policyUri, other.policyUri)) {
+      return false;
+    }
+    if (!Objects.equals(this.jwksUri, other.jwksUri)) {
+      return false;
+    }
+    if (!Objects.equals(this.jwks, other.jwks)) {
+      return false;
+    }
+    if (!Objects.equals(this.softwareId, other.softwareId)) {
+      return false;
+    }
+    if (!Objects.equals(this.softwareVersion, other.softwareVersion)) {
+      return false;
+    }
+    if (!Objects.equals(this.softwareStatement, other.softwareStatement)) {
+      return false;
+    }
+    if (!Objects.equals(this.extendedParameters, other.extendedParameters)) {
+      return false;
+    }
+    if (this.tokenEndpointAuthMethod != other.tokenEndpointAuthMethod) {
+      return false;
+    }
+    // compare collections and maps
+    if (!equalCollections(this.scope, other.scope)) {
+      return false;
+    }
+    if (!equalCollections(this.redirectUris, other.redirectUris)) {
+      return false;
+    }
+    if (!equalCollections(this.grantTypes, other.grantTypes)) {
+      return false;
+    }
+    if (!equalCollections(this.responseTypes, other.responseTypes)) {
+      return false;
+    }
+    if (!equalCollections(this.contacts, other.contacts)) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Internal method to compare two collections. Evaluates whether both
+   * collections fully contain each other. This is needed since the collections
+   * may be different types (e.g. HashSet vs. Array).
+   *
+   * @param thisCollection  this object's collection
+   * @param otherCollection the other object's collection
+   * @return true if both collections fully contain the other (i.e. are equal)
+   */
+  protected boolean equalCollections(Collection thisCollection, Collection otherCollection) {
+    if (thisCollection == null && otherCollection == null) {
+      return true;
+    }
+    if (thisCollection == null || otherCollection == null) {
+      return false;
+    }
+    if (thisCollection.isEmpty() && otherCollection.isEmpty()) {
+      return true;
+    }
+    ArrayList one = new ArrayList(thisCollection);
+    ArrayList two = new ArrayList(otherCollection);
+    /**
+     * Clean up the 'scope' array. JSONB deserialization has a tendency to add
+     * an empty entry.
+     */
+    one.remove("");
+    two.remove("");
+    return one.containsAll(two) && two.containsAll(one);
   }//</editor-fold>
 
 }
