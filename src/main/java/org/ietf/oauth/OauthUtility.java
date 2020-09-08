@@ -19,10 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.bind.adapter.JsonbAdapter;
@@ -177,7 +174,10 @@ public class OauthUtility {
              * Intercept collections. Extract the collection then add the
              * collection to the map.
              */
-            multivaluedMap.addAll(fieldName, (Collection) field.get(instance));
+            Collection theCollection = (Collection) field.get(instance);
+            if (!theCollection.isEmpty()) {
+              multivaluedMap.put(fieldName, new ArrayList(theCollection));
+            }
           } else {
             /**
              * The field is a normal field with no transformer. Write its String
