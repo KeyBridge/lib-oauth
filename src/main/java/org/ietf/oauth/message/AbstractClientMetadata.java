@@ -264,7 +264,7 @@ public abstract class AbstractClientMetadata implements Serializable {
    * evaluation.
    */
   @JsonbProperty("extended_parameters")
-  protected Map<String, Object> extendedParameters;
+  protected Map<String, String> extendedParameters;
 
   /**
    * Default no-arg constructor.
@@ -416,14 +416,14 @@ public abstract class AbstractClientMetadata implements Serializable {
     this.softwareStatement = softwareStatement;
   }
 
-  public Map<String, Object> getExtendedParameters() {
+  public Map<String, String> getExtendedParameters() {
     if (extendedParameters == null) {
       extendedParameters = new TreeMap<>();
     }
     return extendedParameters;
   }
 
-  public void setExtendedParameters(Map<String, Object> extendedParameters) {
+  public void setExtendedParameters(Map<String, String> extendedParameters) {
     this.extendedParameters = extendedParameters;
   }
 
@@ -437,7 +437,7 @@ public abstract class AbstractClientMetadata implements Serializable {
    * @param parameter the value to be associated with the specified key
    */
   public void putExtendedParameter(String key, Object parameter) {
-    getExtendedParameters().put(key, parameter);
+    getExtendedParameters().put(key, String.valueOf(parameter));
   }//</editor-fold>
 
   /**
