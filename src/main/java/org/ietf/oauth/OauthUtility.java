@@ -169,6 +169,20 @@ public class OauthUtility {
             JsonbTypeAdapter typeAdapter = field.getDeclaredAnnotation(JsonbTypeAdapter.class);
             JsonbAdapter adapter = typeAdapter.value().getConstructor().newInstance();
             multivaluedMap.putSingle(fieldName, adapter.adaptToJson(fieldValue));
+          } else if (field.getType().isAssignableFrom(Map.class)) {
+            /**
+             * NO-OP
+             * <p>
+             * Ignore and do no not copy object map contents into the top level.
+             * This is specifically for AbstractClientMetadata
+             * extendedParameters field, which is Key Bridge proprietary.
+             */
+//            Map<Object, Object> theMap = (Map) field.get(instance);
+//            theMap.entrySet().stream()
+//              .filter(e -> e.getValue() != null)
+//              .forEach(e -> {
+//                multivaluedMap.putSingle(String.valueOf(e.getKey()), String.valueOf(e.getValue()));
+//              });
           } else if (field.getType().isAssignableFrom(Collection.class)) {
             /**
              * Intercept collections. Extract the collection then add the
