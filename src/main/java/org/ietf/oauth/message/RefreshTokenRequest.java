@@ -152,7 +152,7 @@ public class RefreshTokenRequest extends AbstractUrlEncodedMessage implements Se
    * @return a new class instance
    * @throws java.lang.Exception on mv-map parse error
    */
-  public static RefreshTokenRequest fromMultivaluedMap(MultivaluedMap<String, Object> multivaluedMap) throws Exception {
+  public static RefreshTokenRequest fromMultivaluedMap(MultivaluedMap<String, String> multivaluedMap) throws Exception {
     return OauthUtility.fromMultivaluedMap(multivaluedMap, RefreshTokenRequest.class);
   }
 

@@ -233,7 +233,7 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage {
    * @return a new class instance
    * @throws java.lang.Exception on mv-map parse error
    */
-  public static AccessTokenRequest fromMultivaluedMap(MultivaluedMap<String, Object> multivaluedMap) throws Exception {
+  public static AccessTokenRequest fromMultivaluedMap(MultivaluedMap<String, String> multivaluedMap) throws Exception {
     return OauthUtility.fromMultivaluedMap(multivaluedMap, AccessTokenRequest.class);
   }
 

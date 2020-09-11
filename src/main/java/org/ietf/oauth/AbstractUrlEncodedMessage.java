@@ -46,7 +46,7 @@ public abstract class AbstractUrlEncodedMessage implements Serializable {
    *
    * @return a MultivaluedMap instance configuration
    */
-  public MultivaluedMap<String, Object> toMultivaluedMap() {
+  public MultivaluedMap<String, String> toMultivaluedMap() {
     return OauthUtility.toMultivaluedMap(this);
   }
 

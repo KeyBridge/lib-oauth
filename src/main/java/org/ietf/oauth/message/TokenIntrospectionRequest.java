@@ -69,7 +69,7 @@ public class TokenIntrospectionRequest extends AbstractUrlEncodedMessage {
    * @return a new class instance
    * @throws java.lang.Exception on mv-map parse error
    */
-  public static TokenIntrospectionRequest fromMultivaluedMap(MultivaluedMap<String, Object> multivaluedMap) throws Exception {
+  public static TokenIntrospectionRequest fromMultivaluedMap(MultivaluedMap<String, String> multivaluedMap) throws Exception {
     return OauthUtility.fromMultivaluedMap(multivaluedMap, TokenIntrospectionRequest.class);
   }
 

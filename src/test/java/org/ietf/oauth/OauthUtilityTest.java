@@ -70,7 +70,7 @@ public class OauthUtilityTest {
     System.out.println("Marshal AccessTokenRequest");
     System.out.println(jsonb.marshal(a));
 
-    MultivaluedMap<String, Object> mvmap = OauthUtility.toMultivaluedMap(a);
+    MultivaluedMap<String, String> mvmap = OauthUtility.toMultivaluedMap(a);
 
     System.out.println("as map \n" + mvmap);
 

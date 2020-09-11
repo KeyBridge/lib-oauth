@@ -179,7 +179,7 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
    * @return a new class instance
    * @throws java.lang.Exception on mv-map parse error
    */
-  public static AuthorizationRequest fromMultivaluedMap(MultivaluedMap<String, Object> multivaluedMap) throws Exception {
+  public static AuthorizationRequest fromMultivaluedMap(MultivaluedMap<String, String> multivaluedMap) throws Exception {
     return OauthUtility.fromMultivaluedMap(multivaluedMap, AuthorizationRequest.class);
   }
 
