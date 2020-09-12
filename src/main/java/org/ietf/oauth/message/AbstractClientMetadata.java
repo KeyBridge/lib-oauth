@@ -300,11 +300,18 @@ public abstract class AbstractClientMetadata implements Serializable {
   }
 
   public void setGrantTypes(Collection<GrantType> grantTypes) {
-    this.grantTypes = grantTypes;
+    getGrantTypes().clear();
+    grantTypes.forEach(g -> addGrantType(g));
   }
 
+  /**
+   * Add a grant type. Also adds the corresponding response types.
+   *
+   * @param grantType the grant type
+   */
   public void addGrantType(GrantType grantType) {
     getGrantTypes().add(grantType);
+    getResponseTypes().addAll(grantType.getResponseTypes());
   }
 
   public Collection<ResponseType> getResponseTypes() {
