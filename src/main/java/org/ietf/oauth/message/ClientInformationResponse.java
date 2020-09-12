@@ -38,18 +38,18 @@ import javax.json.bind.annotation.JsonbProperty;
 public class ClientInformationResponse extends ClientRegistrationResponse {
 
   /**
-   * REQUIRED. String containing the fully qualified URL of the client
-   * configuration endpoint for this client.
-   */
-  @JsonbProperty("registration_client_uri")
-  private String registrationClientUri;
-  /**
    * REQUIRED. String containing the access token to be used at the client
    * configuration endpoint to perform subsequent operations upon the client
    * registration.
    */
   @JsonbProperty("registration_access_token")
   private String registrationAccessToken;
+  /**
+   * REQUIRED. String containing the fully qualified URL of the client
+   * configuration endpoint for this client.
+   */
+  @JsonbProperty("registration_client_uri")
+  private String registrationClientUri;
 
   public String getRegistrationClientUri() {
     return registrationClientUri;
@@ -83,23 +83,7 @@ public class ClientInformationResponse extends ClientRegistrationResponse {
     /**
      * Copy the request data.
      */
-    c.setRedirectUris(q.getRedirectUris());
-    c.setTokenEndpointAuthMethod(q.getTokenEndpointAuthMethod());
-    c.setGrantTypes(q.getGrantTypes());
-    c.setResponseTypes(q.getResponseTypes());
-    c.setClientName(q.getClientName());
-    c.setClientUri(q.getClientUri());
-    c.setLogoUri(q.getLogoUri());
-    c.setScope(q.getScope());
-    c.setContacts(q.getContacts());
-    c.setTosUri(q.getTosUri());
-    c.setPolicyUri(q.getPolicyUri());
-    c.setJwks(q.getJwks());
-    c.setJwksUri(q.getJwksUri());
-    c.setSoftwareId(q.getSoftwareId());
-    c.setSoftwareVersion(q.getSoftwareVersion());
-    c.setSoftwareStatement(q.getSoftwareStatement());
-    c.setExtendedParameters(q.getExtendedParameters());
+    c.copyMetadata(q);
     return c;
   }
 

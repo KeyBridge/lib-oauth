@@ -56,6 +56,7 @@ public class ErrorResponse implements Serializable {
    */
   @JsonbProperty("error_description")
   private String errorDescription;
+
   /**
    * OPTIONAL. A URI identifying a human-readable web page with information
    * about the error, used to provide the client developer with additional
