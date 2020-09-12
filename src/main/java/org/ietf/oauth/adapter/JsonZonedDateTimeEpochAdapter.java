@@ -59,4 +59,18 @@ public class JsonZonedDateTimeEpochAdapter implements JsonbAdapter<ZonedDateTime
     return ZonedDateTime.ofInstant(Instant.ofEpochSecond(obj), ZoneId.of("UTC"));
   }
 
+  /**
+   * Extra method to handle deserialization of String types.
+   * <p>
+   * This method is used on deserialization only. It contains a conversion logic
+   * from type Adapted to type Original.
+   *
+   * @param obj Object to convert.
+   * @return Converted object representing pojo to be set into object graph.
+   * @throws Exception if there is an error during the conversion.
+   */
+  public ZonedDateTime adaptFromJson(String obj) throws Exception {
+    return ZonedDateTime.ofInstant(Instant.ofEpochSecond(Long.parseLong(obj)), ZoneId.of("UTC"));
+  }
+
 }
