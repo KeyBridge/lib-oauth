@@ -315,9 +315,12 @@ public class OauthUtility {
           ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
           Type actualType = parameterizedType.getActualTypeArguments()[0];
           /**
-           * Look for an add method to add the enumerated type.
+           * Look for an add method to add the enumerated type. Call
+           * `cls.getMethod` to capture _all_ methods. Calling
+           * `cls.getDeclaredMethod` fails as it only inspects the instant class
+           * and not its parents.
            */
-          Method addMethod = cls.getDeclaredMethod("add" + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1), (Class) actualType);
+          Method addMethod = cls.getMethod("add" + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1), (Class) actualType);
           /**
            * Call the add[type] method, using the Json Adapter if available to
            * correctly unmarshal String to object (Enum, etc.)
