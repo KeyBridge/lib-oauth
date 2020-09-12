@@ -16,7 +16,7 @@
 package org.ietf.oauth.message;
 
 import java.time.Clock;
-import java.time.Duration;
+import java.time.Period;
 import java.time.ZonedDateTime;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTypeAdapter;
@@ -138,16 +138,23 @@ public class ClientRegistrationResponse extends AbstractClientMetadata {
 
   public void setExpiresAt(ZonedDateTime expiresAt) {
     this.expiresAt = expiresAt;
-  }//</editor-fold>
+  }
 
   /**
-   * Set the `expiresAt` field to a specific duration after the `issuedAt` time
-   * stamp. After expiration the client must re-register.
+   * Set the `expiresAt` field to a specific period after the `issuedAt` time
+   * stamp. After expiration the client must re-register. Period specifies
+   * date-based values (years, months, days).
+   * <p>
+   * If the `issuedAt` field is null sets the `expiresAt` value to _now_ plus
+   * the period. Otherwise sets `expiresAt` to the issuedAt value plus the
+   * period.
    *
-   * @param duration the duration.
+   * @param period the period of the validity
    */
-  public void setDuration(Duration duration) {
-    this.expiresAt = issuedAt.plus(duration);
-  }
+  public void setPeriod(Period period) {
+    this.expiresAt = issuedAt == null
+                     ? ZonedDateTime.now(Clock.systemUTC()).plus(period)
+                     : issuedAt.plus(period);
+  }//</editor-fold>
 
 }
