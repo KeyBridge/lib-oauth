@@ -16,13 +16,19 @@
 package org.ietf.oauth.type;
 
 /**
- * Enumerate values of the authorization endpoint {@code response_type}
- * parameter.
- * <p>
- * The client informs the authorization server of the desired grant type.
+ * RFC 6749 OAuth 2.0 3.1.1. Response Type
  * <p>
  * The authorization endpoint is used by the authorization code grant type and
- * implicit grant type flows.
+ * implicit grant type flows. The client informs the authorization server of the
+ * desired grant type using the `response_type` parameter.
+ * <p>
+ * Extension response types MAY contain a space-delimited (%x20) list of values,
+ * where the order of values does not matter (e.g., response type "a b" is the
+ * same as "b a").
+ * <p>
+ * Enumerate values of the authorization endpoint {@code response_type}
+ * parameter. The client informs the authorization server of the desired grant
+ * type.
  *
  * @since v0.0.1
  * @author Jesse Caulfield 10/06/17
@@ -30,20 +36,24 @@ package org.ietf.oauth.type;
 public enum ResponseType {
 
   /**
-   * Used for the authorization code grant type.
+   * Used for the authorization code grant type. For requesting an authorization
+   * code as described by RFC 6749 OAuth 2.0 Section 4.1.1.
    */
   code("Authorization Code Grant Type"),
   /**
-   * Used for the implicit grant type.
+   * Used for the implicit grant type. For requesting an access token (implicit
+   * grant) as described by RFC 6749 OAuth 2.0 Section 4.2.1.
    */
   token("Implicit Grant Type"),
   /**
-   * Include an ID Token in the Authorization Request.
+   * OpenId Connect Core 3.2.2.1. Authentication Request. ID Token value
+   * associated with the authenticated session. When using the Implicit Flow,
+   * the response_type value is `id_token token` or `id_token`.
    */
   id_token("ID Token"),
 
   /**
-   * @deprecated use `token`
+   * @deprecated 2020-09-12 use `token`
    *
    * Message access token. Used for client registration.
    */
