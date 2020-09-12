@@ -250,12 +250,17 @@ public class OauthUtility {
   }
 
   /**
-   * Read MultivaluedMap entries and assign them to class fields according to
-   * their matching field name.
+   * Read MultivaluedMap entries and (try to) assign them to class fields
+   * according to their matching field name.
    * <p>
    * Note that collection fields must have an {@code add} method available as
    * discovered collection entries are added to the object instance one at a
    * time.
+   * <p>
+   * CAUTION: Field assignment will fail silently if the JsonbTypeAdapter fails,
+   * which occurs if the adapter does not accept a String value. Map entries
+   * having a key that does not match a recognized field name are silently
+   * ignored.
    *
    * @param <T>            the class type to produce
    * @param multivaluedMap the MultivaluedMap instance from which to parse
@@ -278,6 +283,14 @@ public class OauthUtility {
      */
     for (Map.Entry<String, List<String>> entry : multivaluedMap.entrySet()) {
       try {
+        /**
+         * Silently ignore map entries having a key that does not match a
+         * recognized field name.
+         */
+        if (!jsonNamedFields.containsKey(entry.getKey())) {
+          LOG.log(Level.FINE, "{0} is not a valid field name of class {1}", new Object[]{entry.getKey(), cls.getSimpleName()});
+          continue;
+        }
         Field field = jsonNamedFields.get(entry.getKey());
         field.setAccessible(true);
         /**
@@ -287,7 +300,12 @@ public class OauthUtility {
         if (field.getDeclaredAnnotation(JsonbTypeAdapter.class) != null) {
           JsonbTypeAdapter typeAdapter = field.getDeclaredAnnotation(JsonbTypeAdapter.class);
           JsonbAdapter adapter = typeAdapter.value().getConstructor().newInstance();
-          field.set(instance, adapter.adaptFromJson(entry.getValue().get(0)));
+          /**
+           * Inspect the adapter and get the method that accepts a String. This
+           * is necessary since some adapters may transform to a Numeric.
+           */
+          Method adaptMethodString = adapter.getClass().getMethod("adaptFromJson", String.class);
+          field.set(instance, adaptMethodString.invoke(adapter, entry.getValue().get(0)));
         } else if (field.getType().isAssignableFrom(Collection.class)) {
           /**
            * If the field is a collection then expect to iterate over one or
@@ -350,8 +368,11 @@ public class OauthUtility {
             }
           }
         }
-      } catch (NoSuchFieldException | SecurityException noSuchFieldException) {
-        LOG.log(Level.SEVERE, "{0} is not a valid field name of class {1}", new Object[]{entry.getKey(), cls.getSimpleName()});
+      } catch (NoSuchFieldException | SecurityException ex) {
+        LOG.log(Level.SEVERE, "Invalid field name {0}.{1}.  {2}", new Object[]{cls.getSimpleName(), entry.getKey(), ex.getMessage()});
+      } catch (Exception exception) {
+        LOG.log(Level.SEVERE, "Error parsing {0}.{1}.   {2}", new Object[]{cls.getSimpleName(), entry.getKey(), exception.getMessage()});
+        LOG.log(Level.SEVERE, null, exception);
       }
     }
     return instance;
@@ -377,7 +398,7 @@ public class OauthUtility {
         Method fromTextMethod = type.getDeclaredMethod("fromText", String.class);
         enumInstance = (Enum) fromTextMethod.invoke(type, name);
       } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
-        LOG.log(Level.SEVERE, "Failed instantiate enumerated class {0} from name {1}", new Object[]{type.getSimpleName(), name});
+        LOG.log(Level.SEVERE, "Failed to instantiate enumerated class {0} from name {1}", new Object[]{type.getSimpleName(), name});
       }
     }
     return enumInstance;
