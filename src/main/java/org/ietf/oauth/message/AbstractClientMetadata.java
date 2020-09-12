@@ -301,7 +301,7 @@ public abstract class AbstractClientMetadata implements Serializable {
 
   public void setGrantTypes(Collection<GrantType> grantTypes) {
     getGrantTypes().clear();
-    grantTypes.forEach(g -> addGrantType(g));
+    grantTypes.forEach(g -> addGrantTypes(g));
   }
 
   /**
@@ -309,7 +309,7 @@ public abstract class AbstractClientMetadata implements Serializable {
    *
    * @param grantType the grant type
    */
-  public void addGrantType(GrantType grantType) {
+  public void addGrantTypes(GrantType grantType) {
     getGrantTypes().add(grantType);
     getResponseTypes().addAll(grantType.getResponseTypes());
   }
@@ -325,7 +325,7 @@ public abstract class AbstractClientMetadata implements Serializable {
     this.responseTypes = responseTypes;
   }
 
-  public void addResponseType(ResponseType responseType) {
+  public void addResponseTypes(ResponseType responseType) {
     getResponseTypes().add(responseType);
   }
 
@@ -493,10 +493,10 @@ public abstract class AbstractClientMetadata implements Serializable {
    * @param source the source instance
    */
   protected void copyMetadata(AbstractClientMetadata source) {
-    this.setRedirectUris(source.getRedirectUris());
-    this.setTokenEndpointAuthMethod(source.getTokenEndpointAuthMethod());
     this.setGrantTypes(source.getGrantTypes());
     this.setResponseTypes(source.getResponseTypes());
+    this.setRedirectUris(source.getRedirectUris());
+    this.setTokenEndpointAuthMethod(source.getTokenEndpointAuthMethod());
     this.setClientName(source.getClientName());
     this.setClientUri(source.getClientUri());
     this.setLogoUri(source.getLogoUri());
