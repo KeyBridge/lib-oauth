@@ -15,9 +15,18 @@
  */
 package org.ietf.oauth.type;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import javax.json.bind.annotation.JsonbProperty;
 
 /**
+ * RFC 6749 OAuth 2.0 4. Obtaining Authorization
+ * <p>
+ * OAuth defines four grant types: authorization code, implicit, resource owner
+ * password credentials, and client credentials. It also provides an extension
+ * mechanism for defining additional grant types.
+ * <p>
  * The "grant_type" element is defined in RFC 6749 OAuth 2.0 Sections 4.1.3,
  * 4.3.2, 4.4.2, 4.5, and 6 plus OpenId Connect Core section 3.1.3.1. and 12.
  * <p>
@@ -174,4 +183,65 @@ public enum GrantType {
   @JsonbProperty("urn:ietf:params:oauth:grant-type:device_code")
   device_code;
 
+  /**
+   * RFC 7591 OAuth 2.0 Dynamic Registration
+   * <p>
+   * 2.1. Relationship between Grant Types and Response Types
+   * <p>
+   * The "grant_types" and "response_types" values described above are partially
+   * orthogonal, as they refer to arguments passed to different endpoints in the
+   * OAuth protocol. However, they are related in that the "grant_types"
+   * available to a client influence the "response_types" that the client is
+   * allowed to use, and vice versa. For instance, a "grant_types" value that
+   * includes "authorization_code" implies a "response_types" value that
+   * includes "code", as both values are defined as part of the OAuth 2.0
+   * authorization code grant. As such, a server supporting these fields SHOULD
+   * take steps to ensure that a client cannot register itself into an
+   * inconsistent state, for example, by returning an "invalid_client_metadata"
+   * error response to an inconsistent registration request.
+   * <p>
+   * The correlation between the two fields is listed in the table below.
+   * <pre>
+   * +-----------------------------------------------+-------------------+
+   * | grant_types value includes:                   | response_types    |
+   * |                                               | value includes:   |
+   * +-----------------------------------------------+-------------------+
+   * | authorization_code                            | code              |
+   * | implicit                                      | token  id_token   |
+   * | password                                      | (none)            |
+   * | client_credentials                            | (none)            |
+   * | refresh_token                                 | (none)            |
+   * | urn:ietf:params:oauth:grant-type:jwt-bearer   | (none)            |
+   * | urn:ietf:params:oauth:grant-type:saml2-bearer | (none)            |
+   * +-----------------------------------------------+-------------------+</pre>
+   *
+   * @return correlated ResponseType for the current grant type
+   */
+  public Collection<ResponseType> getResponseTypes() {
+    switch (this) {
+
+      case authorization_code:
+        return Collections.singleton(ResponseType.code);
+
+      /**
+       * `id_token` is added in the OpenId specification. OpenId Connect Core
+       * 3.2.2.1. Authentication Request. When using the Implicit Flow, the
+       * response_type value is `id_token token` or `id_token`.
+       */
+      case implicit:
+        return Arrays.asList(ResponseType.token, ResponseType.id_token);
+
+      case jwt_bearer:
+      case saml2_bearer:
+      case token_exchange:
+      case device_code:
+        return Collections.singleton(ResponseType.token);
+
+      case password:
+      case client_credentials:
+      case refresh_token:
+      default:
+        return Collections.EMPTY_SET;
+    }
+  }
 }
