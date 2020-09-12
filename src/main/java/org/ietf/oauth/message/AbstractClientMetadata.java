@@ -284,6 +284,10 @@ public abstract class AbstractClientMetadata implements Serializable {
     this.redirectUris = redirectUris;
   }
 
+  public void addRedirectUris(String redirectUri) {
+    getRedirectUris().add(redirectUri);
+  }
+
   public TokenAuthenticationType getTokenEndpointAuthMethod() {
     return tokenEndpointAuthMethod;
   }
@@ -364,6 +368,10 @@ public abstract class AbstractClientMetadata implements Serializable {
     this.scope = scope;
   }
 
+  public void addScope(String scope) {
+    getScope().add(scope);
+  }
+
   public Collection<String> getContacts() {
     if (contacts == null) {
       contacts = new TreeSet<>();
@@ -373,6 +381,10 @@ public abstract class AbstractClientMetadata implements Serializable {
 
   public void setContacts(Collection<String> contacts) {
     this.contacts = contacts;
+  }
+
+  public void addContacts(String contact) {
+    getContacts().add(contact);
   }
 
   public String getTosUri() {
