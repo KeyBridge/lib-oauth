@@ -300,7 +300,11 @@ public abstract class AbstractClientMetadata implements Serializable {
   }
 
   public void setGrantTypes(Collection<GrantType> grantTypes) {
-    this.grantTypes = grantTypes;
+    this.grantTypes = new TreeSet<>(grantTypes);
+  }
+
+  public void addGrantType(GrantType grantType) {
+    getGrantTypes().add(grantType);
   }
 
   public Collection<ResponseType> getResponseTypes() {
@@ -312,6 +316,10 @@ public abstract class AbstractClientMetadata implements Serializable {
 
   public void setResponseTypes(Collection<ResponseType> responseTypes) {
     this.responseTypes = responseTypes;
+  }
+
+  public void addResponseType(ResponseType responseType) {
+    getResponseTypes().add(responseType);
   }
 
   public String getClientName() {
