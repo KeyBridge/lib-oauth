@@ -43,6 +43,9 @@ package org.ietf.oauth.type;
  * In addition to the error codes defined in Section 4.1.2.1 of OAuth 2.0, this
  * specification also defines the following error codes.
  *
+ * @see
+ * <a href="https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml">OAuth
+ * Extensions Error Registry</a>
  * @author Jesse Caulfield 10/06/17
  * @since v0.0.1
  * @since v3.1.0 updated 2020-09-12 for other supported RFCs in this library
@@ -69,6 +72,8 @@ public enum ErrorResponseType {
   unauthorized_client,
   /**
    * RFC 6749 The resource owner or authorization server denied the request.
+   * <p>
+   * RFC 8628 The authorization request was denied.
    */
   access_denied,
   /**
@@ -110,6 +115,14 @@ public enum ErrorResponseType {
    * to access the protected resource.
    */
   insufficient_scope,
+
+  // RFC 7009 Token Revocation
+  /**
+   * RFC 7009 The authorization server does not support the revocation of the
+   * presented token type. That is, the client tried to revoke an access token
+   * on a server not supporting this feature.
+   */
+  unsupported_token_type,
 
   // RFC 7591 OAuth 2.0 Dynamic Registration 3.2.2.  Client Registration Error Response
   /**
@@ -197,6 +210,32 @@ public enum ErrorResponseType {
    * parameters of a RFC8693 Token Exchange Request, the "invalid_target" error
    * code SHOULD be used in the error response.
    */
-  invalid_target;
+  invalid_target,
+
+  // RFC 8628 OAuth 2.0 Device Grant
+  /**
+   * RFC 8628 The authorization request is still pending as the end user hasn't
+   * yet completed the user-interaction steps (Section 3.3). The client SHOULD
+   * repeat the access token request to the token endpoint (a process known as
+   * polling). Before each new request, the client MUST wait at least the number
+   * of seconds specified by the "interval" parameter of the device
+   * authorization response (see Section 3.2), or 5 seconds if none was
+   * provided, and respect any increase in the polling interval required by the
+   * "slow_down" error.
+   */
+  authorization_pending,
+  /**
+   * RFC 8628 A variant of "authorization_pending", the authorization request is
+   * still pending and polling should continue, but the interval MUST be
+   * increased by 5 seconds for this and all subsequent requests.
+   */
+  slow_down,
+  /**
+   * RFC 8628 The "device_code" has expired, and the device authorization
+   * session has concluded. The client MAY commence a new device authorization
+   * request but SHOULD wait for user interaction before restarting to avoid
+   * unnecessary polling.
+   */
+  expired_token;
 
 }
