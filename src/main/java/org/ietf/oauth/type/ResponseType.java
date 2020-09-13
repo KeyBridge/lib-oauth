@@ -36,19 +36,53 @@ package org.ietf.oauth.type;
 public enum ResponseType {
 
   /**
-   * Used for the authorization code grant type. For requesting an authorization
-   * code as described by RFC 6749 OAuth 2.0 Section 4.1.1.
+   * RFC 6749 Used for the authorization code grant type. For requesting an
+   * authorization code as described by RFC 6749 OAuth 2.0 Section 4.1.1.
    */
   code("Authorization Code Grant Type"),
   /**
-   * Used for the implicit grant type. For requesting an access token (implicit
-   * grant) as described by RFC 6749 OAuth 2.0 Section 4.2.1.
+   * RFC 6749 Used for the implicit grant type. For requesting an access token
+   * (implicit grant) as described by RFC 6749 OAuth 2.0 Section 4.2.1.
    */
   token("Implicit Grant Type"),
+
+  /**
+   * OpenId. The intended purpose is to enable use cases where a party requests
+   * the Authorization Server to register a grant of access to a Protected
+   * Resource on behalf of a Client but requires no access credentials to be
+   * returned to the Client at that time. The means by which the Client
+   * eventually obtains the access credentials is left unspecified.
+   * <p>
+   * When supplied as the response_type parameter in an OAuth 2.0 Authorization
+   * Request, the Authorization Server SHOULD NOT return an OAuth 2.0
+   * Authorization Code, Access Token, Access Token Type, or ID Token in a
+   * successful response to the grant request. If a redirect_uri is supplied,
+   * the User Agent SHOULD be redirected there after granting or denying access.
+   * The request MAY include a state parameter, and if so, the Authorization
+   * Server MUST echo its value as a response parameter when issuing either a
+   * successful response or an error response. The default Response Mode for
+   * this Response Type is the query encoding. Both successful and error
+   * responses SHOULD be returned using the supplied Response Mode, or if none
+   * is supplied, using the default Response Mode.
+   *
+   * @see
+   * <a href="https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html#none">OAuth
+   * 2.0 Multiple Response Type Encoding Practices</a>
+   */
+  none("The client does not require access credentials"),
   /**
    * OpenId Connect Core 3.2.2.1. Authentication Request. ID Token value
    * associated with the authenticated session. When using the Implicit Flow,
-   * the response_type value is `id_token token` or `id_token`.
+   * the response_type value is `id_token token` or `id_token`. The intended
+   * purpose of the id_token is that it MUST provide an assertion of the
+   * identity of the Resource Owner as understood by the Authorization Server.
+   * The assertion MUST specify a targeted audience, e.g. the requesting Client.
+   * However, the specific semantics of the assertion and how it can be
+   * validated are not specified in this document.
+   *
+   * @see
+   * <a href="https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html#id_token">OAuth
+   * 2.0 Multiple Response Type Encoding Practices</a>
    */
   id_token("ID Token"),
 
