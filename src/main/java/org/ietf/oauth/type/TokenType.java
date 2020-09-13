@@ -43,6 +43,7 @@ import javax.json.bind.annotation.JsonbProperty;
  * @since v2.2.0 created 2020-09-05
  */
 public enum TokenType {
+
   /**
    * Indicates that the token is an OAuth 2.0 access token issued by the given
    * authorization server.
