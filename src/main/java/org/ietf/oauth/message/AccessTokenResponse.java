@@ -121,25 +121,28 @@ public class AccessTokenResponse implements Serializable {
   @JsonbProperty("access_token")
   private String accessToken;
   /**
-   * Default is "Bearer".
+   * Allowed values are "Bearer", "N_A". Default is "Bearer".
    * <p>
    * REQUIRED. The type of the token issued as described in Section 7.1. Value
    * is case insensitive.
    * <p>
-   * RFC 6749 OAuth 2.0 7.1. Access Token Types:
-   * <p>
-   * The access token type provides the client with the information required to
-   * successfully utilize the access token to make a protected resource request
-   * (along with type-specific attributes). The client MUST NOT use an access
-   * token if it does not understand the token type.
+   * RFC 6749 OAuth 2.0 7.1. Access Token Types: The access token type provides
+   * the client with the information required to successfully utilize the access
+   * token to make a protected resource request (along with type-specific
+   * attributes). The client MUST NOT use an access token if it does not
+   * understand the token type.
    * <p>
    * For example, the "bearer" token type defined in [RFC6750] is utilized by
    * simply including the access token string in the request:
    * <pre>
    *   GET /resource/1 HTTP/1.1
    *   Host: example.com
-   *   Authorization: Bearer mF_9.B5f-4.1JqM
-   * </pre>
+   *   Authorization: Bearer mF_9.B5f-4.1JqM</pre>
+   * <p>
+   * RFC8693, Section 2.2.1 OAuth 2.0 Token Exchange: If the issued token is not
+   * an access token or usable as an access token, then the "token_type" value
+   * "N_A" is used to indicate that an OAuth 2.0 "token_type" identifier is not
+   * applicable in that context.
    */
   @JsonbProperty("token_type")
   private String tokenType;
