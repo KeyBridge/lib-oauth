@@ -213,14 +213,14 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage {
   /**
    * Construct a new OAUTH AuthorizationRequest instance.
    *
-   * @param client_id The Client Identifier valid at the Authorization Server
-   * @param state     An opaque value used by the client to maintain state
-   *                  between the request and callback
+   * @param clientId The Client Identifier valid at the Authorization Server
+   * @param state    An opaque value used by the client to maintain state
+   *                 between the request and callback
    * @return a new OAUTH AuthorizationRequest instance.
    */
-  public static AccessTokenRequest getInstance(String client_id, String state) {
+  public static AccessTokenRequest getInstance(String clientId, String state) {
     AccessTokenRequest ar = new AccessTokenRequest();
-    ar.setClientId(client_id);
+    ar.setClientId(clientId);
     ar.setState(state);
     return ar;
   }
@@ -320,6 +320,10 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage {
 
   public void setScope(Collection<String> scope) {
     this.scope = scope;
+  }
+
+  public void addScope(String scope) {
+    getScope().add(scope);
   }//</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="Equals and Hashcode">
