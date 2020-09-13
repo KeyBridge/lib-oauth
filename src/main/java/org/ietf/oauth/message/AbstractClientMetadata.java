@@ -18,7 +18,9 @@ package org.ietf.oauth.message;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbTypeAdapter;
 import org.ietf.oauth.adapter.JsonCollectionAdapter;
 import org.ietf.oauth.type.GrantType;
@@ -504,7 +506,7 @@ public abstract class AbstractClientMetadata implements Serializable {
    *
    * @param source the source instance
    */
-  protected void copyMetadata(AbstractClientMetadata source) {
+  public void copyMetadata(AbstractClientMetadata source) {
     this.setGrantTypes(source.getGrantTypes());
     this.setResponseTypes(source.getResponseTypes());
     this.setRedirectUris(source.getRedirectUris());
@@ -524,7 +526,44 @@ public abstract class AbstractClientMetadata implements Serializable {
 //    this.setExtendedParameters(source.getExtendedParameters());
   }
 
+  /**
+   * Check the message to ensure it its configuration is valid. Requires the
+   * `clientName` field plus ensures the `grantTypes` and `responseTypes` values
+   * pair correctly.
+   *
+   * @return TRUE if the configuration is complete and valid
+   */
+  @JsonbTransient
+  public boolean isValid() {
+    if (getGrantTypes().isEmpty()) {
+      return false;
+    } else {
+      List<ResponseType> expectedResponseTypes = grantTypes.stream()
+        .flatMap(g -> g.getResponseTypes().stream())
+        .map(r -> (ResponseType) r)
+        .distinct()
+        .collect(Collectors.toList());
+      if (!expectedResponseTypes.containsAll(getResponseTypes())) {
+        return false;
+      }
+      if (!getResponseTypes().containsAll(expectedResponseTypes)) {
+        return false;
+      }
+    }
+    return isSet(clientName);
+  }
+
   //<editor-fold defaultstate="collapsed" desc="Equals and Hashcode">
+  /**
+   * Internal helper method to evaluate a String value.
+   *
+   * @param value the string
+   * @return true if the string is not null and not empty
+   */
+  protected boolean isSet(String value) {
+    return value != null && !value.trim().isEmpty();
+  }
+
   @Override
   public int hashCode() {
     int hash = 7;
