@@ -18,7 +18,7 @@ package org.ietf.oauth.message;
 import javax.json.bind.annotation.JsonbProperty;
 
 /**
- * RFC 7592 OAuth 2.0 Dynamic Registration Management
+ * RFC 7592 OAuth 2.0 Dynamic Registration Management 2.2. Client Update Request
  * <p>
  * To update a previously registered client's registration with an authorization
  * server, the client makes an HTTP PUT request to the client configuration
@@ -38,22 +38,16 @@ import javax.json.bind.annotation.JsonbProperty;
 public class ClientUpdateRequest extends AbstractClientMetadata {
 
   /**
-   * REQUIRED. OAuth 2.0 client identifier string. It SHOULD NOT be currently
-   * valid for any other registered client, though an authorization server MAY
-   * issue the same client identifier to multiple instances of a registered
-   * client at its discretion.
+   * REQUIRED. OAuth 2.0 client identifier string. The client MUST include its
+   * "client_id" field in the request, and it MUST be the same as its currently
+   * issued client identifier.
    */
   @JsonbProperty("client_id")
   private String clientId;
   /**
-   * OPTIONAL. OAuth 2.0 client secret string. If issued, this MUST be unique
-   * for each "client_id" and SHOULD be unique for multiple instances of a
-   * client using the same "client_id". This value is used by confidential
-   * clients to authenticate to the token endpoint, as described in OAuth 2.0
-   * [RFC6749], Section 2.3.1.
-   * <p>
-   * (This is basically a client "password" shared secret and is used for
-   * "Basic" type HTTP authentication.)
+   * OPTIONAL. OAuth 2.0 client secret string. If the client includes the
+   * "client_secret" field in the request, the value of this field MUST match
+   * the currently issued client secret for that client.
    */
   @JsonbProperty("client_secret")
   private String clientSecret;
@@ -72,6 +66,17 @@ public class ClientUpdateRequest extends AbstractClientMetadata {
 
   public void setClientSecret(String clientSecret) {
     this.clientSecret = clientSecret;
+  }
+
+  /**
+   * {@inheritDoc} ClientUpdateRequest requires the `clientId` field.
+   */
+  @Override
+  public boolean isValid() {
+    if (!isSet(clientId)) {
+      return false;
+    }
+    return super.isValid();
   }
 
 }
