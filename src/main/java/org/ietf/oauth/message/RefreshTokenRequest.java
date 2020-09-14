@@ -27,9 +27,7 @@ import org.ietf.oauth.OauthUtility;
 import org.ietf.oauth.adapter.JsonCollectionAdapter;
 
 /**
- * RFC 6749 OAuth 2.0
- * <p>
- * 1.5. Refresh Token
+ * RFC 6749 OAuth 2.0 1.5. Refresh Token
  * <p>
  * Refresh tokens are credentials used to obtain access tokens. Refresh tokens
  * are issued to the client by the authorization server and are used to obtain a
@@ -45,6 +43,24 @@ import org.ietf.oauth.adapter.JsonCollectionAdapter;
  * token denotes an identifier used to retrieve the authorization information.
  * Unlike access tokens, refresh tokens are intended for use only with
  * authorization servers and are never sent to resource servers.
+ * <p>
+ * Unlike access tokens, refresh tokens are intended for use only with
+ * authorization servers and are never sent to resource servers.
+ * <pre>
+ * +--------+                                           +---------------+
+ * |        |--(A)------- Authorization Grant ---------=|               |
+ * |        |=-(B)---Access Token + Refresh Token ------|               |
+ * |        |                            +----------+   |               |
+ * |        |--(C)---- Access Token ----=|          |   |               |
+ * |        |=-(D)- Protected Resource --| Resource |   | Authorization |
+ * | Client |                            |  Server  |   |     Server    |
+ * |        |--(E)---- Access Token ----=|          |   |               |
+ * |        |=-(F)- Invalid Token Error -|          |   |               |
+ * |        |                            +----------+   |               |
+ * |        |--(G)----------- Refresh Token -----------=|               |
+ * |        |=-(H)--Access + Optional Refresh Token-----|               |
+ * +--------+                                           +---------------+
+ *          Figure 2: Refreshing an Expired Access Token</pre>
  * <p>
  * 6. Refreshing an Access Token
  * <p>

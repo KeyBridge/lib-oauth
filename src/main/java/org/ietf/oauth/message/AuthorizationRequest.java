@@ -27,9 +27,7 @@ import org.ietf.oauth.type.ResponseType;
 import org.ietf.oauth.type.ScopeType;
 
 /**
- * RFC 6749 OAuth 2.0
- * <p>
- * 4.1.1. Authorization Request
+ * RFC 6749 OAuth 2.0 4.1.1. Authorization Request
  * <p>
  * To request an access token, the client obtains authorization from the
  * resource owner. The authorization is expressed in the form of an

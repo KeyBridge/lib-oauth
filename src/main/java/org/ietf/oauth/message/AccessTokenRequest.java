@@ -25,6 +25,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
 import org.ietf.oauth.OauthUtility;
 import org.ietf.oauth.adapter.JsonCollectionAdapter;
+import org.ietf.oauth.type.ClientAssertionType;
 import org.ietf.oauth.type.GrantType;
 import org.ietf.oauth.type.ScopeType;
 
@@ -153,6 +154,7 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage {
    */
   @JsonbProperty("grant_type")
   private GrantType grantType;
+
   /**
    * REQUIRED. The authorization code received from the authorization server.
    */
@@ -169,18 +171,24 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage {
    */
   @JsonbProperty("client_id")
   private String clientId;
+
   /**
+   * RFC 6749 4.3. Resource Owner Password Credentials Grant
+   * <p>
    * The resource owner username. The resource owner password credentials grant
    * type is suitable in cases where the resource owner has a trust relationship
    * with the client.
    */
   private String username;
   /**
+   * RFC 6749 4.3. Resource Owner Password Credentials Grant
+   * <p>
    * The resource owner password. The resource owner password credentials grant
    * type is suitable in cases where the resource owner has a trust relationship
    * with the client.
    */
   private String password;
+
   /**
    * RECOMMENDED. An opaque value used by the client to maintain state between
    * the request and callback. The authorization server includes this value when
@@ -204,6 +212,38 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage {
    */
   @JsonbTypeAdapter(JsonCollectionAdapter.class)
   private Collection<String> scope;
+
+  // RFC 7521                OAuth Assertion Framework fields
+  /**
+   * RFC 7521 The assertion being used as an authorization grant. Specific
+   * serialization of the assertion is defined by profile documents.
+   * <p>
+   * For JWT the value of the "assertion" parameter MUST contain a single JWT.
+   *
+   * @see <a href="https://tools.ietf.org/html/rfc7521#section-4.1">Using
+   * Assertions as Authorization Grants</a>
+   * @see <a href="https://tools.ietf.org/html/rfc7523#section-2.1">Using JWTs
+   * as Authorization Grants</a>
+   */
+  private String assertion;
+  /**
+   * RFC 7521 The format of the assertion as defined by the authorization
+   * server. The value will be an absolute URI.
+   * <p>
+   * For JWT the value of the "client_assertion_type" is
+   * "urn:ietf:params:oauth:client-assertion-type:jwt-bearer".
+   */
+  @JsonbProperty("client_assertion_type")
+  private ClientAssertionType clientAssertionType;
+  /**
+   * RFC 7521 The assertion being used to authenticate the client. Specific
+   * serialization of the assertion is defined by profile documents.
+   * <p>
+   * For JWT the value of the "client_assertion" parameter contains a single
+   * JWT. It MUST NOT contain more than one JWT.
+   */
+  @JsonbProperty("client_assertion")
+  private String clientAssertion;
 
   public AccessTokenRequest() {
     this.grantType = AUTHORIZATION_CODE;
@@ -324,20 +364,47 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage {
 
   public void addScope(String scope) {
     getScope().add(scope);
+  }
+
+  public String getAssertion() {
+    return assertion;
+  }
+
+  public void setAssertion(String assertion) {
+    this.assertion = assertion;
+  }
+
+  public ClientAssertionType getClientAssertionType() {
+    return clientAssertionType;
+  }
+
+  public void setClientAssertionType(ClientAssertionType clientAssertionType) {
+    this.clientAssertionType = clientAssertionType;
+  }
+
+  public String getClientAssertion() {
+    return clientAssertion;
+  }
+
+  public void setClientAssertion(String clientAssertion) {
+    this.clientAssertion = clientAssertion;
   }//</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="Equals and Hashcode">
   @Override
   public int hashCode() {
-    int hash = 7;
-    hash = 67 * hash + Objects.hashCode(this.grantType);
-    hash = 67 * hash + Objects.hashCode(this.code);
-    hash = 67 * hash + Objects.hashCode(this.redirectUri);
-    hash = 67 * hash + Objects.hashCode(this.clientId);
-    hash = 67 * hash + Objects.hashCode(this.username);
-    hash = 67 * hash + Objects.hashCode(this.password);
-    hash = 67 * hash + Objects.hashCode(this.state);
-    hash = 67 * hash + Objects.hashCode(this.scope);
+    int hash = 3;
+    hash = 17 * hash + Objects.hashCode(this.grantType);
+    hash = 17 * hash + Objects.hashCode(this.code);
+    hash = 17 * hash + Objects.hashCode(this.redirectUri);
+    hash = 17 * hash + Objects.hashCode(this.clientId);
+    hash = 17 * hash + Objects.hashCode(this.username);
+    hash = 17 * hash + Objects.hashCode(this.password);
+    hash = 17 * hash + Objects.hashCode(this.state);
+    hash = 17 * hash + Objects.hashCode(this.scope);
+    hash = 17 * hash + Objects.hashCode(this.assertion);
+    hash = 17 * hash + Objects.hashCode(this.clientAssertionType);
+    hash = 17 * hash + Objects.hashCode(this.clientAssertion);
     return hash;
   }
 
@@ -371,10 +438,18 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage {
     if (!Objects.equals(this.state, other.state)) {
       return false;
     }
+    if (!Objects.equals(this.assertion, other.assertion)) {
+      return false;
+    }
+    if (!Objects.equals(this.clientAssertion, other.clientAssertion)) {
+      return false;
+    }
     if (this.grantType != other.grantType) {
       return false;
     }
-
+    if (this.clientAssertionType != other.clientAssertionType) {
+      return false;
+    }
     if (!this.getScope().containsAll(other.getScope())) {
       return false;
     }
