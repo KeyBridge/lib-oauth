@@ -37,7 +37,7 @@
     - add RFC7592 OAuth 2.0 Dynamic Registration Management
     - rewrite URL serializer, MVMap reader to OauthUtility class
     - add RFC 8628 OAuth 2.0 Device Grant
-  </description>
+    - add RFC 7009 OAuth 2.0 Token Revocation</description>
 
   <organization>
     <name>Key Bridge</name>
