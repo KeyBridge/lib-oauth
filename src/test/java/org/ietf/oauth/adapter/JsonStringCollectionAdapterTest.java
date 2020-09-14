@@ -24,18 +24,18 @@ import org.junit.*;
  *
  * @author Key Bridge
  */
-public class JsonCollectionAdapterTest {
+public class JsonStringCollectionAdapterTest {
 
   private static LoremIpsum l = LoremIpsum.getInstance();
 
-  private static JsonCollectionAdapter adapter;
+  private static JsonStringCollectionAdapter adapter;
 
-  public JsonCollectionAdapterTest() {
+  public JsonStringCollectionAdapterTest() {
   }
 
   @BeforeClass
   public static void setUpClass() {
-    adapter = new JsonCollectionAdapter();
+    adapter = new JsonStringCollectionAdapter();
   }
 
   @AfterClass

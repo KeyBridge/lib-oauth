@@ -19,7 +19,7 @@ import java.time.ZonedDateTime;
 import java.util.Collection;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTypeAdapter;
-import org.ietf.oauth.adapter.JsonCollectionAdapter;
+import org.ietf.oauth.adapter.JsonStringCollectionAdapter;
 import org.ietf.oauth.adapter.JsonZonedDateTimeEpochAdapter;
 
 /**
@@ -60,7 +60,7 @@ public class TokenIntrospectionResponse {
    * Section 3.3 of OAuth 2.0 [RFC6749]) that the client can use when requesting
    * access tokens.
    */
-  @JsonbTypeAdapter(JsonCollectionAdapter.class)
+  @JsonbTypeAdapter(JsonStringCollectionAdapter.class)
   protected Collection<String> scope;
   /**
    * OPTIONAL. Client identifier for the OAuth 2.0 client that requested this

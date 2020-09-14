@@ -27,7 +27,7 @@ import java.util.Objects;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbTypeAdapter;
-import org.ietf.oauth.adapter.JsonCollectionAdapter;
+import org.ietf.oauth.adapter.JsonStringCollectionAdapter;
 import org.ietf.oauth.adapter.JsonDurationSecondsAdapter;
 import org.ietf.oauth.adapter.JsonZonedDateTimeAdapter;
 import org.ietf.oauth.type.ErrorResponseType;
@@ -196,7 +196,7 @@ public class AccessTokenResponse implements Serializable {
    * strings, their order does not matter, and each string adds an additional
    * access range to the requested scope.
    */
-  @JsonbTypeAdapter(JsonCollectionAdapter.class)
+  @JsonbTypeAdapter(JsonStringCollectionAdapter.class)
   private Collection<String> scope;
 
   /**

@@ -33,7 +33,7 @@ import javax.json.bind.adapter.JsonbAdapter;
  * @see
  * <a href="https://docs.oracle.com/javaee/5/api/javax/xml/bind/annotation/XmlList.html">XmlList</a>
  */
-public class JsonCollectionAdapter implements JsonbAdapter<Collection<String>, String> {
+public class JsonStringCollectionAdapter implements JsonbAdapter<Collection<String>, String> {
 
   /**
    * {@inheritDoc} URL encode each entry to support strings with spaces and

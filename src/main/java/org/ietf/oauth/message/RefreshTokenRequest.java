@@ -24,7 +24,7 @@ import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.ws.rs.core.MultivaluedMap;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
 import org.ietf.oauth.OauthUtility;
-import org.ietf.oauth.adapter.JsonCollectionAdapter;
+import org.ietf.oauth.adapter.JsonStringCollectionAdapter;
 
 /**
  * RFC 6749 OAuth 2.0 1.5. Refresh Token
@@ -132,7 +132,7 @@ public class RefreshTokenRequest extends AbstractUrlEncodedMessage implements Se
    * resource owner, and if omitted is treated as equal to the scope originally
    * granted by the resource owner.
    */
-  @JsonbTypeAdapter(JsonCollectionAdapter.class)
+  @JsonbTypeAdapter(JsonStringCollectionAdapter.class)
   private Collection<String> scope;
 
   public RefreshTokenRequest() {

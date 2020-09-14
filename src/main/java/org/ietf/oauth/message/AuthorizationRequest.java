@@ -22,7 +22,7 @@ import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.ws.rs.core.MultivaluedMap;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
 import org.ietf.oauth.OauthUtility;
-import org.ietf.oauth.adapter.JsonCollectionAdapter;
+import org.ietf.oauth.adapter.JsonStringCollectionAdapter;
 import org.ietf.oauth.type.ResponseType;
 import org.ietf.oauth.type.ScopeType;
 
@@ -137,7 +137,7 @@ public class AuthorizationRequest extends AbstractUrlEncodedMessage implements S
    * strings, their order does not matter, and each string adds an additional
    * access range to the requested scope.
    */
-  @JsonbTypeAdapter(JsonCollectionAdapter.class)
+  @JsonbTypeAdapter(JsonStringCollectionAdapter.class)
   private Collection<String> scope;
   /**
    * RECOMMENDED. An opaque value used by the client to maintain state between

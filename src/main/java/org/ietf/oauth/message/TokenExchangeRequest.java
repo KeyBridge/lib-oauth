@@ -23,7 +23,7 @@ import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.ws.rs.core.MultivaluedMap;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
 import org.ietf.oauth.OauthUtility;
-import org.ietf.oauth.adapter.JsonCollectionAdapter;
+import org.ietf.oauth.adapter.JsonStringCollectionAdapter;
 import org.ietf.oauth.adapter.JsonGrantTypeAdapter;
 import org.ietf.oauth.adapter.JsonTokenTypeAdapter;
 import org.ietf.oauth.type.GrantType;
@@ -99,7 +99,7 @@ public class TokenExchangeRequest extends AbstractUrlEncodedMessage {
    * of scope are service specific and expected to be described in the relevant
    * service documentation.
    */
-  @JsonbTypeAdapter(JsonCollectionAdapter.class)
+  @JsonbTypeAdapter(JsonStringCollectionAdapter.class)
   private Collection<String> scope;
   /**
    * OPTIONAL. An identifier, as described in Section 3, for the type of the

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbTypeAdapter;
-import org.ietf.oauth.adapter.JsonCollectionAdapter;
+import org.ietf.oauth.adapter.JsonStringCollectionAdapter;
 import org.ietf.oauth.type.GrantType;
 import org.ietf.oauth.type.ResponseType;
 import org.ietf.oauth.type.TokenAuthenticationType;
@@ -160,7 +160,7 @@ public abstract class AbstractClientMetadata implements Serializable {
    * If omitted, an authorization server MAY register a client with a default
    * set of scopes.
    */
-  @JsonbTypeAdapter(JsonCollectionAdapter.class)
+  @JsonbTypeAdapter(JsonStringCollectionAdapter.class)
   protected Collection<String> scope;
   /**
    * Array of strings representing ways to contact people responsible for this

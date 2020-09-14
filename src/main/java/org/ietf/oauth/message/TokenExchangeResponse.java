@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTypeAdapter;
-import org.ietf.oauth.adapter.JsonCollectionAdapter;
+import org.ietf.oauth.adapter.JsonStringCollectionAdapter;
 import org.ietf.oauth.type.TokenType;
 
 /**
@@ -94,7 +94,7 @@ public class TokenExchangeResponse {
    * OPTIONAL if the scope of the issued security token is identical to the
    * scope requested by the client; otherwise, it is REQUIRED.
    */
-  @JsonbTypeAdapter(JsonCollectionAdapter.class)
+  @JsonbTypeAdapter(JsonStringCollectionAdapter.class)
   private Collection<String> scope;
   /**
    * OPTIONAL. A refresh token will typically not be issued when the exchange is
@@ -300,7 +300,7 @@ public class TokenExchangeResponse {
       }
       if (scope != null && !scope.isEmpty()) {
         try {
-          claims.put("scope", new JsonCollectionAdapter().adaptToJson(scope));
+          claims.put("scope", new JsonStringCollectionAdapter().adaptToJson(scope));
         } catch (Exception exception) {
           LOG.log(Level.INFO, "Error serializing scope {0} .{1}", new Object[]{scope, exception.getMessage()});
         }

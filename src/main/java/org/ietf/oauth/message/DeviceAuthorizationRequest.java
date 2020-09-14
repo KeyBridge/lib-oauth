@@ -23,7 +23,7 @@ import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.ws.rs.core.MultivaluedMap;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
 import org.ietf.oauth.OauthUtility;
-import org.ietf.oauth.adapter.JsonCollectionAdapter;
+import org.ietf.oauth.adapter.JsonStringCollectionAdapter;
 
 /**
  * RFC 8628 OAuth 2.0 Device Grant 3.1. Device Authorization Request
@@ -50,7 +50,7 @@ public class DeviceAuthorizationRequest extends AbstractUrlEncodedMessage {
    * OPTIONAL. The scope of the access request as defined by Section 3.3 of
    * [RFC6749].
    */
-  @JsonbTypeAdapter(JsonCollectionAdapter.class)
+  @JsonbTypeAdapter(JsonStringCollectionAdapter.class)
   private Collection<String> scope;
 
   /**

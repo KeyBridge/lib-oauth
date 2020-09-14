@@ -24,7 +24,7 @@ import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.ws.rs.core.MultivaluedMap;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
 import org.ietf.oauth.OauthUtility;
-import org.ietf.oauth.adapter.JsonCollectionAdapter;
+import org.ietf.oauth.adapter.JsonStringCollectionAdapter;
 import org.ietf.oauth.type.ClientAssertionType;
 import org.ietf.oauth.type.GrantType;
 import org.ietf.oauth.type.ScopeType;
@@ -210,7 +210,7 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage {
    * strings, their order does not matter, and each string adds an additional
    * access range to the requested scope.
    */
-  @JsonbTypeAdapter(JsonCollectionAdapter.class)
+  @JsonbTypeAdapter(JsonStringCollectionAdapter.class)
   private Collection<String> scope;
 
   // RFC 7521                OAuth Assertion Framework fields
