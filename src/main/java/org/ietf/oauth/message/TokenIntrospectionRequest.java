@@ -19,6 +19,7 @@ import javax.json.bind.annotation.JsonbProperty;
 import javax.ws.rs.core.MultivaluedMap;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
 import org.ietf.oauth.OauthUtility;
+import org.ietf.oauth.type.TokenTypeHint;
 
 /**
  * Request for Comments: 7662 OAuth 2.0 Token Introspection request message
@@ -59,7 +60,7 @@ public class TokenIntrospectionRequest extends AbstractUrlEncodedMessage {
    * in OAuth Token Revocation [RFC7009].
    */
   @JsonbProperty("token_type_hint")
-  private String tokenTypeHint;
+  private TokenTypeHint tokenTypeHint;
 
   /**
    * Create a new instance of this type and set field values from the provided
@@ -94,12 +95,21 @@ public class TokenIntrospectionRequest extends AbstractUrlEncodedMessage {
     this.token = token;
   }
 
-  public String getTokenTypeHint() {
+  public TokenTypeHint getTokenTypeHint() {
     return tokenTypeHint;
   }
 
-  public void setTokenTypeHint(String tokenTypeHint) {
+  public void setTokenTypeHint(TokenTypeHint tokenTypeHint) {
     this.tokenTypeHint = tokenTypeHint;
   }//</editor-fold>
+
+  /**
+   * Require a valid token.
+   *
+   * @return TRUE if the token is configured
+   */
+  public boolean isValid() {
+    return token != null && !token.trim().isEmpty();
+  }
 
 }
