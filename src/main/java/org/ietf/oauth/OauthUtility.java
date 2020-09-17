@@ -401,7 +401,7 @@ public class OauthUtility {
         Method fromTextMethod = type.getDeclaredMethod("fromText", String.class);
         enumInstance = (Enum) fromTextMethod.invoke(type, name);
       } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
-        LOG.log(Level.SEVERE, "Failed to instantiate enumerated class {0} from name {1}", new Object[]{type.getSimpleName(), name});
+        LOG.log(Level.WARNING, "Failed to instantiate enumerated class {0} from name \"{1}\"", new Object[]{type.getSimpleName(), name});
       }
     }
     return enumInstance;
