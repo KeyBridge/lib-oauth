@@ -76,7 +76,7 @@ public class TokenIntrospectionResponse {
   private String username;
   /**
    * OPTIONAL. Type of the token as defined in Section 5.1 of OAuth 2.0
-   * [RFC6749].
+   * [RFC6749]. Default is "Bearer".
    */
   @JsonbProperty("token_type")
   private String tokenType;
