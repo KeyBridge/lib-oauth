@@ -20,7 +20,14 @@ import javax.json.bind.annotation.JsonbProperty;
 import org.ietf.oauth.type.ErrorResponseType;
 
 /**
- * 4.2.2.1. Error Response
+ * RFC 6749 OAuth 2.0 5.2. Error Response
+ * <p>
+ * The authorization server responds with an HTTP 400 (Bad Request) status code
+ * (unless specified otherwise) and includes the following parameters with the
+ * response.
+ * <p>
+ * <p>
+ * OpenId Connect 4.2.2.1. Error Response
  * <p>
  * If the request fails due to a missing, invalid, or mismatching redirection
  * URI, or if the client identifier is missing or invalid, the authorization
