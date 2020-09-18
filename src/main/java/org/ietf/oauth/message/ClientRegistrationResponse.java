@@ -98,7 +98,7 @@ public class ClientRegistrationResponse extends AbstractClientMetadata {
    * @param q the client registration request
    * @return a client registration response instance
    */
-  public static ClientRegistrationResponse getInstance(ClientRegistrationResponse q) {
+  public static ClientRegistrationResponse getInstance(ClientRegistrationRequest q) {
     ClientRegistrationResponse c = new ClientRegistrationResponse();
     /**
      * Copy the request data.
