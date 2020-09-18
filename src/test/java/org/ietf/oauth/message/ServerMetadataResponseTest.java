@@ -108,14 +108,14 @@ public class ServerMetadataResponseTest {
     smr.getUiLocalesSupported().add(Locale.US);
     smr.setOpTosUri(getUri());
     smr.setRevocationEndpoint(getUri());
-    smr.getRevocationEndpointAuthMethodsSupported().add(l.getWords(1));
-    smr.getRevocationEndpointAuthMethodsSupported().add(l.getWords(1));
+//    smr.getRevocationEndpointAuthMethodsSupported().add(l.getWords(1));
+//    smr.getRevocationEndpointAuthMethodsSupported().add(l.getWords(1));
     smr.getRevocationEndpointAuthSigningAlgValuesSupported().add(l.getWords(1));
     smr.getRevocationEndpointAuthSigningAlgValuesSupported().add(l.getWords(1));
 
     smr.setIntrospectionEndpoint(getUri());
 
-    smr.getIntrospectionEndpointAuthMethodsSupported().add(l.getWords(1));
+//    smr.getIntrospectionEndpointAuthMethodsSupported().add(l.getWords(1));
     smr.getIntrospectionEndpointAuthSigningAlgValuesSupported().add(l.getWords(1));
 
     smr.getCodeChallengeMethodsSupported().add(l.getWords(1));
