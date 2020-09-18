@@ -83,16 +83,16 @@ public class ServerMetadataResponse {
   @JsonbProperty("jwks_uri")
   private URI jwksUri;
   /**
-   * OPTIONAL. URL of the authorization server's OAuth 2.0 Dynamic Client
-   * Registration endpoint [RFC7591].
-   */
-  @JsonbProperty("scopes_supported")
-  private Collection<String> scopesSupported;
-  /**
    * RECOMMENDED. JSON array containing a list of the OAuth 2.0 [RFC6749]
    * "scope" values that this authorization server supports. Servers MAY choose
    * not to advertise some supported scope values even when this parameter is
    * used.
+   */
+  @JsonbProperty("scopes_supported")
+  private Collection<String> scopesSupported;
+  /**
+   * OPTIONAL. URL of the authorization server's OAuth 2.0 Dynamic Client
+   * Registration endpoint [RFC7591].
    */
   @JsonbProperty("registration_endpoint")
   private URI registrationEndpoint;
@@ -199,7 +199,7 @@ public class ServerMetadataResponse {
    * specified in Section 2.3.1 of OAuth 2.0 [RFC6749].
    */
   @JsonbProperty("revocation_endpoint_auth_methods_supported")
-  private Collection<String> revocationEndpointAuthMethodsSupported;
+  private Collection<TokenAuthenticationType> revocationEndpointAuthMethodsSupported;
   /**
    * OPTIONAL. JSON array containing a list of the JWS signing algorithms ("alg"
    * values) supported by the revocation endpoint for the signature on the JWT
@@ -229,7 +229,7 @@ public class ServerMetadataResponse {
    * be determined by other means.
    */
   @JsonbProperty("introspection_endpoint_auth_methods_supported")
-  private Collection<String> introspectionEndpointAuthMethodsSupported;
+  private Collection<TokenAuthenticationType> introspectionEndpointAuthMethodsSupported;
   /**
    * OPTIONAL. JSON array containing a list of the JWS signing algorithms ("alg"
    * values) supported by the introspection endpoint for the signature on the
@@ -421,14 +421,14 @@ public class ServerMetadataResponse {
     this.revocationEndpoint = revocationEndpoint;
   }
 
-  public Collection<String> getRevocationEndpointAuthMethodsSupported() {
+  public Collection<TokenAuthenticationType> getRevocationEndpointAuthMethodsSupported() {
     if (revocationEndpointAuthMethodsSupported == null) {
       revocationEndpointAuthMethodsSupported = new TreeSet<>();
     }
     return revocationEndpointAuthMethodsSupported;
   }
 
-  public void setRevocationEndpointAuthMethodsSupported(Collection<String> revocationEndpointAuthMethodsSupported) {
+  public void setRevocationEndpointAuthMethodsSupported(Collection<TokenAuthenticationType> revocationEndpointAuthMethodsSupported) {
     this.revocationEndpointAuthMethodsSupported = revocationEndpointAuthMethodsSupported;
   }
 
@@ -451,14 +451,14 @@ public class ServerMetadataResponse {
     this.introspectionEndpoint = introspectionEndpoint;
   }
 
-  public Collection<String> getIntrospectionEndpointAuthMethodsSupported() {
+  public Collection<TokenAuthenticationType> getIntrospectionEndpointAuthMethodsSupported() {
     if (introspectionEndpointAuthMethodsSupported == null) {
       introspectionEndpointAuthMethodsSupported = new TreeSet<>();
     }
     return introspectionEndpointAuthMethodsSupported;
   }
 
-  public void setIntrospectionEndpointAuthMethodsSupported(Collection<String> introspectionEndpointAuthMethodsSupported) {
+  public void setIntrospectionEndpointAuthMethodsSupported(Collection<TokenAuthenticationType> introspectionEndpointAuthMethodsSupported) {
     this.introspectionEndpointAuthMethodsSupported = introspectionEndpointAuthMethodsSupported;
   }
 
