@@ -100,7 +100,7 @@ public class TokenIntrospectionResponse {
    * [RFC7519].
    */
   @JsonbProperty("aud")
-  private String audience;
+  private Collection<String> audience;
   /**
    * OPTIONAL. Integer timestamp, measured in the number of seconds since
    * January 1 1970 UTC, indicating when this token will expire, as defined in
@@ -188,11 +188,11 @@ public class TokenIntrospectionResponse {
     this.subject = subject;
   }
 
-  public String getAudience() {
+  public Collection<String> getAudience() {
     return audience;
   }
 
-  public void setAudience(String audience) {
+  public void setAudience(Collection<String> audience) {
     this.audience = audience;
   }
 
