@@ -23,14 +23,14 @@ import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.ws.rs.core.MultivaluedMap;
 import org.ietf.oauth.AbstractUrlEncodedMessage;
 import org.ietf.oauth.OauthUtility;
-import org.ietf.oauth.adapter.JsonStringCollectionAdapter;
 import org.ietf.oauth.adapter.JsonGrantTypeAdapter;
+import org.ietf.oauth.adapter.JsonStringCollectionAdapter;
 import org.ietf.oauth.adapter.JsonTokenTypeAdapter;
 import org.ietf.oauth.type.GrantType;
 import org.ietf.oauth.type.TokenType;
 
 /**
- * Request for Comments: 8693 OAuth 2.0 Token Exchange Request
+ * RFC 8693 OAuth 2.0 Token Exchange Request
  * <p>
  * The client makes a token exchange request to the token endpoint with an
  * extension grant type using the HTTP "POST" method. The following parameters
@@ -72,7 +72,7 @@ public class TokenExchangeRequest extends AbstractUrlEncodedMessage {
    * intended to be used at the multiple resources listed. See [OAUTH-RESOURCE]
    * for additional background and uses of the "resource" parameter.
    */
-  private String resource;
+  private Collection<String> resource;
   /**
    * OPTIONAL. The logical name of the target service where the client intends
    * to use the requested security token. This serves a purpose similar to the
@@ -90,7 +90,7 @@ public class TokenExchangeRequest extends AbstractUrlEncodedMessage {
    * together to indicate multiple target services with a mix of logical names
    * and resource URIs.
    */
-  private String audience;
+  private Collection<String> audience;
   /**
    * OPTIONAL. A list of space-delimited, case-sensitive strings, as defined in
    * Section 3.3 of [RFC6749], that allow the client to specify the desired
@@ -193,20 +193,34 @@ public class TokenExchangeRequest extends AbstractUrlEncodedMessage {
     this.grantType = grantType;
   }
 
-  public String getResource() {
+  public Collection<String> getResource() {
+    if (resource == null) {
+      resource = new HashSet<>();
+    }
     return resource;
   }
 
-  public void setResource(String resource) {
+  public void setResource(Collection<String> resource) {
     this.resource = resource;
   }
 
-  public String getAudience() {
+  public void addResource(String resource) {
+    getResource().add(resource);
+  }
+
+  public Collection<String> getAudience() {
+    if (audience == null) {
+      audience = new HashSet<>();
+    }
     return audience;
   }
 
-  public void setAudience(String audience) {
+  public void setAudience(Collection<String> audience) {
     this.audience = audience;
+  }
+
+  public void addAudience(String audience) {
+    getAudience().add(audience);
   }
 
   public Collection<String> getScope() {
@@ -264,6 +278,30 @@ public class TokenExchangeRequest extends AbstractUrlEncodedMessage {
     this.actorTokenType = actorTokenType;
   }//</editor-fold>
 
+  /**
+   * Evaluate the configuration and determine if it is valid and suitable for
+   * use. Note that a valid configuration only means the object is correctly
+   * configured, not that the token request is valid and should be granted.
+   *
+   * @return TRUE if the configuration is valid.
+   */
+  public boolean isValid() {
+    if (grantType == null) {
+      return false;
+    }
+    if (!isSet(subjectToken)) {
+      return false;
+    }
+    if (subjectTokenType == null) {
+      return false;
+    }
+    return !(isSet(actorToken) && actorTokenType == null);
+  }
+
+  private boolean isSet(String string) {
+    return string != null && !string.trim().isEmpty();
+  }
+
   //<editor-fold defaultstate="collapsed" desc="Equals and Hashcode">
   @Override
   public int hashCode() {
@@ -292,12 +330,6 @@ public class TokenExchangeRequest extends AbstractUrlEncodedMessage {
       return false;
     }
     final TokenExchangeRequest other = (TokenExchangeRequest) obj;
-    if (!Objects.equals(this.resource, other.resource)) {
-      return false;
-    }
-    if (!Objects.equals(this.audience, other.audience)) {
-      return false;
-    }
     if (!Objects.equals(this.subjectToken, other.subjectToken)) {
       return false;
     }
@@ -315,6 +347,12 @@ public class TokenExchangeRequest extends AbstractUrlEncodedMessage {
       return false;
     }
     if (this.actorTokenType != other.actorTokenType) {
+      return false;
+    }
+    if (!this.getAudience().containsAll(other.getAudience()) || !other.getAudience().containsAll(getAudience())) {
+      return false;
+    }
+    if (!this.getResource().containsAll(other.getResource()) || !other.getResource().containsAll(getResource())) {
       return false;
     }
     return (this.getScope().containsAll(other.getScope()) && other.getScope().containsAll(getScope()));
