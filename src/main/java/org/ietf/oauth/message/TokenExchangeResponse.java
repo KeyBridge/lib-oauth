@@ -15,6 +15,8 @@
  */
 package org.ietf.oauth.message;
 
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,12 +26,14 @@ import org.ietf.oauth.adapter.JsonStringCollectionAdapter;
 import org.ietf.oauth.type.TokenType;
 
 /**
- * Request for Comments: 8693 OAuth 2.0 Token Exchange Request Response
+ * RFC 8693 OAuth 2.0 Token Exchange Request Response
  * <p>
  * The authorization server responds to a token exchange request with a normal
  * OAuth 2.0 response from the token endpoint, as specified in Section 5 of
  * [RFC6749]. Additional details and explanation are provided in the following
  * subsections.
+ * <p>
+ * Use the ClaimsBuilder to assemble a set of token claims.
  *
  * @see <a href="https://tools.ietf.org/html/rfc8693">OAuth 2.0 Token
  * Exchange</a>
@@ -39,6 +43,7 @@ import org.ietf.oauth.type.TokenType;
 public class TokenExchangeResponse {
 
   private static final String TOKEN_TYPE = "Bearer";
+
   /**
    * REQUIRED. The security token issued by the authorization server in response
    * to the token exchange request. The "access_token" parameter from Section
@@ -139,6 +144,16 @@ public class TokenExchangeResponse {
     return tokenType;
   }
 
+  /**
+   * @deprecated use with caution. default is "Bearer" and is set in the
+   * constructor.
+   *
+   * Set the `token_type` value. A case-insensitive value specifying the method
+   * of using the access token issued, as specified in Section 7.1 of [RFC6749].
+   * It provides the client with information about how to utilize the access
+   * token to access protected resources.
+   * @param tokenType the `token_type` value.
+   */
   public void setTokenType(String tokenType) {
     this.tokenType = tokenType;
   }
@@ -149,6 +164,21 @@ public class TokenExchangeResponse {
 
   public void setExpiresIn(Long expiresIn) {
     this.expiresIn = expiresIn;
+  }
+
+  /**
+   * Set the validity lifetime of the token as a ZonedDateTime. Note that the
+   * value MUST be in the future.
+   *
+   * @param expiresIn the validity lifetime of the token
+   */
+  public void setExpiresAt(ZonedDateTime expiresIn) {
+    ZonedDateTime now = ZonedDateTime.now(expiresIn.getZone()).truncatedTo(ChronoUnit.SECONDS);
+    ZonedDateTime expires = expiresIn.truncatedTo(ChronoUnit.SECONDS);
+    if (expires.isBefore(now)) {
+      throw new IllegalArgumentException("ExpiresIn cannot be in the past.");
+    }
+    this.expiresIn = expires.toInstant().getEpochSecond() - now.toInstant().getEpochSecond();
   }
 
   public Collection<String> getScope() {
@@ -213,6 +243,15 @@ public class TokenExchangeResponse {
     return (this.getScope().containsAll(other.getScope()) && other.getScope().containsAll(getScope()));
   }//</editor-fold>
 
+  /**
+   * Get a new ClaimsBuilder instance.
+   *
+   * @return a new ClaimsBuilder instance
+   */
+  public static ClaimsBuilder getClaimsBuilder() {
+    return new ClaimsBuilder();
+  }
+
   //<editor-fold defaultstate="collapsed" desc="Internal JWT claims builder helper class">
   /**
    * Request for Comments: 8693 OAuth 2.0 Token Exchange
@@ -262,7 +301,9 @@ public class TokenExchangeResponse {
 
     //<editor-fold defaultstate="collapsed" desc="Setters">
     public ClaimsBuilder withActor(String actor) {
-      this.actor = new Actor(actor);
+      if (actor != null && !actor.trim().isEmpty()) {
+        this.actor = new Actor(actor);
+      }
       return this;
     }
 
@@ -277,7 +318,9 @@ public class TokenExchangeResponse {
     }
 
     public ClaimsBuilder withMayAct(String may_act) {
-      this.mayAct = new Actor(may_act);
+      if (may_act != null && !may_act.trim().isEmpty()) {
+        this.mayAct = new Actor(may_act);
+      }
       return this;
     }//</editor-fold>
 
