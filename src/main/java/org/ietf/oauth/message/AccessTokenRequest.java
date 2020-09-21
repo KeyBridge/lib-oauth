@@ -135,12 +135,12 @@ import org.ietf.oauth.type.ScopeType;
 public class AccessTokenRequest extends AbstractUrlEncodedMessage {
 
   /**
-   * 3.1.3.1. Token Request
-   * <p>
-   * The default value is "authorization_code".
+   * "authorization_code". The default grant type.
    */
-  private static final GrantType AUTHORIZATION_CODE = GrantType.authorization_code;
+  private static final GrantType GRANT_TYPE = GrantType.authorization_code;
   /**
+   * "oauth". The default scope type.
+   * <p>
    * 4.1.1. Authorization Request scope is OPTIONAL and describes the scope of
    * the access request.
    */
@@ -246,7 +246,7 @@ public class AccessTokenRequest extends AbstractUrlEncodedMessage {
   private String clientAssertion;
 
   public AccessTokenRequest() {
-    this.grantType = AUTHORIZATION_CODE;
+    this.grantType = GRANT_TYPE;
     this.scope = Collections.singleton(SCOPE_TYPE.name());
   }
 
