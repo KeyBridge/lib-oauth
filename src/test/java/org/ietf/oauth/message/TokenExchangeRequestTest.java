@@ -19,6 +19,7 @@ import ch.keybridge.json.JsonbUtility;
 import com.thedeanda.lorem.LoremIpsum;
 import java.util.Random;
 import java.util.UUID;
+import org.ietf.oauth.OauthUtility;
 import org.ietf.oauth.type.TokenType;
 import org.junit.*;
 
@@ -54,8 +55,8 @@ public class TokenExchangeRequestTest {
   @Test
   public void testRoundTrip() throws Exception {
     TokenExchangeRequest t = new TokenExchangeRequest();
-    t.setResource(l.getUrl());
-    t.setAudience(l.getUrl());
+    t.addResource(l.getUrl());
+    t.addAudience(l.getUrl());
     t.getScope().add(l.getWords(1));
     t.getScope().add(l.getWords(1));
     t.getScope().add(l.getWords(1));
@@ -66,14 +67,14 @@ public class TokenExchangeRequestTest {
     t.setActorTokenType(TokenType.id_token);
 
     String json = jsonb.marshal(t);
-//    System.out.println("TokenExchangeRequest" + json);
+    System.out.println("TokenExchangeRequest" + json);
 
 //    System.out.println("Query : " + t.writeUrlEncoded()); // throws Exception
     String query = t.toUrlEncodedString();
 
-    TokenExchangeRequest recovered = new TokenExchangeRequest().fromUrlEncodedString(query);
+    TokenExchangeRequest recovered = OauthUtility.fromUrlEncodedString(query, TokenExchangeRequest.class);
 
-//    System.out.println("Recovered " + jsonb.marshal(recovered));
+    System.out.println("Recovered " + jsonb.marshal(recovered));
     Assert.assertEquals(t, recovered);
     System.out.println("testRoundTrip OK");
 
